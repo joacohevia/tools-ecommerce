@@ -1,0 +1,86 @@
+/* 1. Importar fuentes (ejemplo con Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+/* 2. Directivas de Tailwind (DEBEN IR EN ESTE ORDEN) */
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. Capa base para estilos globales */
+@layer base {
+  :root {
+    /* 🎨 Variables CSS reutilizables */
+    --font-title: 'Playfair Display', serif;
+    --font-subtitle: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --bg-dark: #0b0f19;      /* Negro azulado profundo */
+    --bg-blue-dark: #111827; /* Azul oscuro (gray-900) */
+    --text-primary: #f8fafc; /* Blanco suave */
+    --text-secondary: #94a3b8; /* Gris azulado */
+    --accent: #3b82f6;       /* Azul Tailwind */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    /* Gradiente sutil azul/negro */
+    background: linear-gradient(180deg, var(--bg-blue-dark) 0%, var(--bg-dark) 100%);
+    background-attachment: fixed; /* Fija el fondo al hacer scroll */
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* 📝 Tipografía base */
+  h1, h2, h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  h4, h5, h6 {
+    font-family: var(--font-subtitle);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  a:hover {
+    color: var(--accent);
+  }
+
+  /* 🖱️ Selección de texto personalizada */
+  ::selection {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* ♿ Accesibilidad: foco visible */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}

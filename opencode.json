@@ -1,0 +1,51 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "model": "deepseek/deepseek-v4-pro",
+  "small_model": "deepseek/deepseek-chat",
+
+  "mcp": {
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=eqybnumouyhtxklrzuvc&read_only=true"
+    },
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\joaco\\OneDrive\\Escritorio\\FACULTAD\\Herramientas-Tandil\\herramientas-tandil"],
+      "enabled": false
+    }
+  },
+
+  "shell": "pwsh",
+
+  "instructions": [
+    "AGENTS.md"
+  ],
+
+  "skills": {
+    "paths": [
+      ".opencode/skills"
+    ]
+  },
+
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
+  },
+
+  "permission": {
+    "edit": "allow",
+    "bash": "allow",
+    "read": "allow"
+  },
+
+  "tools": {
+    "write": true,
+    "edit": true,
+    "bash": true,
+    "read": true,
+    "glob": true,
+    "grep": true
+  }
+}
