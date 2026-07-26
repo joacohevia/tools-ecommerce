@@ -5,12 +5,68 @@
 -- Luego configurar Storage desde el dashboard.
 -- ============================================================
 
--- 1. CATEGORIAS
-create table categorias (
-  id bigserial primary key,
-  nombre text not null unique,
-  slug text not null unique,
-  created_at timestamptz default now()
+CREATE TABLE public.categorias (
+  id bigint NOT NULL DEFAULT nextval('categorias_id_seq'::regclass),
+  nombre text NOT NULL UNIQUE,
+  slug text NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT categorias_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.marcas (
+  id bigint NOT NULL DEFAULT nextval('marcas_id_seq'::regclass),
+  nombre text NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT marcas_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.productos (
+  id bigint NOT NULL DEFAULT nextval('productos_id_seq'::regclass),
+  nombre text NOT NULL,
+  descripcion text,
+  slug text NOT NULL UNIQUE,
+  precio numeric NOT NULL,
+  precio_oferta numeric,
+  stock integer DEFAULT 0,
+  categoria_id bigint NOT NULL,
+  marca_id bigint NOT NULL,
+  destacado boolean DEFAULT false,
+  mas_vendido boolean DEFAULT false,
+  imagenes ARRAY DEFAULT '{}'::text[],
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT productos_pkey PRIMARY KEY (id),
+  CONSTRAINT productos_categoria_id_fkey FOREIGN KEY (categoria_id) REFERENCES public.categorias(id),
+  CONSTRAINT productos_marca_id_fkey FOREIGN KEY (marca_id) REFERENCES public.marcas(id)
+);
+CREATE TABLE public.perfiles (
+  id bigint NOT NULL DEFAULT nextval('perfiles_id_seq'::regclass),
+  user_id uuid NOT NULL,
+  nombre text NOT NULL,
+  apellido text NOT NULL,
+  dni text,
+  rol text NOT NULL DEFAULT 'cliente'::text CHECK (rol = ANY (ARRAY['admin'::text, 'cliente'::text])),
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT perfiles_pkey PRIMARY KEY (id),
+  CONSTRAINT perfiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.pedidos (
+  id bigint NOT NULL DEFAULT nextval('pedidos_id_seq'::regclass),
+  perfil_id bigint NOT NULL,
+  estado text NOT NULL DEFAULT 'pendiente'::text CHECK (estado = ANY (ARRAY['pendiente'::text, 'confirmado'::text, 'enviado'::text, 'entregado'::text, 'cancelado'::text])),
+  total numeric NOT NULL DEFAULT 0,
+  nota text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT pedidos_pkey PRIMARY KEY (id),
+  CONSTRAINT pedidos_perfil_id_fkey FOREIGN KEY (perfil_id) REFERENCES public.perfiles(id)
+);
+CREATE TABLE public.pedido_items (
+  id bigint NOT NULL DEFAULT nextval('pedido_items_id_seq'::regclass),
+  pedido_id bigint NOT NULL,
+  producto_id bigint NOT NULL,
+  cantidad integer NOT NULL CHECK (cantidad > 0),
+  precio_unitario numeric NOT NULL,
+  subtotal numeric DEFAULT ((cantidad)::numeric * precio_unitario),
+  CONSTRAINT pedido_items_pkey PRIMARY KEY (id),
+  CONSTRAINT pedido_items_pedido_id_fkey FOREIGN KEY (pedido_id) REFERENCES public.pedidos(id),
+  CONSTRAINT pedido_items_producto_id_fkey FOREIGN KEY (producto_id) REFERENCES public.productos(id)
 );
 
 insert into categorias (nombre, slug) values
@@ -26,12 +82,7 @@ insert into categorias (nombre, slug) values
   ('Generadores', 'generadores'),
   ('Otras Herramientas', 'otras-herramientas');
 
--- 2. MARCAS
-create table marcas (
-  id bigserial primary key,
-  nombre text not null unique,
-  created_at timestamptz default now()
-);
+
 
 insert into marcas (nombre) values
   ('Bosch'),
@@ -46,22 +97,7 @@ insert into marcas (nombre) values
   ('Dowen'),
   ('Otra Marca');
 
--- 3. PRODUCTOS
-create table productos (
-  id bigserial primary key,
-  nombre text not null,
-  descripcion text,
-  slug text not null unique,
-  precio numeric(10,2) not null,
-  precio_oferta numeric(10,2),
-  stock integer default 0,
-  categoria_id bigint not null references categorias(id),
-  marca_id bigint not null references marcas(id),
-  destacado boolean default false,
-  mas_vendido boolean default false,
-  imagenes text[] default '{}'::text[],
-  created_at timestamptz default now()
-);
+
 -- ============================================================
 -- Nota: Las imágenes se suben a Supabase Storage, no a la DB.
 -- Crear el bucket "productos" desde el dashboard:
@@ -95,3 +131,6 @@ INSERT INTO productos (nombre, descripcion, slug, precio, precio_oferta, stock, 
 ('Lijadora Orbital Bosch 300W', 'Lijadora orbital 300W, velocidad variable, base de 125mm, recolección de polvo.', 'lijadora-orbital-bosch-300w', 72000.00, NULL, 18, 8, 1, false, false),
 ('Compresor Dowen 50L 2HP', 'Compresor de aire 50 litros, 2HP, max 8 bares, con ruedas para traslado.', 'compresor-dowen-50l-2hp', 220000.00, 195000.00, 5, 9, 10, false, true),
 ('Generador Gamma 3000W Nafta', 'Generador eléctrico naftero 3000W, arranque manual, 4 tomas 220V.', 'generador-gamma-3000w-nafta', 350000.00, NULL, 3, 10, 8, true, true);
+
+
+

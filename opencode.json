@@ -7,7 +7,13 @@
   "mcp": {
     "supabase": {
       "type": "remote",
-      "url": "https://mcp.supabase.com/mcp?project_ref=eqybnumouyhtxklrzuvc&read_only=true"
+      "url": "https://mcp.supabase.com/mcp?project_ref=eqybnumouyhtxklrzuvc&read_only=true",
+      "enabled": false
+    },
+    "supabase-read": {
+      "type": "local",
+      "command": ["node", "backend/mcp/supabase-read/server.js"],
+      "enabled": true
     },
     "filesystem": {
       "type": "local",

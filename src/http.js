@@ -1,4 +1,13 @@
+import { supabase } from './supabase';
+
 const API_URL = "http://localhost:3000/api";
+
+async function getAuthHeaders() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token
+    ? { Authorization: `Bearer ${session.access_token}` }
+    : {};
+}
 
 export async function getProductos(filtros = {}) {
   const params = new URLSearchParams(filtros).toString();
@@ -18,7 +27,7 @@ export async function getProductoById(id) {
 export async function createProducto(producto) {
   const res = await fetch(`${API_URL}/productos`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
     body: JSON.stringify(producto),
   });
   if (!res.ok) throw new Error("Error al crear producto");
@@ -28,7 +37,7 @@ export async function createProducto(producto) {
 export async function updateProducto(id, cambios) {
   const res = await fetch(`${API_URL}/productos/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
     body: JSON.stringify(cambios),
   });
   if (!res.ok) throw new Error("Error al actualizar producto");
@@ -36,7 +45,10 @@ export async function updateProducto(id, cambios) {
 }
 
 export async function deleteProducto(id) {
-  const res = await fetch(`${API_URL}/productos/${id}`, { method: "DELETE" });
+  const res = await fetch(`${API_URL}/productos/${id}`, {
+    method: "DELETE",
+    headers: { ...(await getAuthHeaders()) },
+  });
   if (!res.ok) throw new Error("Error al eliminar producto");
 }
 
@@ -52,14 +64,168 @@ export async function getMarcas() {
   return res.json();
 }
 
+/**
+ * Inicia sesión contra el backend.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{ user: object, session: object, perfil: object|null }>}
+ */
+export async function loginApi(email, password) {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Error al iniciar sesión");
+  }
+  return res.json();
+}
+
 export async function uploadImagen(file) {
   const formData = new FormData();
   formData.append("imagen", file);
 
   const res = await fetch(`${API_URL}/upload`, {
     method: "POST",
+    headers: { ...(await getAuthHeaders()) },
     body: formData,
   });
   if (!res.ok) throw new Error("Error al subir imagen");
+  return res.json();
+}
+
+/**
+ * Crea el perfil del usuario autenticado.
+ * @param {object} perfil - { nombre, apellido, dni? }
+ * @param {string} token - JWT de acceso del usuario
+ * @returns {Promise<object>} Perfil creado
+ */
+export async function createPerfil(perfil, token) {
+  const res = await fetch(`${API_URL}/perfiles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(perfil),
+  });
+  if (!res.ok) throw new Error("Error al crear perfil");
+  return res.json();
+}
+
+/**
+ * Obtiene el perfil del usuario autenticado.
+ * @param {string} token - JWT de acceso del usuario
+ * @returns {Promise<object>} Datos del perfil
+ */
+export async function getPerfilMe(token) {
+  const res = await fetch(`${API_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al obtener perfil");
+  return res.json();
+}
+
+export async function getPerfiles() {
+  const res = await fetch(`${API_URL}/perfiles`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al obtener perfiles");
+  return res.json();
+}
+
+export async function getPerfilById(id) {
+  const res = await fetch(`${API_URL}/perfiles/${id}`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Perfil no encontrado");
+  return res.json();
+}
+
+export async function createCategoria(categoria) {
+  const res = await fetch(`${API_URL}/categorias`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify(categoria),
+  });
+  if (!res.ok) throw new Error("Error al crear categoria");
+  return res.json();
+}
+
+export async function updateCategoria(id, cambios) {
+  const res = await fetch(`${API_URL}/categorias/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify(cambios),
+  });
+  if (!res.ok) throw new Error("Error al actualizar categoria");
+  return res.json();
+}
+
+export async function deleteCategoria(id) {
+  const res = await fetch(`${API_URL}/categorias/${id}`, {
+    method: "DELETE",
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al eliminar categoria");
+}
+
+export async function createMarca(marca) {
+  const res = await fetch(`${API_URL}/marcas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify(marca),
+  });
+  if (!res.ok) throw new Error("Error al crear marca");
+  return res.json();
+}
+
+export async function updateMarca(id, cambios) {
+  const res = await fetch(`${API_URL}/marcas/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify(cambios),
+  });
+  if (!res.ok) throw new Error("Error al actualizar marca");
+  return res.json();
+}
+
+export async function deleteMarca(id) {
+  const res = await fetch(`${API_URL}/marcas/${id}`, {
+    method: "DELETE",
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al eliminar marca");
+}
+
+export async function getPedidos() {
+  const res = await fetch(`${API_URL}/pedidos`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al obtener pedidos");
+  return res.json();
+}
+
+export async function createPedido(pedido) {
+  const res = await fetch(`${API_URL}/pedidos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify(pedido),
+  });
+  if (!res.ok) throw new Error("Error al crear pedido");
+  return res.json();
+}
+
+export async function updatePedidoEstado(id, estado) {
+  const res = await fetch(`${API_URL}/pedidos/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify({ estado }),
+  });
+  if (!res.ok) throw new Error("Error al actualizar pedido");
   return res.json();
 }

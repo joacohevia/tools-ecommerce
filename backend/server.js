@@ -8,6 +8,7 @@ import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import rateLimit from "express-rate-limit";
 
 dotenv.config({ path: "../.env" });
 
@@ -23,8 +24,158 @@ const PORT = process.env.PORT || 3000;
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.VITE_FRONTEND_URL || "http://localhost:5173",
+}));
 app.use(express.json());
+
+/**
+ * Middleware de autenticación JWT.
+ * Verifica el token del header Authorization contra Supabase Auth.
+ * Si es válido, inyecta req.user con { id, email } y continúa.
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
+async function auth(req, res, next) {
+  try {
+    const header = req.headers.authorization;
+    if (!header || !header.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Token de acceso requerido" });
+    }
+    const token = header.split(" ")[1];
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      return res.status(401).json({ error: "Token inválido o expirado" });
+    }
+    req.user = user;
+    next();
+  } catch {
+    res.status(500).json({ error: "Error al verificar autenticación" });
+  }
+}
+
+/**
+ * Middleware de autorización — solo administradores.
+ * Requiere que auth() ya haya inyectado req.user.
+ * Busca el perfil del usuario y verifica que su rol sea 'admin'.
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
+async function adminOnly(req, res, next) {
+  try {
+    const { data: perfil, error } = await supabase
+      .from("perfiles")
+      .select("rol")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (error || !perfil || perfil.rol !== "admin") {
+      return res.status(403).json({ error: "Acceso denegado — solo administradores" });
+    }
+    next();
+  } catch {
+    res.status(500).json({ error: "Error al verificar rol de administrador" });
+  }
+}
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Demasiados intentos, intentá de nuevo en 15 minutos" },
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+
+/**
+ * POST /api/auth/login
+ * Autentica al usuario con email y contraseña contra Supabase Auth.
+ * Devuelve los datos de sesión (access_token, refresh_token, etc.)
+ * y el perfil del usuario si ya existe en la tabla perfiles.
+ *
+ * @body   {string} email    - Correo del usuario
+ * @body   {string} password - Contraseña del usuario
+ * @returns {object} 200 - { user, session, perfil }
+ * @returns {object} 400 - Campos requeridos faltantes
+ * @returns {object} 401 - Credenciales inválidas
+ * @returns {object} 500 - Error interno del servidor
+ */
+app.post("/api/auth/login", loginLimiter, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email y contraseña son requeridos" });
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      if (error.message?.includes("Invalid login")) {
+        return res.status(401).json({ error: "Credenciales inválidas" });
+      }
+      if (error.message?.includes("Email not confirmed")) {
+        return res.status(401).json({ error: "Debes confirmar tu correo antes de iniciar sesión" });
+      }
+      return res.status(401).json({ error: error.message });
+    }
+
+    if (!data.user || !data.session) {
+      return res.status(500).json({ error: "Error al iniciar sesión" });
+    }
+
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("*")
+      .eq("user_id", data.user.id)
+      .maybeSingle();
+
+    res.json({
+      user: data.user,
+      session: {
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_in: data.session.expires_in,
+      },
+      perfil,
+    });
+  } catch {
+    res.status(500).json({ error: "Error interno al iniciar sesión" });
+  }
+});
+
+/**
+ * GET /api/auth/me
+ * Devuelve el usuario autenticado y su perfil a partir del token JWT.
+ * Requiere token Bearer en el header Authorization.
+ *
+ * @returns {object} 200 - { user, perfil }
+ * @returns {object} 401 - Token inválido o ausente
+ * @returns {object} 500 - Error interno del servidor
+ */
+app.get("/api/auth/me", auth, async (req, res) => {
+  try {
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    res.json({ user: req.user, perfil: perfil || null });
+  } catch {
+    res.status(500).json({ error: "Error al obtener datos del usuario" });
+  }
+});
 
 // ============================================================
 // PRODUCTOS
@@ -68,7 +219,7 @@ app.get("/api/productos/:id", async (req, res) => {
   }
 });
 
-app.post("/api/productos", async (req, res) => {
+app.post("/api/productos", auth, adminOnly, async (req, res) => {
   try {
     const { nombre, descripcion, slug, precio, precio_oferta, stock, categoria_id, marca_id, destacado, mas_vendido, imagenes } = req.body;
 
@@ -89,30 +240,45 @@ app.post("/api/productos", async (req, res) => {
   }
 });
 
-app.put("/api/productos/:id", async (req, res) => {
+app.put("/api/productos/:id", auth, adminOnly, async (req, res) => {
   try {
+    const camposPermitidos = [
+      "nombre", "descripcion", "slug", "precio", "precio_oferta",
+      "stock", "categoria_id", "marca_id", "destacado", "mas_vendido", "imagenes",
+    ];
+
+    const updateData = {};
+    for (const key of camposPermitidos) {
+      if (key in req.body) updateData[key] = req.body[key];
+    }
+
     const { data, error } = await supabase
       .from("productos")
-      .update(req.body)
+      .update(updateData)
       .eq("id", req.params.id)
       .select()
       .single();
 
     if (error) return res.status(500).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: "Producto no encontrado" });
     res.json(data);
   } catch {
     res.status(500).json({ error: "Error al actualizar producto" });
   }
 });
 
-app.delete("/api/productos/:id", async (req, res) => {
+app.delete("/api/productos/:id", auth, adminOnly, async (req, res) => {
   try {
-    const { error } = await supabase
+    const { data: deleted, error } = await supabase
       .from("productos")
       .delete()
-      .eq("id", req.params.id);
+      .eq("id", req.params.id)
+      .select();
 
     if (error) return res.status(500).json({ error: error.message });
+    if (!deleted || deleted.length === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
     res.json({ message: "Producto eliminado" });
   } catch {
     res.status(500).json({ error: "Error al eliminar producto" });
@@ -124,31 +290,76 @@ app.delete("/api/productos/:id", async (req, res) => {
 // ============================================================
 
 app.get("/api/categorias", async (req, res) => {
-  // Evita que el navegador/proxy sirva una respuesta cacheada (304)
   res.set("Cache-Control", "no-store");
 
-  console.log("[GET /api/categorias] Request recibida");
-
   try {
-    const { data, error, status, statusText } = await supabase
+    const { data, error } = await supabase
       .from("categorias")
       .select("*")
       .order("nombre");
 
-    console.log("[GET /api/categorias] Supabase status:", status, statusText);
-
-    if (error) {
-      console.error("[GET /api/categorias] Error de Supabase:", error);
-      return res.status(500).json({ error: error.message });
-    }
-
-    console.log("[GET /api/categorias] Filas recibidas:", data?.length ?? 0);
-    console.log("[GET /api/categorias] Data:", JSON.stringify(data, null, 2));
-
+    if (error) return res.status(500).json({ error: error.message });
     res.json(data);
-  } catch (err) {
-    console.error("[GET /api/categorias] Excepción:", err);
+  } catch {
     res.status(500).json({ error: "Error al obtener categorias" });
+  }
+});
+
+app.post("/api/categorias", auth, adminOnly, async (req, res) => {
+  try {
+    const { nombre, slug } = req.body;
+    if (!nombre || !slug) {
+      return res.status(400).json({ error: "Faltan campos requeridos: nombre, slug" });
+    }
+    const { data, error } = await supabase
+      .from("categorias")
+      .insert({ nombre, slug })
+      .select()
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    res.status(201).json(data);
+  } catch {
+    res.status(500).json({ error: "Error al crear categoria" });
+  }
+});
+
+app.put("/api/categorias/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { nombre, slug } = req.body;
+    const updateData = {};
+    if (nombre) updateData.nombre = nombre;
+    if (slug) updateData.slug = slug;
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "Sin campos para actualizar" });
+    }
+    const { data, error } = await supabase
+      .from("categorias")
+      .update(updateData)
+      .eq("id", req.params.id)
+      .select()
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: "Categoria no encontrada" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al actualizar categoria" });
+  }
+});
+
+app.delete("/api/categorias/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { data: deleted, error } = await supabase
+      .from("categorias")
+      .delete()
+      .eq("id", req.params.id)
+      .select();
+    if (error) return res.status(500).json({ error: error.message });
+    if (!deleted || deleted.length === 0) {
+      return res.status(404).json({ error: "Categoria no encontrada" });
+    }
+    res.json({ message: "Categoria eliminada" });
+  } catch {
+    res.status(500).json({ error: "Error al eliminar categoria" });
   }
 });
 
@@ -170,11 +381,283 @@ app.get("/api/marcas", async (req, res) => {
   }
 });
 
+app.post("/api/marcas", auth, adminOnly, async (req, res) => {
+  try {
+    const { nombre } = req.body;
+    if (!nombre) {
+      return res.status(400).json({ error: "Falta campo requerido: nombre" });
+    }
+    const { data, error } = await supabase
+      .from("marcas")
+      .insert({ nombre })
+      .select()
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    res.status(201).json(data);
+  } catch {
+    res.status(500).json({ error: "Error al crear marca" });
+  }
+});
+
+app.put("/api/marcas/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { nombre } = req.body;
+    if (!nombre) {
+      return res.status(400).json({ error: "Falta campo requerido: nombre" });
+    }
+    const { data, error } = await supabase
+      .from("marcas")
+      .update({ nombre })
+      .eq("id", req.params.id)
+      .select()
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: "Marca no encontrada" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al actualizar marca" });
+  }
+});
+
+app.delete("/api/marcas/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { data: deleted, error } = await supabase
+      .from("marcas")
+      .delete()
+      .eq("id", req.params.id)
+      .select();
+    if (error) return res.status(500).json({ error: error.message });
+    if (!deleted || deleted.length === 0) {
+      return res.status(404).json({ error: "Marca no encontrada" });
+    }
+    res.json({ message: "Marca eliminada" });
+  } catch {
+    res.status(500).json({ error: "Error al eliminar marca" });
+  }
+});
+
+// ============================================================
+// PERFILES
+// ============================================================
+
+app.get("/api/perfiles", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("perfiles")
+      .select("*")
+      .order("id");
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener perfiles" });
+  }
+});
+
+app.get("/api/perfiles/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("perfiles")
+      .select("*")
+      .eq("id", req.params.id)
+      .single();
+
+    if (error) return res.status(404).json({ error: "Perfil no encontrado" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener perfil" });
+  }
+});
+
+/**
+ * POST /api/perfiles
+ * Crea el perfil del usuario autenticado.
+ * Requiere token JWT en el header Authorization.
+ *
+ * @body {string} nombre - Nombre del usuario
+ * @body {string} apellido - Apellido del usuario
+ * @body {string} [dni] - DNI del usuario (opcional)
+ * @returns {object} 201 - Perfil creado
+ * @returns {object} 400 - Campos requeridos faltantes
+ * @returns {object} 401 - Token inválido o ausente
+ * @returns {object} 409 - El usuario ya tiene un perfil
+ */
+app.post("/api/perfiles", auth, async (req, res) => {
+  try {
+    const { nombre, apellido, dni } = req.body;
+
+    if (!nombre || !apellido) {
+      return res.status(400).json({ error: "Faltan campos requeridos: nombre, apellido" });
+    }
+
+    const existe = await supabase
+      .from("perfiles")
+      .select("id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (existe.data) {
+      return res.status(409).json({ error: "El usuario ya tiene un perfil" });
+    }
+
+    const { data, error } = await supabase
+      .from("perfiles")
+      .insert({
+        user_id: req.user.id,
+        nombre,
+        apellido,
+        dni: dni || null,
+        rol: "cliente",
+      })
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.status(201).json(data);
+  } catch {
+    res.status(500).json({ error: "Error al crear perfil" });
+  }
+});
+
+// ============================================================
+// PEDIDOS
+// ============================================================
+
+app.get("/api/pedidos", auth, async (req, res) => {
+  try {
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("id, rol")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (!perfil) return res.status(404).json({ error: "Perfil no encontrado" });
+
+    let query = supabase
+      .from("pedidos")
+      .select("*, pedido_items(*, productos(nombre, slug, imagenes))")
+      .order("created_at", { ascending: false });
+
+    if (perfil.rol !== "admin") {
+      query = query.eq("perfil_id", perfil.id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener pedidos" });
+  }
+});
+
+app.post("/api/pedidos", auth, async (req, res) => {
+  try {
+    const { items, nota } = req.body;
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: "El pedido debe tener al menos un item" });
+    }
+
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (!perfil) return res.status(404).json({ error: "Perfil no encontrado" });
+
+    let total = 0;
+    const itemsConPrecio = [];
+
+    for (const item of items) {
+      const { data: producto } = await supabase
+        .from("productos")
+        .select("precio, precio_oferta")
+        .eq("id", item.producto_id)
+        .single();
+
+      if (!producto) {
+        return res.status(400).json({ error: `Producto ${item.producto_id} no encontrado` });
+      }
+
+      const precio = producto.precio_oferta || producto.precio;
+      const subtotal = precio * item.cantidad;
+      total += subtotal;
+      itemsConPrecio.push({
+        producto_id: item.producto_id,
+        cantidad: item.cantidad,
+        precio_unitario: precio,
+      });
+    }
+
+    const { data: pedido, error: pedidoError } = await supabase
+      .from("pedidos")
+      .insert({
+        perfil_id: perfil.id,
+        estado: "pendiente",
+        total,
+        nota: nota || null,
+      })
+      .select()
+      .single();
+
+    if (pedidoError) return res.status(500).json({ error: pedidoError.message });
+
+    const itemsParaInsertar = itemsConPrecio.map((item) => ({
+      pedido_id: pedido.id,
+      ...item,
+    }));
+
+    const { error: itemsError } = await supabase
+      .from("pedido_items")
+      .insert(itemsParaInsertar);
+
+    if (itemsError) return res.status(500).json({ error: itemsError.message });
+
+    const { data: pedidoCompleto } = await supabase
+      .from("pedidos")
+      .select("*, pedido_items(*, productos(nombre, slug, imagenes))")
+      .eq("id", pedido.id)
+      .single();
+
+    res.status(201).json(pedidoCompleto);
+  } catch {
+    res.status(500).json({ error: "Error al crear pedido" });
+  }
+});
+
+app.put("/api/pedidos/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { estado } = req.body;
+    const estadosValidos = ["pendiente", "confirmado", "enviado", "entregado", "cancelado"];
+
+    if (!estado || !estadosValidos.includes(estado)) {
+      return res.status(400).json({
+        error: `Estado inválido. Permitidos: ${estadosValidos.join(", ")}`,
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("pedidos")
+      .update({ estado })
+      .eq("id", req.params.id)
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: "Pedido no encontrado" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al actualizar pedido" });
+  }
+});
+
 // ============================================================
 // UPLOAD DE IMAGENES
 // ============================================================
 
-app.post("/api/upload", upload.single("imagen"), async (req, res) => {
+app.post("/api/upload", auth, adminOnly, upload.single("imagen"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No se recibio ninguna imagen" });
@@ -224,6 +707,12 @@ app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+const isTest = process.env.NODE_ENV === 'test';
+
+if (!isTest) {
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  });
+}
+
+export default app;

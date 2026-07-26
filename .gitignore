@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+baseHerramientas.sql
+comand.md
+README.md

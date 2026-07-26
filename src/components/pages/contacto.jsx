@@ -129,12 +129,8 @@ export default function Contacto() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      {/**
-       * [MODIFICACIÓN 1] Breadcrumb
-       * Se alineó el patrón visual con el de productos.jsx usando las clases
-       * dark-muted/dark-text del tema oscuro de la app.
-       */}
-      <nav className="text-sm text-dark-muted mb-8" aria-label="Breadcrumb">
+      {/* Breadcrumb */}
+      <nav className="text-sm text-dark-muted mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">
           <li>
             <Link to="/home" className="hover:text-dark-text transition-colors">

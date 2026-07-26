@@ -1,51 +1,52 @@
 import { useEffect, useState } from "react";
-import Card from "../card";
 import { getProductos } from "../../http";
-
-const visible = 3;
+import Card from "../card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
 
 const CarrouselOfertas = () => {
   const [ofertas, setOfertas] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getProductos({ destacado: true }).then(setOfertas).catch(console.error);
+    getProductos({ destacado: true })
+      .then(setOfertas)
+      .catch((err) => setError(err.message))
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const prev = () => setIndex((i) => (i <= 0 ? ofertas.length - visible : i - 1));
-  const next = () => setIndex((i) => (i >= ofertas.length - visible ? 0 : i + 1));
-
-  if (!ofertas.length) return null;
+  if (isLoading) return null;
+  if (error || !ofertas.length) return null;
 
   return (
-    <section className="my-8 relative">
-      <h2 className="text-2xl font-semibold mb-4">Ofertas</h2>
-      <div className="overflow-hidden">
-        <div
-          className="flex transition-transform duration-300"
-          style={{ transform: `translateX(-${index * 100}%)` }}
-        >
+    <section className="my-8">
+      <h2 className="text-2xl font-semibold mb-4 font-title">
+        Ofertas
+      </h2>
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+          slidesToScroll: 3,
+        }}
+        className="px-10"
+      >
+        <CarouselContent className="gap-2 py-1">
           {ofertas.map((p) => (
-            <div key={p.id} className="mr-4 shrink-0">
-              <Card producto={p} />
-            </div>
+            <CarouselItem key={p.id}>
+              <Card producto={p} onDelete={(id) => setOfertas((prev) => prev.filter((x) => x.id !== id))} />
+            </CarouselItem>
           ))}
-        </div>
-      </div>
-      <button
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 cursor-pointer"
-        onClick={prev}
-        aria-label="Anterior"
-      >
-        ‹
-      </button>
-      <button
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 cursor-pointer"
-        onClick={next}
-        aria-label="Siguiente"
-      >
-        ›
-      </button>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </section>
   );
 };

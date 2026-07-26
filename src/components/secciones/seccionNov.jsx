@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import heroImg from "../../../public/herramientas-fondo-2.jpg";
 import { getProductos } from "../../http";
+import Card from "../card";
+
 
 const SeccionNov = () => {
   const [novedades, setNovedades] = useState([]);
@@ -11,22 +14,24 @@ const SeccionNov = () => {
   if (!novedades.length) return null;
 
   return (
-    <section className="my-8">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Novedades</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {novedades.map((nov) => (
-          <div key={nov.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
-            <img
-              src={nov.imagenes?.[0] || "https://via.placeholder.com/300x200"}
-              alt={nov.nombre}
-              className="w-full h-48 object-cover"
+    <section className="relative overflow-hidden my-8">
+      <div
+        className="absolute inset-0 bg-cover bg-center blur-[3px] opacity-30"
+        style={{ backgroundImage: `url(${heroImg})` }}
+      />
+      <div className="relative z-10 py-8">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-dark-text">
+          Novedades
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 justify-items-center px-4">
+          {novedades.map((nov) => (
+            <Card
+              key={nov.id}
+              producto={nov}
+              onDelete={(id) => setNovedades((prev) => prev.filter((p) => p.id !== id))}
             />
-            <div className="p-4">
-              <h3 className="text-lg font-medium text-gray-800">{nov.nombre}</h3>
-              <p className="text-sm text-gray-600 mt-2">{nov.descripcion}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

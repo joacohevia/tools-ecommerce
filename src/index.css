@@ -84,3 +84,25 @@
     border-radius: 4px;
   }
 }
+
+@layer utilities {
+  /**
+   * Animación slide-in para los toasts (notificaciones emergentes).
+   * Entra desde abajo (translateY(100%)) mientras sube opacidad de 0 a 1,
+   * con duración de 300ms y easing ease-out.
+   */
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

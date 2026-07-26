@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getCategorias, getMarcas, getProductos } from '../../http';
 import Card from '../card';
 import Filtrado from '../filtrado';
+import Footer from '../footer';
 
 const ORDEN_OPCIONES = [
   { value: 'mas_vendido', label: 'Más vendidos' },
@@ -213,14 +214,15 @@ export default function Productos() {
               <p className="text-dark-muted text-sm">Probá ajustando los filtros</p>
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(245px,1fr))] gap-4 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 justify-items-center">
               {productosFiltrados.map((producto) => (
-                <Card key={producto.id} producto={producto} />
+                <Card key={producto.id} producto={producto} onDelete={(id) => setProductos((prev) => prev.filter((p) => p.id !== id))} />
               ))}
             </div>
           )}
         </div>
       </div>
+    <Footer></Footer>
     </main>
   );
 }

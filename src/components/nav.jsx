@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import fotoLogo from '../../public/Logo.jpg';
+import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
 import { getCategorias } from '../http';
 import Busq from './busq';
@@ -23,6 +24,8 @@ const Nav = () => {
     totalItems,
     totalPrecio,
   } = useCarrito();
+
+  const { user, perfil, logout } = useAuth();
 
   useEffect(() => {
     getCategorias().then(setCategorias).catch(console.error);
@@ -49,7 +52,7 @@ const Nav = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="flex items-center justify-between py-1 space-x-10">
-          <Link to="/" className="flex-shrink-0">
+          <Link to="/home" className="flex-shrink-0">
             <img src={fotoLogo} alt="Logo" className="h-20 w-auto object-contain" />
           </Link>
 
@@ -67,31 +70,50 @@ const Nav = () => {
               </button>
 
               {menuUsuarioAbierto && (
-                <ul className="absolute right-0 mt-2 w-44 bg-dark-blue border border-white/20 rounded-md shadow-lg z-50">
-                  <li>
-                    <button
-                      onClick={() => { navigate('/login'); setMenuUsuarioAbierto(false); }}
-                      className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-blue-400 transition-colors cursor-pointer"
-                    >
-                      Soy admin
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => { navigate('/login'); setMenuUsuarioAbierto(false); }}
-                      className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-blue-400 transition-colors cursor-pointer"
-                    >
-                      Soy cliente
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => { navigate('/registro'); setMenuUsuarioAbierto(false); }}
-                      className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-blue-400 transition-colors cursor-pointer"
-                    >
-                      Quiero registrarme
-                    </button>
-                  </li>
+                <ul className="absolute right-0 mt-2 w-44 bg-black border border-white/20 rounded-md shadow-lg z-50">
+                  {user ? (
+                    <>
+                      <li className="px-4 py-2 text-dark-text text-sm border-b border-white/10 truncate">
+                        {perfil?.nombre
+                          ? `Hola, ${perfil.nombre}`
+                          : user.email}
+                      </li>
+                      {perfil?.rol === 'admin' && (
+                        <li>
+                          <span className="block w-full text-left px-4 py-2 text-dark-muted text-xs">
+                            Administrador
+                          </span>
+                        </li>
+                      )}
+                      <li>
+                        <button
+                          onClick={() => { logout(); setMenuUsuarioAbierto(false); }}
+                          className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-red-400 transition-colors cursor-pointer"
+                        >
+                          Cerrar sesión
+                        </button>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <button
+                          onClick={() => { navigate('/login'); setMenuUsuarioAbierto(false); }}
+                          className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-blue-400 transition-colors cursor-pointer"
+                        >
+                          Iniciar sesión
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => { navigate('/registro'); setMenuUsuarioAbierto(false); }}
+                          className="block w-full text-left px-4 py-2 text-dark-text hover:bg-white/10 hover:text-blue-400 transition-colors cursor-pointer"
+                        >
+                          Quiero registrarme
+                        </button>
+                      </li>
+                    </>
+                  )}
                 </ul>
               )}
             </div>
@@ -112,7 +134,7 @@ const Nav = () => {
               </button>
 
               {carritoAbierto && (
-                <div className="absolute right-0 mt-2 w-80 bg-dark-blue border border-white/20 rounded-md shadow-lg z-50 p-4">
+                <div className="absolute right-0 mt-2 w-80 bg-black border border-white/20 rounded-md shadow-lg z-50 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-dark-text font-semibold text-sm">Tu Carrito</h3>
                     <button
@@ -261,7 +283,7 @@ const Nav = () => {
 
             <li><Link to="/productos" className="text-dark-text hover:text-blue-400 transition-colors font-body">Producto</Link></li>
             <li><Link to="/contacto" className="text-dark-text hover:text-blue-400 transition-colors font-body">Contacto</Link></li>
-            <li><Link to="/" className="text-dark-text hover:text-blue-400 transition-colors font-body">Quienes Somos</Link></li>
+            {/*<li><Link to="/" className="text-dark-text hover:text-blue-400 transition-colors font-body">Quienes Somos</Link></li> */}
           </ul>
         </nav>
 
