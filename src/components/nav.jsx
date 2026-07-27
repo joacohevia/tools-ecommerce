@@ -283,6 +283,9 @@ const Nav = () => {
 
             <li><Link to="/productos" className="text-dark-text hover:text-blue-400 transition-colors font-body">Producto</Link></li>
             <li><Link to="/contacto" className="text-dark-text hover:text-blue-400 transition-colors font-body">Contacto</Link></li>
+            {perfil?.rol === 'admin' && (
+              <li><Link to="/admin" className="text-dark-text hover:text-blue-400 transition-colors font-body">Admin</Link></li>
+            )}
             {/*<li><Link to="/" className="text-dark-text hover:text-blue-400 transition-colors font-body">Quienes Somos</Link></li> */}
           </ul>
         </nav>

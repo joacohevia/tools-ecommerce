@@ -45,7 +45,7 @@ function TrashIcon() {
  * @param {function} [props.onDelete] - Callback opcional tras eliminar, recibe (id) para refrescar el padre
  * @returns {JSX.Element}
  */
-const Card = ({ producto, onDelete }) => {
+const Card = ({ producto, onDelete, onEdit }) => {
   const { agregarAlCarrito } = useCarrito();
   const { perfil } = useAuth();
   const { confirm } = useConfirm();
@@ -57,7 +57,6 @@ const Card = ({ producto, onDelete }) => {
   const precioRegular = Number(producto.precio) || 0;
   const precioOferta = producto.precio_oferta ? Number(producto.precio_oferta) : null;
   const precioEfectivo = precioOferta || precioRegular;
-  const cuotas = { cuotas: 6, monto: Math.round(precioEfectivo / 6) };
   const marcaNombre = producto.marcas?.nombre || '';
 
   const productoParaCarrito = {
@@ -89,80 +88,85 @@ const Card = ({ producto, onDelete }) => {
   };
 
   return (
-    <Link
-      to={`/producto/${producto.id}`}
-      className="relative w-[245px] h-[333px] bg-dark-blue border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col"
-    >
-      {isAdmin && (
-        <div
-          className="absolute top-2 right-2 z-10 flex gap-1.5"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span
-            className="flex items-center justify-center w-7 h-7 rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:text-white hover:bg-blue-600 hover:border-blue-500 transition-colors cursor-pointer"
-            title="Editar producto"
-          >
-            <PencilIcon />
-          </span>
-          <span
-            onClick={handleDelete}
-            className="flex items-center justify-center w-7 h-7 rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:text-red-400 hover:bg-red-500/20 hover:border-red-500 transition-colors cursor-pointer"
-            title="Eliminar producto"
-          >
-            <TrashIcon />
-          </span>
-        </div>
-      )}
-
-      <div className="h-[60%] w-full bg-white/5 flex items-center justify-center p-3">
-        <img
-          src={imagen}
-          alt={nombre}
-          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-          loading="lazy"
-        />
-      </div>
-
-      <div className="h-[40%] w-full p-3 flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <h3 className="text-dark-text font-body text-sm font-medium leading-tight line-clamp-2 flex-1">
-            {nombre}
-          </h3>
-        </div>
-
-        <p className="text-dark-muted text-xs">{marcaNombre}</p>
-
-        <div className="flex flex-col gap-1">
-          {precioOferta ? (
-            <p className="text-dark-muted text-xs line-through">
-              ${precioRegular.toLocaleString('es-AR')}
-            </p>
-          ) : (
-            <p className="text-dark-muted text-xs">&nbsp;</p>
-          )}
-          <p className="text-blue-400 font-semibold text-sm">
-            ${precioEfectivo.toLocaleString('es-AR')}
-            <span className="text-dark-muted text-xs font-normal ml-1">efectivo</span>
-          </p>
-          <p className="text-dark-text text-xs">
-            {cuotas.cuotas}x de ${cuotas.monto.toLocaleString('es-AR')}
-            <span className="text-dark-muted">/mes</span>
-          </p>
-        </div>
-
+  <Link
+    to={`/producto/${producto.id}`}
+    className="relative w-[260px] h-[380px] bg-dark-blue border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col"
+  >
+    {isAdmin && (
+      <div
+        className="absolute top-3 right-3 z-20 flex gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={(e) => {
             e.preventDefault();
-            agregarAlCarrito(productoParaCarrito);
+            e.stopPropagation();
+            onEdit?.(producto);
           }}
-          className="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium py-1.5 rounded-lg transition-colors duration-200 cursor-pointer mt-auto"
-          aria-label={`Agregar ${nombre} al carrito`}
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:bg-blue-600 hover:text-white transition-colors"
+          title="Editar producto"
         >
-          Agregar
+          <PencilIcon />
+        </button>
+
+        <button
+          onClick={handleDelete}
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:bg-red-600 hover:text-white transition-colors"
+          title="Eliminar producto"
+        >
+          <TrashIcon />
         </button>
       </div>
-    </Link>
-  );
+    )}
+
+    {/* Imagen */}
+    <div className="h-1/2 w-full bg-white/5 flex items-center justify-center p-4">
+      <img
+        src={imagen}
+        alt={nombre}
+        className="w-40 h-40 object-contain transition-transform duration-300 hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+    {/* Información */}
+    <div className="flex flex-1 flex-col px-2 py-2 gap-0.5">
+
+      <h3
+        className="text-dark-text text-sm font-semibold leading-snug truncate"
+        title={nombre}
+      >
+        {nombre}
+      </h3>
+      <p className="text-xs text-dark-muted">
+        Marca: <span className="text-white">{marcaNombre}</span>
+      </p>
+
+      <div className="space-y-1">
+
+        {precioOferta && (
+          <p className="text-xs text-dark-muted line-through">
+            ${precioRegular.toLocaleString("es-AR")}
+          </p>
+        )}
+
+        <p className="text-lg font-bold text-blue-400">
+          ${precioEfectivo.toLocaleString("es-AR")}
+        </p>
+        
+      </div>
+
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          agregarAlCarrito(productoParaCarrito);
+        }}
+        className="mt-auto w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+      >
+        Agregar al carrito
+      </button>
+    </div>
+  </Link>
+);
 };
 
 export default Card;

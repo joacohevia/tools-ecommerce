@@ -2,13 +2,16 @@ import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import rateLimit from "express-rate-limit";
+import { load } from "js-yaml";
 import multer from "multer";
 import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
-import rateLimit from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config({ path: "../.env" });
 
@@ -18,7 +21,6 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,6 +30,11 @@ app.use(cors({
   origin: process.env.VITE_FRONTEND_URL || "http://localhost:5173",
 }));
 app.use(express.json());
+
+// ── Swagger UI ─────────────────────────────────────────────
+const openapiSpec = load(readFileSync(path.join(__dirname, "openapi.yml"), "utf8"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
+console.log("Swagger UI disponible en http://localhost:" + PORT + "/api-docs");
 
 /**
  * Middleware de autenticación JWT.
@@ -348,6 +355,16 @@ app.put("/api/categorias/:id", auth, adminOnly, async (req, res) => {
 
 app.delete("/api/categorias/:id", auth, adminOnly, async (req, res) => {
   try {
+    const { count, error: countError } = await supabase
+      .from("productos")
+      .select("*", { count: "exact", head: true })
+      .eq("categoria_id", req.params.id);
+
+    if (countError) return res.status(500).json({ error: countError.message });
+    if (count > 0) {
+      return res.status(409).json({ error: "No se puede eliminar la categoria porque tiene productos asociados" });
+    }
+
     const { data: deleted, error } = await supabase
       .from("categorias")
       .delete()
@@ -421,6 +438,16 @@ app.put("/api/marcas/:id", auth, adminOnly, async (req, res) => {
 
 app.delete("/api/marcas/:id", auth, adminOnly, async (req, res) => {
   try {
+    const { count, error: countError } = await supabase
+      .from("productos")
+      .select("*", { count: "exact", head: true })
+      .eq("marca_id", req.params.id);
+
+    if (countError) return res.status(500).json({ error: countError.message });
+    if (count > 0) {
+      return res.status(409).json({ error: "No se puede eliminar la marca porque tiene productos asociados" });
+    }
+
     const { data: deleted, error } = await supabase
       .from("marcas")
       .delete()
@@ -692,6 +719,122 @@ app.post("/api/upload", auth, adminOnly, upload.single("imagen"), async (req, re
     res.json({ url: publicUrl });
   } catch {
     res.status(500).json({ error: "Error al subir imagen" });
+  }
+});
+
+// ============================================================
+// ADMIN — USUARIOS Y PEDIDOS
+// ============================================================
+
+app.get("/api/admin/usuarios", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("perfiles")
+      .select("*")
+      .order("id");
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener usuarios" });
+  }
+});
+
+app.put("/api/perfiles/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { rol } = req.body;
+    if (!rol || !["admin", "cliente"].includes(rol)) {
+      return res.status(400).json({ error: "Rol invalido. Permitidos: admin, cliente" });
+    }
+
+    const { data: adminPerfil } = await supabase
+      .from("perfiles")
+      .select("id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (adminPerfil && String(adminPerfil.id) === req.params.id) {
+      return res.status(403).json({ error: "No puedes cambiar tu propio rol" });
+    }
+
+    const { data, error } = await supabase
+      .from("perfiles")
+      .update({ rol })
+      .eq("id", req.params.id)
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: "Perfil no encontrado" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al actualizar perfil" });
+  }
+});
+
+app.delete("/api/perfiles/:id", auth, adminOnly, async (req, res) => {
+  try {
+    const { data: adminPerfil } = await supabase
+      .from("perfiles")
+      .select("id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (adminPerfil && String(adminPerfil.id) === req.params.id) {
+      return res.status(403).json({ error: "No puedes eliminar tu propia cuenta" });
+    }
+
+    const { data: deleted, error } = await supabase
+      .from("perfiles")
+      .delete()
+      .eq("id", req.params.id)
+      .select();
+
+    if (error) return res.status(500).json({ error: error.message });
+    if (!deleted || deleted.length === 0) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+    res.json({ message: "Perfil eliminado" });
+  } catch {
+    res.status(500).json({ error: "Error al eliminar perfil" });
+  }
+});
+
+app.get("/api/admin/usuarios/:perfilId/pedidos", auth, adminOnly, async (req, res) => {
+  try {
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("id")
+      .eq("id", req.params.perfilId)
+      .maybeSingle();
+
+    if (!perfil) return res.status(404).json({ error: "Perfil no encontrado" });
+
+    const { data, error } = await supabase
+      .from("pedidos")
+      .select("*, pedido_items(*, productos(nombre, slug, imagenes))")
+      .eq("perfil_id", req.params.perfilId)
+      .order("created_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener pedidos del usuario" });
+  }
+});
+
+app.get("/api/admin/pedidos/:pedidoId/items", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("pedidos")
+      .select("*, pedido_items(*, productos(nombre, slug, imagenes))")
+      .eq("id", req.params.pedidoId)
+      .single();
+
+    if (error || !data) return res.status(404).json({ error: "Pedido no encontrado" });
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: "Error al obtener items del pedido" });
   }
 });
 
