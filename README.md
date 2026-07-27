@@ -1,11 +1,17 @@
 ## pasos a seguir:
 porque cuando me logueaba no podia ver los productos? Por permisos de supabase
 
+probar todos los enpoint del backend especialmente los de admin
+sacar el scrol de atras en los form
+poder subir mas de una foto
+
+
+
 animacion al agregar al carrito
-hacer rama adicionar para cada nueva feacture, y hacer una nueva para el Spec
-probar test
-vista de admin
-login y formularios para agregar productos y categorias
+ojo en password
+el relleno de campos debe permanecer blanco al llenar
+el registro debe tener mas margen
+acomodar rutas del breadcrum
 desarrollo mobile
 agregar fotos y productos reales /
 patron para el bancken  

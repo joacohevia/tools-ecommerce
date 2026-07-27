@@ -1,0 +1,1134 @@
+openapi: "3.0.3"
+info:
+  title: Herramientas Tandil API
+  description: API REST para el e-commerce de ferretería. Prueba endpoints con Swagger UI.
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT obtenido de POST /api/auth/login (campo session.access_token)
+
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        session:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expires_in:
+              type: integer
+        perfil:
+          $ref: "#/components/schemas/Perfil"
+
+    MeResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        perfil:
+          $ref: "#/components/schemas/Perfil"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        role:
+          type: string
+
+    Perfil:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          type: string
+          nullable: true
+        rol:
+          type: string
+          enum: [admin, cliente]
+        created_at:
+          type: string
+          format: date-time
+
+    Producto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        descripcion:
+          type: string
+          nullable: true
+        slug:
+          type: string
+        precio:
+          type: number
+        precio_oferta:
+          type: number
+          nullable: true
+        stock:
+          type: integer
+        categoria_id:
+          type: integer
+        marca_id:
+          type: integer
+        destacado:
+          type: boolean
+        mas_vendido:
+          type: boolean
+        imagenes:
+          type: array
+          items:
+            type: string
+          description: URLs de imágenes en Supabase Storage
+        categorias:
+          type: object
+          nullable: true
+          properties:
+            nombre:
+              type: string
+            slug:
+              type: string
+        marcas:
+          type: object
+          nullable: true
+          properties:
+            nombre:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ProductoInput:
+      type: object
+      required: [nombre, slug, precio, categoria_id, marca_id]
+      properties:
+        nombre:
+          type: string
+        descripcion:
+          type: string
+        slug:
+          type: string
+        precio:
+          type: number
+        precio_oferta:
+          type: number
+        stock:
+          type: integer
+        categoria_id:
+          type: integer
+        marca_id:
+          type: integer
+        destacado:
+          type: boolean
+        mas_vendido:
+          type: boolean
+        imagenes:
+          type: array
+          items:
+            type: string
+
+    Categoria:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        slug:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    CategoriaInput:
+      type: object
+      required: [nombre, slug]
+      properties:
+        nombre:
+          type: string
+        slug:
+          type: string
+
+    Marca:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    MarcaInput:
+      type: object
+      required: [nombre]
+      properties:
+        nombre:
+          type: string
+
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+        perfil_id:
+          type: integer
+        estado:
+          type: string
+          enum: [pendiente, confirmado, enviado, entregado, cancelado]
+        total:
+          type: number
+        nota:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        pedido_items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PedidoItem"
+
+    PedidoItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        pedido_id:
+          type: integer
+        producto_id:
+          type: integer
+        cantidad:
+          type: integer
+        precio_unitario:
+          type: number
+        subtotal:
+          type: number
+        productos:
+          type: object
+          nullable: true
+          properties:
+            nombre:
+              type: string
+            slug:
+              type: string
+            imagenes:
+              type: array
+              items:
+                type: string
+
+    PedidoInput:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [producto_id, cantidad]
+            properties:
+              producto_id:
+                type: integer
+              cantidad:
+                type: integer
+        nota:
+          type: string
+
+    PedidoEstadoInput:
+      type: object
+      required: [estado]
+      properties:
+        estado:
+          type: string
+          enum: [pendiente, confirmado, enviado, entregado, cancelado]
+
+    UploadResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL pública de la imagen subida
+
+    PerfilInput:
+      type: object
+      required: [nombre, apellido]
+      properties:
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          type: string
+
+    PerfilRolInput:
+      type: object
+      required: [rol]
+      properties:
+        rol:
+          type: string
+          enum: [admin, cliente]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+
+tags:
+  - name: Auth
+    description: Autenticación y sesión
+  - name: Productos
+    description: CRUD de productos
+  - name: Categorías
+    description: CRUD de categorías
+  - name: Marcas
+    description: CRUD de marcas
+  - name: Perfiles
+    description: Gestión de perfiles de usuario
+  - name: Pedidos
+    description: Gestión de pedidos
+  - name: Upload
+    description: Subida de imágenes
+  - name: Admin
+    description: Endpoints exclusivos de administrador
+  - name: Root
+    description: Health check
+
+paths:
+  # ── Auth ──────────────────────────────────────────────────
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Iniciar sesión
+      description: Autentica al usuario contra Supabase Auth y devuelve JWT + perfil.
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Faltan email o password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Credenciales inválidas o email sin confirmar
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Rate limit excedido (10 intentos cada 15 min)
+        "500":
+          description: Error interno
+
+  /api/auth/me:
+    get:
+      tags: [Auth]
+      summary: Obtener perfil del usuario autenticado
+      description: Devuelve el user y perfil asociado al token JWT enviado.
+      operationId: me
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Datos del usuario y perfil
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+        "401":
+          description: Token ausente o inválido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ── Productos ─────────────────────────────────────────────
+  /api/productos:
+    get:
+      tags: [Productos]
+      summary: Listar productos
+      description: Obtiene todos los productos. Soporta filtros opcionales por query params.
+      operationId: listProductos
+      parameters:
+        - name: categoria
+          in: query
+          schema:
+            type: string
+          description: Slug de categoría para filtrar
+        - name: marca
+          in: query
+          schema:
+            type: string
+          description: Nombre de marca para filtrar
+        - name: destacado
+          in: query
+          schema:
+            type: boolean
+          description: Filtrar solo destacados
+        - name: mas_vendido
+          in: query
+          schema:
+            type: boolean
+          description: Filtrar solo más vendidos
+      responses:
+        "200":
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Producto"
+
+    post:
+      tags: [Productos]
+      summary: Crear producto
+      description: Crea un nuevo producto. Requiere autenticación y rol admin.
+      operationId: createProducto
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductoInput"
+      responses:
+        "201":
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "400":
+          description: Faltan campos requeridos
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "500":
+          description: Error interno
+
+  /api/productos/{id}:
+    get:
+      tags: [Productos]
+      summary: Obtener producto por ID
+      operationId: getProducto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "404":
+          description: Producto no encontrado
+
+    put:
+      tags: [Productos]
+      summary: Actualizar producto
+      description: Actualiza campos de un producto. Requiere admin.
+      operationId: updateProducto
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductoInput"
+      responses:
+        "200":
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "400":
+          description: Sin campos para actualizar
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Producto no encontrado
+
+    delete:
+      tags: [Productos]
+      summary: Eliminar producto
+      description: Elimina un producto. Requiere admin.
+      operationId: deleteProducto
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Producto eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Producto no encontrado
+
+  # ── Categorías ────────────────────────────────────────────
+  /api/categorias:
+    get:
+      tags: [Categorías]
+      summary: Listar categorías
+      operationId: listCategorias
+      responses:
+        "200":
+          description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Categoria"
+
+    post:
+      tags: [Categorías]
+      summary: Crear categoría
+      description: Requiere admin.
+      operationId: createCategoria
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoriaInput"
+      responses:
+        "201":
+          description: Categoría creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categoria"
+        "400":
+          description: Faltan campos requeridos
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+
+  /api/categorias/{id}:
+    put:
+      tags: [Categorías]
+      summary: Actualizar categoría
+      description: Requiere admin.
+      operationId: updateCategoria
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoriaInput"
+      responses:
+        "200":
+          description: Categoría actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categoria"
+        "400":
+          description: Sin campos para actualizar
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Categoría no encontrada
+
+    delete:
+      tags: [Categorías]
+      summary: Eliminar categoría
+      description: Requiere admin. No se puede eliminar si tiene productos asociados.
+      operationId: deleteCategoria
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Categoría eliminada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Categoría no encontrada
+        "409":
+          description: Tiene productos asociados
+
+  # ── Marcas ────────────────────────────────────────────────
+  /api/marcas:
+    get:
+      tags: [Marcas]
+      summary: Listar marcas
+      operationId: listMarcas
+      responses:
+        "200":
+          description: Lista de marcas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Marca"
+
+    post:
+      tags: [Marcas]
+      summary: Crear marca
+      description: Requiere admin.
+      operationId: createMarca
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarcaInput"
+      responses:
+        "201":
+          description: Marca creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Marca"
+        "400":
+          description: Falta campo requerido
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+
+  /api/marcas/{id}:
+    put:
+      tags: [Marcas]
+      summary: Actualizar marca
+      description: Requiere admin.
+      operationId: updateMarca
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarcaInput"
+      responses:
+        "200":
+          description: Marca actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Marca"
+        "400":
+          description: Falta campo requerido
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Marca no encontrada
+
+    delete:
+      tags: [Marcas]
+      summary: Eliminar marca
+      description: Requiere admin. No se puede eliminar si tiene productos asociados.
+      operationId: deleteMarca
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Marca eliminada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Marca no encontrada
+        "409":
+          description: Tiene productos asociados
+
+  # ── Perfiles ──────────────────────────────────────────────
+  /api/perfiles:
+    get:
+      tags: [Perfiles]
+      summary: Listar todos los perfiles
+      description: Requiere admin.
+      operationId: listPerfiles
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de perfiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Perfil"
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+
+    post:
+      tags: [Perfiles]
+      summary: Crear perfil del usuario autenticado
+      description: Crea el perfil para el usuario dueño del token JWT. El rol por defecto es "cliente".
+      operationId: createPerfil
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerfilInput"
+      responses:
+        "201":
+          description: Perfil creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Perfil"
+        "400":
+          description: Faltan campos requeridos
+        "401":
+          description: Token ausente o inválido
+        "409":
+          description: El usuario ya tiene un perfil
+
+  /api/perfiles/{id}:
+    get:
+      tags: [Perfiles]
+      summary: Obtener perfil por ID
+      description: Requiere admin.
+      operationId: getPerfilById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Perfil encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Perfil"
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Perfil no encontrado
+
+    put:
+      tags: [Perfiles]
+      summary: Cambiar rol de un perfil
+      description: Requiere admin. No se puede cambiar el propio rol.
+      operationId: updatePerfilRol
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerfilRolInput"
+      responses:
+        "200":
+          description: Rol actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Perfil"
+        "400":
+          description: Rol inválido
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin o intento de cambiar propio rol
+        "404":
+          description: Perfil no encontrado
+
+    delete:
+      tags: [Perfiles]
+      summary: Eliminar perfil
+      description: Requiere admin. No se puede eliminar el propio perfil.
+      operationId: deletePerfil
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Perfil eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin o intento de eliminar propia cuenta
+        "404":
+          description: Perfil no encontrado
+
+  # ── Pedidos ───────────────────────────────────────────────
+  /api/pedidos:
+    get:
+      tags: [Pedidos]
+      summary: Listar pedidos
+      description: Si el usuario es admin, devuelve todos los pedidos. Si es cliente, solo los propios.
+      operationId: listPedidos
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pedido"
+        "401":
+          description: Token ausente o inválido
+        "404":
+          description: Perfil no encontrado
+
+    post:
+      tags: [Pedidos]
+      summary: Crear pedido
+      description: Crea un pedido con sus items a partir del carrito del usuario autenticado.
+      operationId: createPedido
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PedidoInput"
+      responses:
+        "201":
+          description: Pedido creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pedido"
+        "400":
+          description: Items inválidos o producto no encontrado
+        "401":
+          description: Token ausente o inválido
+        "404":
+          description: Perfil no encontrado
+
+  /api/pedidos/{id}:
+    put:
+      tags: [Pedidos]
+      summary: Cambiar estado de un pedido
+      description: Requiere admin.
+      operationId: updatePedidoEstado
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PedidoEstadoInput"
+      responses:
+        "200":
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pedido"
+        "400":
+          description: Estado inválido
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Pedido no encontrado
+
+  # ── Upload ────────────────────────────────────────────────
+  /api/upload:
+    post:
+      tags: [Upload]
+      summary: Subir imagen de producto
+      description: |
+        Sube una imagen, la comprime a WebP 800px y la guarda en Supabase Storage.
+        Requiere admin.
+        Usar Content-Type: multipart/form-data con campo "imagen".
+      operationId: uploadImagen
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [imagen]
+              properties:
+                imagen:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: URL de la imagen subida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+        "400":
+          description: No se recibió imagen
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+
+  # ── Admin ─────────────────────────────────────────────────
+  /api/admin/usuarios:
+    get:
+      tags: [Admin]
+      summary: Listar todos los usuarios (perfiles)
+      description: Requiere admin. Idéntico a GET /api/perfiles.
+      operationId: getAdminUsuarios
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de perfiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Perfil"
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+
+  /api/admin/usuarios/{perfilId}/pedidos:
+    get:
+      tags: [Admin]
+      summary: Listar pedidos de un usuario
+      description: Requiere admin. Devuelve todos los pedidos (con items) de un perfil específico.
+      operationId: getAdminPedidosPorUsuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: perfilId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Pedidos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pedido"
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Perfil no encontrado
+
+  /api/admin/pedidos/{pedidoId}/items:
+    get:
+      tags: [Admin]
+      summary: Obtener detalle completo de un pedido
+      description: Requiere admin. Devuelve un pedido con todos sus items y productos anidados.
+      operationId: getAdminPedidoItems
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pedidoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detalle completo del pedido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pedido"
+        "401":
+          description: Token ausente o inválido
+        "403":
+          description: No es admin
+        "404":
+          description: Pedido no encontrado
+
+  # ── Root ──────────────────────────────────────────────────
+  /:
+    get:
+      tags: [Root]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        "200":
+          description: API funcionando
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string

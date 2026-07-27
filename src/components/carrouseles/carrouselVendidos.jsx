@@ -37,9 +37,9 @@ const CarrouselVendidos = () => {
         }}
         className="px-10"
       >
-        <CarouselContent className="gap-2 py-1">
+        <CarouselContent className="py-1">
           {productos.map((p) => (
-            <CarouselItem key={p.id}>
+            <CarouselItem key={p.id} className="pr-2">
               <Card producto={p} onDelete={(id) => setProductos((prev) => prev.filter((x) => x.id !== id))} />
             </CarouselItem>
           ))}
