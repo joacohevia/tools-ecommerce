@@ -120,11 +120,11 @@ const Card = ({ producto, onDelete, onEdit }) => {
     )}
 
     {/* Imagen */}
-    <div className="h-1/2 w-full bg-white/5 flex items-center justify-center p-4">
+    <div className="h-1/2 w-full bg-white/5 overflow-hidden">
       <img
         src={imagen}
         alt={nombre}
-        className="w-40 h-40 object-contain transition-transform duration-300 hover:scale-105"
+        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         loading="lazy"
       />
     </div>

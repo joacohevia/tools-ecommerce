@@ -1,23 +1,20 @@
 <!--
 Sync Impact Report
 ==================
-Version change: [TEMPLATE] → 1.0.0
-Reason: Initial concrete fill of all placeholder tokens from project context.
+Version change: 1.0.0 → 1.1.0
+Reason: MINOR — Added Principle X (Responsive & Mobile-First).
 
-Modified principles: N/A (all new)
+Modified principles: None
 Added sections:
-  - Core Principles (9 principles)
-  - Technology & Testing Standards
-  - Governance
+  - Principle X. Responsive & Mobile-First
 
 Removed sections: None
 
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md — Constitution Check section is generic, no changes needed
+  ✅ .specify/templates/plan-template.md — Constitution Check is generic, no changes needed
   ✅ .specify/templates/spec-template.md — requirements/scenarios generic, no changes needed
   ✅ .specify/templates/tasks-template.md — task categorization generic, no changes needed
   ✅ .specify/templates/checklist-template.md — no constitution references, no changes needed
-  ✅ .specify/templates/constitution-template.md — source template, intentionally untouched
 
 Follow-up TODOs: None — all placeholders resolved.
 -->
@@ -140,6 +137,35 @@ variables, funciones y archivos DEBEN ser explícitos y descriptivos.
 **Razón**: Código autodocumentado reduce la necesidad de comentarios superfluos.
 JSDoc permite generar referencias y mejora el intellisense en editores.
 
+### X. Responsive & Mobile-First
+
+Todos los componentes React del frontend DEBEN ser responsive y soportar dispositivos
+móviles desde su implementación inicial. La interfaz DEBE seguir un enfoque mobile-first,
+adaptándose correctamente a al menos tres breakpoints:
+
+- **Móvil** (por defecto, < 640px): layouts en columna única, touch targets >= 44px,
+  navegación accesible con pulgares.
+- **Tablet** (sm: 640px, md: 768px): layouts en 2 columnas donde aplique, sidebars
+  colapsables.
+- **Escritorio** (lg: 1024px, xl: 1280px): layouts en múltiples columnas, sidebars
+  visibles, aprovechamiento del espacio horizontal.
+
+Reglas no negociables:
+
+- Todo componente nuevo DEBE probarse en los tres breakpoints antes de considerarse
+  terminado.
+- Las clases responsive de Tailwind (`sm:`, `md:`, `lg:`, `xl:`) DEBEN usarse para
+  adaptar layout, espaciado, tipografía y visibilidad.
+- No se DEBEN crear componentes exclusivos para desktop ni versiones separadas por
+  dispositivo. El mismo componente DEBE adaptarse via CSS.
+- Si un diseño no puede adaptarse razonablemente a un breakpoint, la excepción DEBE
+  justificarse y documentarse en el plan de implementación correspondiente.
+
+**Razón**: La tienda será utilizada por clientes desde dispositivos móviles como canal
+principal de compra. Un enfoque mobile-first garantiza que la experiencia de compra sea
+fluida en cualquier dispositivo, reduce el mantenimiento de variantes por plataforma y
+fuerza decisiones de diseño que priorizan lo esencial.
+
 ## Technology & Testing Standards
 
 ### Stack Tecnológico
@@ -217,4 +243,4 @@ La versión de la constitución sigue Semantic Versioning:
 - La complejidad que viole algún principio DEBE justificarse en el plan con el motivo y
   por qué la alternativa más simple fue rechazada.
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-26 | **Last Amended**: 2026-07-26
+**Version**: 1.1.0 | **Ratified**: 2026-07-26 | **Last Amended**: 2026-07-28

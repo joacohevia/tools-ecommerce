@@ -18,7 +18,7 @@ dotenv.config({ path: "../.env" });
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const app = express();
@@ -276,18 +276,56 @@ app.put("/api/productos/:id", auth, adminOnly, async (req, res) => {
 
 app.delete("/api/productos/:id", auth, adminOnly, async (req, res) => {
   try {
-    const { data: deleted, error } = await supabase
+    const { data: producto, error: fetchError } = await supabase
+      .from("productos")
+      .select("imagenes")
+      .eq("id", req.params.id)
+      .single();
+
+    if (fetchError || !producto) {
+      console.log(`[DELETE /api/productos/${req.params.id}] Producto no encontrado`);
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const imagenes = producto.imagenes || [];
+    console.log(`[DELETE /api/productos/${req.params.id}] Imagenes a eliminar: ${imagenes.length}`);
+
+    if (imagenes.length > 0) {
+      const filenames = imagenes.map((url) => {
+        const parts = url.split("/productos/");
+        return parts[1] ? decodeURIComponent(parts[1]) : null;
+      }).filter(Boolean);
+
+      console.log(`[DELETE /api/productos/${req.params.id}] Archivos a borrar del storage:`, filenames);
+
+      if (filenames.length > 0) {
+        const { data: removed, error: storageError } = await supabase.storage
+          .from("productos")
+          .remove(filenames);
+
+        if (storageError) {
+          console.error(`[DELETE /api/productos/${req.params.id}] Error al eliminar imagenes del storage:`, storageError.message);
+        } else {
+          console.log(`[DELETE /api/productos/${req.params.id}] Imagenes eliminadas del storage:`, removed);
+        }
+      }
+    }
+
+    const { data: deleted, error: deleteError } = await supabase
       .from("productos")
       .delete()
       .eq("id", req.params.id)
       .select();
 
-    if (error) return res.status(500).json({ error: error.message });
+    if (deleteError) return res.status(500).json({ error: deleteError.message });
     if (!deleted || deleted.length === 0) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-    res.json({ message: "Producto eliminado" });
-  } catch {
+
+    console.log(`[DELETE /api/productos/${req.params.id}] Producto eliminado correctamente`);
+    res.json({ message: "Producto eliminado", deleted });
+  } catch (err) {
+    console.error(`[DELETE /api/productos/${req.params.id}] Error:`, err);
     res.status(500).json({ error: "Error al eliminar producto" });
   }
 });
