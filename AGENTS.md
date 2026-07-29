@@ -184,3 +184,7 @@ src/
 - Estado global: CarritoContext (Context API + localStorage)
 - Patron de filtrado: `useState` para filtros + `useMemo` para datos procesados + `useSearchParams` para sincronizar URL
 - Docstrings: funciones exportadas y helpers complejos incluyen JSDoc con `@param` y `@returns`
+
+<!-- SPECKIT START -->
+Plan actual: `specs/001-admin-panel/plan.md` — Administracion desde el Catalogo (admin CRUD en /productos + vista usuarios)
+<!-- SPECKIT END -->

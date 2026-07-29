@@ -7,6 +7,7 @@ import Registro from './components/pages/registro';
 import CardDetail from './components/pages/cardDetail';
 import Contacto from './components/pages/contacto';
 import Productos from './components/pages/productos';
+import Admin from './components/pages/admin';
 import { CarritoProvider } from './context/CarritoContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/productos" element={<Productos />} />
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/producto/:id" element={<CardDetail />} />
+                <Route path="/admin" element={<Admin />} />
               </Routes>
             </div>
           </ConfirmProvider>

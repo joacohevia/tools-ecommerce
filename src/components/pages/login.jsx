@@ -21,8 +21,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login(email, password);
-      navigate("/home");
+      const data = await login(email, password);
+      navigate(data.perfil?.rol === 'admin' ? '/productos' : '/home');
     } catch (err) {
       setError(err.message === "Invalid login credentials"
         ? "Correo o contraseña incorrectos"

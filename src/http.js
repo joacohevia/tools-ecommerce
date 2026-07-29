@@ -127,7 +127,8 @@ export async function getPerfilMe(token) {
     },
   });
   if (!res.ok) throw new Error("Error al obtener perfil");
-  return res.json();
+  const data = await res.json();
+  return data.perfil;
 }
 
 export async function getPerfiles() {
@@ -171,7 +172,10 @@ export async function deleteCategoria(id) {
     method: "DELETE",
     headers: { ...(await getAuthHeaders()) },
   });
-  if (!res.ok) throw new Error("Error al eliminar categoria");
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Error al eliminar categoria");
+  }
 }
 
 export async function createMarca(marca) {
@@ -199,7 +203,10 @@ export async function deleteMarca(id) {
     method: "DELETE",
     headers: { ...(await getAuthHeaders()) },
   });
-  if (!res.ok) throw new Error("Error al eliminar marca");
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Error al eliminar marca");
+  }
 }
 
 export async function getPedidos() {
@@ -228,4 +235,76 @@ export async function updatePedidoEstado(id, estado) {
   });
   if (!res.ok) throw new Error("Error al actualizar pedido");
   return res.json();
+}
+
+/**
+ * Obtiene todos los perfiles registrados (solo admin).
+ * @returns {Promise<Array>} Lista de perfiles con nombre, apellido, dni, rol, created_at
+ */
+export async function getAdminUsuarios() {
+  const res = await fetch(`${API_URL}/admin/usuarios`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al obtener usuarios");
+  return res.json();
+}
+
+/**
+ * Obtiene los pedidos de un perfil especifico, con items y productos anidados.
+ * @param {number} perfilId
+ * @returns {Promise<Array>} Lista de pedidos con pedido_items y productos
+ */
+export async function getAdminPedidosPorUsuario(perfilId) {
+  const res = await fetch(`${API_URL}/admin/usuarios/${perfilId}/pedidos`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al obtener pedidos del usuario");
+  return res.json();
+}
+
+/**
+ * Obtiene el detalle completo de un pedido con sus items y productos.
+ * @param {number} pedidoId
+ * @returns {Promise<object>} Pedido con pedido_items y productos anidados
+ */
+export async function getAdminPedidoItems(pedidoId) {
+  const res = await fetch(`${API_URL}/admin/pedidos/${pedidoId}/items`, {
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) throw new Error("Error al obtener items del pedido");
+  return res.json();
+}
+
+/**
+ * Cambia el rol de un perfil (solo admin).
+ * @param {number} id - ID del perfil
+ * @param {string} rol - "admin" o "cliente"
+ * @returns {Promise<object>} Perfil actualizado
+ */
+export async function updatePerfilRol(id, rol) {
+  const res = await fetch(`${API_URL}/perfiles/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...(await getAuthHeaders()) },
+    body: JSON.stringify({ rol }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Error al actualizar rol");
+  }
+  return res.json();
+}
+
+/**
+ * Elimina un perfil (solo admin, no permite auto-eliminacion).
+ * @param {number} id - ID del perfil
+ */
+export async function deletePerfil(id) {
+  const res = await fetch(`${API_URL}/perfiles/${id}`, {
+    method: "DELETE",
+    headers: { ...(await getAuthHeaders()) },
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || "Error al eliminar perfil");
+  }
 }

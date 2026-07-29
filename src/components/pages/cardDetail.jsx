@@ -7,7 +7,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useCarrito } from '../../context/CarritoContext';
 // hook personalizado para acceder al estado global del carrito (agregar, quitar, vaciar)
 import { getProductoById } from '../../http';
-import SeccionDescripcion from '../secciones/seccionDescripcion';
 
 const CardDetail = () => {
    const { id } = useParams();
@@ -171,13 +170,35 @@ const CardDetail = () => {
                 efectivo
               </span>
             </p>
+            {/*
             <p className="text-dark-text text-sm">
               6x de ${cuota.toLocaleString('es-AR')}
               <span className="text-dark-muted">/mes</span>
             </p>
+
+            */}
             <p className="text-dark-muted text-sm">
               Stock: {producto.stock ?? 0} unidades
             </p>
+            
+            <section className="border-t border-white/10 pt-3 mt-5">
+              <h2 className="text-dark-text text-xl font-semibold mb-4">Descripción</h2>
+
+              {producto.descripcion?.trim() ? (
+                <ul className="list-disc pl-5 space-y-2 text-dark-muted text-sm">
+                  {producto.descripcion
+                    .split("\n")
+                    .filter((item) => item.trim() !== "")
+                    .map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                </ul>
+              ) : (
+                <p className="text-dark-muted text-sm">
+                  Este producto no posee descripción.
+                </p>
+              )}
+            </section>
           </div>
 
           <button
@@ -188,8 +209,7 @@ const CardDetail = () => {
           </button>
         </div>
       </div>
-
-      <SeccionDescripcion />
+      
     </main>
   );
 };
