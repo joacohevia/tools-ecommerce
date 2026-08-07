@@ -108,7 +108,7 @@ Servidor local via stdio definido en `backend/mcp/supabase-read/server.js`. Usa 
 | `supabase_get_columns` | Columnas de una tabla: nombre, tipo, nullable, default, FK |
 | `supabase_select` | SELECT parametrizado con filtros (eq, neq, gt, gte, lt, lte, like, ilike, is, in), orden y limite. Soporta joins via `select: "*,categorias(nombre)"` |
 
-El esquema de tablas está hardcodeado en el servidor (Opción B). Si cambia `baseHerramientas.sql`, sincronizar el objeto `SCHEMA` en `backend/mcp/supabase-read/server.js`.
+El servidor consulta la estructura de tablas dinámicamente desde la especificación OpenAPI de Supabase/PostgREST en tiempo de ejecución.
 
 Configurado en `opencode.json` → `mcp.supabase-read`. El MCP original de Supabase está desactivado (`enabled: false`).
 

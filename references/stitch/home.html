@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Titan Hardware - Herramientas y Equipamiento Profesional</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f6f3f2",
+                      "on-secondary-fixed": "#1b1b1c",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-tertiary-container": "#4f5151",
+                      "inverse-primary": "#99d907",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#f0edec",
+                      "on-surface": "#1c1b1b",
+                      "on-primary-fixed": "#131f00",
+                      "on-primary": "#ffffff",
+                      "primary": "#476800",
+                      "on-primary-fixed-variant": "#354e00",
+                      "outline": "#737a63",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-background": "#1c1b1b",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-bright": "#fcf9f8",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "tertiary": "#5d5f5f",
+                      "on-primary-container": "#3d5900",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#c2caaf",
+                      "on-secondary-container": "#636262",
+                      "secondary": "#5f5e5e",
+                      "secondary-container": "#e2dfde",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#424935",
+                      "inverse-surface": "#313030",
+                      "secondary-fixed": "#e5e2e1",
+                      "surface-dim": "#dcd9d9",
+                      "surface-variant": "#e5e2e1",
+                      "primary-container": "#97d700",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "background": "#fcf9f8",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-container-highest": "#e5e2e1",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-tint": "#476800",
+                      "error-container": "#ffdad6",
+                      "primary-fixed-dim": "#99d907",
+                      "surface": "#fcf9f8",
+                      "primary-fixed": "#b4f734",
+                      "tertiary-container": "#c4c4c4",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "section-padding": "80px",
+                      "gutter": "24px",
+                      "stack-lg": "32px",
+                      "container-max": "1280px",
+                      "margin-desktop": "48px",
+                      "margin-mobile": "16px",
+                      "stack-md": "16px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Hanken Grotesk"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "headline-xl": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .product-card-shadow:hover {
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Hide scrollbar for carousel */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 h-[72px] bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/30 shadow-sm flex items-center justify-between px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Logo -->
+<a class="flex items-center gap-2 flex-shrink-0 group" href="#">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">construction</span>
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface dark:text-on-surface-variant">
+        TITAN HARDWARE
+    </span>
+</a>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center space-x-8 font-body-md text-body-md">
+<a class="text-primary dark:text-primary-fixed font-semibold border-b-2 border-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Inicio</a>
+<!-- Dropdown Categorías -->
+<div class="relative group py-6">
+<button class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200 flex items-center gap-1 focus:outline-none">
+        Categorías
+        <span class="material-symbols-outlined text-sm transition-transform duration-200 group-hover:rotate-180">expand_more</span>
+</button>
+<div class="absolute left-0 top-full -mt-2 w-56 bg-surface-container-lowest border border-outline-variant rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col py-2 translate-y-2 group-hover:translate-y-0">
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">power</span> Herramientas Eléctricas
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">handyman</span> Herramientas Manuales
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">architecture</span> Construcción
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">security</span> Seguridad Industrial
+        </a>
+</div>
+</div>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Productos</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Contacto</a>
+</nav>
+<!-- Search & Actions -->
+<div class="flex items-center space-x-4 flex-1 md:flex-none justify-end md:justify-start ml-4 md:ml-0">
+<!-- Search Bar -->
+<div class="relative hidden sm:block w-full max-w-xs group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-on-surface/5 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-md text-body-md text-on-surface transition-colors placeholder:text-on-surface-variant/70" placeholder="Buscar productos..." type="text"/>
+</div>
+<!-- Trailing Icons -->
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95 relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-[72px]">
+<!-- Hero Section -->
+<section class="relative w-full h-[500px] md:h-[600px] flex items-center bg-surface-container-low overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60 mix-blend-multiply grayscale" data-alt="A wide shot of a rugged, professional construction site or workshop. A heavy-duty yellow industrial power tool rests on a rough concrete surface. The lighting is dramatic and directional, highlighting the texture of the tool and the grit of the environment. The overall mood is powerful, capable, and premium, utilizing a high-contrast palette of deep greys, blacks, and striking industrial yellow accents, matching the rugged yet sophisticated brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9UhSZLhgrxof3PMFxdkReOoxZTPmReGp4-BABEUvlb5AMuXm2z-5RnAS-z_opetTYFQ1HVYH4V96K0z0X7KuWuPL4dirV4Iq7r5b2ZPWkXT7PAKoswZVQzb-9-z4tFb0YnKDFqEdZfEssvFwFEObodVNHWmseXVyuxQf36jl1rIak-ADCgi8uSmbzuaVgRa3IuSw0F-JPtBe2uYjwqhDn9bWPCCQW_st21elegRWcs2COIY96Nnia"/>
+<!-- Subtle Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 to-transparent"></div>
+</div>
+<div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full flex flex-col items-center text-center">
+<div class="max-w-2xl">
+<span class="font-label-bold text-label-bold text-primary uppercase tracking-wider mb-4 block">EQUIPAMIENTO DE GRADO PROFESIONAL</span>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-6">Bienvenidos a Herramientas Titan.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-xl mx-auto">Descubra nuestra nueva línea de herramientas eléctricas de fuerza industrial diseñadas para máxima durabilidad y rendimiento sin concesiones.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-primary text-on-primary-fixed h-12 px-8 font-label-bold text-label-bold hover:bg-primary-fixed transition-colors active:scale-95 shadow-sm">
+                            Comprar Herramientas
+                        </button>
+<button class="bg-transparent border border-on-surface text-on-surface h-12 px-8 font-label-bold text-label-bold hover:bg-surface-container transition-colors active:scale-95">
+                            Ver Promociones
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Más Vendidos Section -->
+<section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full bg-surface-container-low">
+<div class="flex items-end justify-between mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Más Vendidos</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Los productos preferidos por los profesionales.</p>
+</div>
+<div class="hidden sm:flex gap-2">
+<button class="w-10 h-10 border border-outline flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface">chevron_left</span>
+</button>
+<button class="w-10 h-10 border border-outline flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Product Carousel -->
+<div class="flex overflow-x-auto gap-gutter hide-scrollbar snap-x snap-mandatory">
+<!-- Product Card 1 -->
+<div class="snap-start flex-shrink-0 w-[280px] bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a Makita brand metal cut-off saw (Cortadora de Disco)." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQfRalM8i8a54asdGmGvm4iRU3E__QYwMwKEi92Pkgcvzj67cVLeL5LNOjLLH2h52wojNpXrMcEJOne5O2B3iY6yAFmOXXrG9ki25EJDy0UO-BtctwXxNqMxVxC5ywfth1R-98Ql3VgdcPq88ZCeUSo7NdcwNmULGvIw8tC91CFXrwP7QP7l8Tgi58Xp_m9G9IZYjydrwKobEYEt7m7ecPEjizi01a7jVIaoGy2PuDpspB8DJFclF-"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Makita</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Cortadora de Disco Makita 2000W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$159.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="snap-start flex-shrink-0 w-[280px] bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A studio product shot of a rugged, red Gamma brand air compressor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy7VJO5GM_Ed_L3yJYVgWBRvurF97JpbuFNcgolQwK4pQXw6m1AXcyvR7DoMojQ9wOseBLqwOUMaYF3lSgxn2rmnbSYs0OedYaPbmJ0HzQA30DfflvqxzTOEJisxu_j5-3KQMaXWZpCj1cq2aMZOJsOeaTH5Ak3ut7DamaR5N6sDHtHUYYbea6ismTyLZ5NXRdPiYqfr8lAElSBRWZtpRq8zxmpeafMw5zZc7skQt4_6JpHYipLLvv"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Gamma</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Compresor Gamma 25L 1.5HP</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$142.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="snap-start flex-shrink-0 w-[280px] bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="An immaculate studio shot of a Black &amp; Decker 1800W pressure washer (Hidrolavadora)." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIAEmfp_MhIxY2ZAQHBmySUjHgownk1JqH-6dHdXgbp0ymNHFSwc5pzIr0oKKOsBQAgoJKID65axRW1o90Cj7bpwqvEsq-27ysbIPsCzYUE7KY83ZiZ2Setn9jUb22CSye4iqdhv7ZR5tOSgHUH5pcKF7pFzZY96dtnryobJoWzedpLXONRTroRE7WJ7Tbhb42OnJKMUCRIfBPChesFGZ2rlLJKq1xQ95UyWEqHr2rbEo2xbe5jPVP"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Black &amp; Decker</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Hidrolavadora Black &amp; Decker 1800W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$149.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="snap-start flex-shrink-0 w-[280px] bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A high-quality product image of a Gamma brand 3000W gasoline generator (Generador Nafta)." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXV7dLi7vQxQhV-GWr8rLQW0HNoA5fE76Ugxz6_mM_3-aLXiwgcLDG_lHUXNxg0AupZeE1SQGvRO3oFJhfFgCCtQGLoxkUuCptzrxBgSyTt5oqNcygV4A6hkjMXJ_8uM-fsq9JdoSFm1gJD94jr7Af8ZqdLguEfvF5qcfvkXJ6wvY9lEf2iKZzuCeYxsSD8jE-dPqUz5fFRySBMBrvMcW_KCmYi0OY7CWJHK9YA_ikH94ufcAAAgXJ"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Gamma</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Generador Gamma 3000W Nafta</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-on-surface">$350.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Novedades Section -->
+<section class="relative py-section-padding bg-surface-container-high overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A high quality professional industrial workshop background with heavy machinery and tools out of focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByO_IWFf8KaeDhpg2AhsztYBaY-KcROdPtyuYYTD01oOcN2gmVKPwJ_JVI3d3TjmVTLCD-RVAPgMMLaLoJumiai7zHWf796fW60YSXzgbrZM5OP4spvtBpiCwb16X5FuLMj-DoWXiO93yrm-qwV9zt6zpRCF4oWZJkSdQ4w1KwzJDSKhK3MyRPztfjSL3eYLJMbvNoypOP0W8eoxHGrHpU3yqvNfnZSWaa_Ckw_vI3tnBEJGiIMs3a"/>
+<div class="absolute inset-0 bg-black/70"></div>
+</div>
+<div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<h2 class="font-headline-lg text-headline-lg text-white mb-stack-lg text-center">Novedades</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product Card 1 -->
+<div class="bg-surface/95 backdrop-blur-md border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-lowest mb-6 relative flex items-center justify-center overflow-hidden rounded">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy7VJO5GM_Ed_L3yJYVgWBRvurF97JpbuFNcgolQwK4pQXw6m1AXcyvR7DoMojQ9wOseBLqwOUMaYF3lSgxn2rmnbSYs0OedYaPbmJ0HzQA30DfflvqxzTOEJisxu_j5-3KQMaXWZpCj1cq2aMZOJsOeaTH5Ak3ut7DamaR5N6sDHtHUYYbea6ismTyLZ5NXRdPiYqfr8lAElSBRWZtpRq8zxmpeafMw5zZc7skQt4_6JpHYipLLvv"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">NUEVO</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Herramienta Nueva 1</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$120.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface/95 backdrop-blur-md border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-lowest mb-6 relative flex items-center justify-center overflow-hidden rounded">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQfRalM8i8a54asdGmGvm4iRU3E__QYwMwKEi92Pkgcvzj67cVLeL5LNOjLLH2h52wojNpXrMcEJOne5O2B3iY6yAFmOXXrG9ki25EJDy0UO-BtctwXxNqMxVxC5ywfth1R-98Ql3VgdcPq88ZCeUSo7NdcwNmULGvIw8tC91CFXrwP7QP7l8Tgi58Xp_m9G9IZYjydrwKobEYEt7m7ecPEjizi01a7jVIaoGy2PuDpspB8DJFclF-"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">NUEVO</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Herramienta Nueva 2</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$95.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface/95 backdrop-blur-md border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-lowest mb-6 relative flex items-center justify-center overflow-hidden rounded">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIAEmfp_MhIxY2ZAQHBmySUjHgownk1JqH-6dHdXgbp0ymNHFSwc5pzIr0oKKOsBQAgoJKID65axRW1o90Cj7bpwqvEsq-27ysbIPsCzYUE7KY83ZiZ2Setn9jUb22CSye4iqdhv7ZR5tOSgHUH5pcKF7pFzZY96dtnryobJoWzedpLXONRTroRE7WJ7Tbhb42OnJKMUCRIfBPChesFGZ2rlLJKq1xQ95UyWEqHr2rbEo2xbe5jPVP"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">NUEVO</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Herramienta Nueva 3</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$210.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface/95 backdrop-blur-md border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow">
+<div class="aspect-square bg-surface-container-lowest mb-6 relative flex items-center justify-center overflow-hidden rounded">
+<img class="object-contain w-3/4 h-3/4 hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXV7dLi7vQxQhV-GWr8rLQW0HNoA5fE76Ugxz6_mM_3-aLXiwgcLDG_lHUXNxg0AupZeE1SQGvRO3oFJhfFgCCtQGLoxkUuCptzrxBgSyTt5oqNcygV4A6hkjMXJ_8uM-fsq9JdoSFm1gJD94jr7Af8ZqdLguEfvF5qcfvkXJ6wvY9lEf2iKZzuCeYxsSD8jE-dPqUz5fFRySBMBrvMcW_KCmYi0OY7CWJHK9YA_ikH94ufcAAAgXJ"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">NUEVO</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Herramienta Nueva 4</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-4">
+<span class="font-headline-md text-headline-md text-primary">$85.000</span>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold hover:opacity-90 transition-opacity">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Categorías Section -->
+<section class="py-section-padding bg-surface">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full text-center">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-stack-lg">Categorías</h2>
+<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-lg group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A large industrial background image showcasing a professional workshop environment with various tools, serving as the backdrop for all categories." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN8vYCLPvpukC8SUz4VQiULqHOPOvbrjqsrAHf7f-4cfdSw3X0lzskeodPAFcFgxsucyBYMR11FuBIi-03wJeihQuDdOvDFyqwthfkLgzyv4oprTABoIrkR7_ssWIuXePVcnXkgf3d_CbChtoBULAb4Q8C_8-abpo_jvdhHcgnOSEXosEvO9lPhFliubHWJxRK-IBFGYA1oEjEsMepqefLxfnEwlL5c2Wd8OhL837wz8A7Lapc0Hph"/>
+<div class="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-500"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center z-10 p-8">
+<h3 class="font-headline-xl text-headline-xl text-on-primary mb-6">Explora Nuestro Catálogo Completo</h3>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="bg-primary text-on-primary-fixed h-12 px-8 font-label-bold text-label-bold hover:bg-primary-fixed transition-colors active:scale-95 shadow-sm rounded">
+                                Herramientas Eléctricas
+                            </button>
+<button class="bg-primary text-on-primary-fixed h-12 px-8 font-label-bold text-label-bold hover:bg-primary-fixed transition-colors active:scale-95 shadow-sm rounded">
+                                Herramientas Manuales
+                            </button>
+<button class="bg-primary text-on-primary-fixed h-12 px-8 font-label-bold text-label-bold hover:bg-primary-fixed transition-colors active:scale-95 shadow-sm rounded">
+                                Almacenamiento
+                            </button>
+<button class="bg-primary text-on-primary-fixed h-12 px-8 font-label-bold text-label-bold hover:bg-primary-fixed transition-colors active:scale-95 shadow-sm rounded">
+                                Seguridad Industrial
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Special Offers Section -->
+<section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<div class="flex items-end justify-between mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Ofertas Especiales</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Ofertas por tiempo limitado en equipamiento premium.</p>
+</div>
+<div class="hidden sm:flex gap-2">
+<button class="w-10 h-10 border border-outline flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface">chevron_left</span>
+</button>
+<button class="w-10 h-10 border border-outline flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Product Grid/Carousel -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product Card 1 -->
+<div class="group bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow relative overflow-hidden">
+<div class="absolute top-4 left-4 bg-error text-on-error font-label-sm text-label-sm px-2 py-1 uppercase tracking-wider z-10">Oferta</div>
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 group-hover:scale-105 transition-transform duration-500" data-alt="A studio product shot of a rugged, red Gamma brand air compressor. The tool is placed exactly in the center against a pristine white backdrop. The lighting is even and soft, highlighting the metallic textures and robust build quality. The aesthetic is clean, modern e-commerce, emphasizing the product's premium nature without any distracting background elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy7VJO5GM_Ed_L3yJYVgWBRvurF97JpbuFNcgolQwK4pQXw6m1AXcyvR7DoMojQ9wOseBLqwOUMaYF3lSgxn2rmnbSYs0OedYaPbmJ0HzQA30DfflvqxzTOEJisxu_j5-3KQMaXWZpCj1cq2aMZOJsOeaTH5Ak3ut7DamaR5N6sDHtHUYYbea6ismTyLZ5NXRdPiYqfr8lAElSBRWZtpRq8zxmpeafMw5zZc7skQt4_6JpHYipLLvv"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Gamma</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Compresor Gamma 25L 1.5HP</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-md text-headline-md text-primary">$142.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant line-through">$175.000</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">6 cuotas de $23.666</p>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow relative overflow-hidden">
+<div class="absolute top-4 left-4 bg-primary text-on-primary-fixed font-label-sm text-label-sm px-2 py-1 uppercase tracking-wider z-10">-15%</div>
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 group-hover:scale-105 transition-transform duration-500" data-alt="A clean, isolated studio shot of a Makita brand metal cut-off saw (Cortadora de Disco). The tool is teal and black, centered on a bright, minimalist light-grey background. Sharp, professional lighting emphasizes the industrial strength and precise engineering of the machine. The style is premium modern retail photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQfRalM8i8a54asdGmGvm4iRU3E__QYwMwKEi92Pkgcvzj67cVLeL5LNOjLLH2h52wojNpXrMcEJOne5O2B3iY6yAFmOXXrG9ki25EJDy0UO-BtctwXxNqMxVxC5ywfth1R-98Ql3VgdcPq88ZCeUSo7NdcwNmULGvIw8tC91CFXrwP7QP7l8Tgi58Xp_m9G9IZYjydrwKobEYEt7m7ecPEjizi01a7jVIaoGy2PuDpspB8DJFclF-"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Makita</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Cortadora de Disco Makita 2000W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-md text-headline-md text-primary">$159.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant line-through">$185.000</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">12 cuotas sin interés</p>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow relative overflow-hidden">
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 group-hover:scale-105 transition-transform duration-500" data-alt="A high-quality product image of a Gamma brand 3000W gasoline generator (Generador Nafta). The heavy equipment is centered against a pure white, stark background. High-key lighting showcases the sturdy metal frame, yellow accents, and motor details. Designed for a premium online hardware store catalogue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXV7dLi7vQxQhV-GWr8rLQW0HNoA5fE76Ugxz6_mM_3-aLXiwgcLDG_lHUXNxg0AupZeE1SQGvRO3oFJhfFgCCtQGLoxkUuCptzrxBgSyTt5oqNcygV4A6hkjMXJ_8uM-fsq9JdoSFm1gJD94jr7Af8ZqdLguEfvF5qcfvkXJ6wvY9lEf2iKZzuCeYxsSD8jE-dPqUz5fFRySBMBrvMcW_KCmYi0OY7CWJHK9YA_ikH94ufcAAAgXJ"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Gamma</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Generador Gamma 3000W Nafta</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-md text-headline-md text-on-surface">$350.000</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">Envío gratis</p>
+<button class="w-full border border-on-surface text-on-surface h-10 font-label-bold text-label-bold hover:bg-surface-container transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group bg-surface-container-lowest border border-outline-variant p-6 flex flex-col transition-all duration-300 product-card-shadow relative overflow-hidden">
+<div class="absolute top-4 left-4 bg-error text-on-error font-label-sm text-label-sm px-2 py-1 uppercase tracking-wider z-10">Destacado</div>
+<div class="aspect-square bg-surface-container-low mb-6 relative flex items-center justify-center overflow-hidden">
+<img class="object-contain w-3/4 h-3/4 group-hover:scale-105 transition-transform duration-500" data-alt="An immaculate studio shot of a Black &amp; Decker 1800W pressure washer (Hidrolavadora). The orange and black machine stands upright, perfectly centered on a very light grey surface. The lighting is crisp and clear, creating subtle, soft shadows that ground the product while maintaining a very bright, clean overall aesthetic appropriate for modern UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIAEmfp_MhIxY2ZAQHBmySUjHgownk1JqH-6dHdXgbp0ymNHFSwc5pzIr0oKKOsBQAgoJKID65axRW1o90Cj7bpwqvEsq-27ysbIPsCzYUE7KY83ZiZ2Setn9jUb22CSye4iqdhv7ZR5tOSgHUH5pcKF7pFzZY96dtnryobJoWzedpLXONRTroRE7WJ7Tbhb42OnJKMUCRIfBPChesFGZ2rlLJKq1xQ95UyWEqHr2rbEo2xbe5jPVP"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Black &amp; Decker</span>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-2 line-clamp-2">Hidrolavadora Black &amp; Decker 1800W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-md text-headline-md text-primary">$149.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant line-through">$178.000</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">En stock - Se envía hoy</p>
+<button class="w-full bg-primary text-on-primary-fixed h-10 font-label-bold text-label-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                Agregar al carrito
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full py-section-padding bg-[#1b1b1c] dark:bg-[#1b1b1c] grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mt-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 flex flex-col gap-4">
+<span class="font-headline-lg text-headline-lg text-primary-fixed mb-4">TITAN HARDWARE</span>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">
+                Construido para Profesionales. Proveyendo equipamiento y herramientas de primer nivel para quienes exigen excelencia en su oficio.
+            </p>
+</div>
+<!-- Links Column 1 -->
+<div class="flex flex-col gap-3">
+<h4 class="font-label-bold text-label-bold text-on-secondary mb-2 uppercase tracking-wider">Empresa</h4>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Sobre Nosotros</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Soporte</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Trabaja con nosotros</a>
+</div>
+<!-- Links Column 2 -->
+<div class="flex flex-col gap-3">
+<h4 class="font-label-bold text-label-bold text-on-secondary mb-2 uppercase tracking-wider">Servicio al Cliente</h4>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Política de Envíos</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Devoluciones y Reembolsos</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Garantía</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Pedidos por Mayor</a>
+</div>
+<!-- Newsletter Column -->
+<div class="flex flex-col gap-4">
+<h4 class="font-label-bold text-label-bold text-on-secondary uppercase tracking-wider">Mantente Actualizado</h4>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">Suscríbete para ofertas exclusivas y anuncios de nuevos productos.</p>
+<div class="flex">
+<input class="bg-surface/10 border border-on-secondary-fixed-variant text-on-secondary px-3 py-2 w-full focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed" placeholder="Dirección de correo" type="email"/>
+<button class="bg-primary-fixed text-on-primary-fixed px-4 font-label-bold hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Copyright Bottom -->
+<div class="col-span-1 md:col-span-4 mt-stack-lg pt-stack-md border-t border-on-secondary-fixed-variant/50 flex flex-col sm:flex-row justify-between items-center">
+<span class="font-body-md text-body-md text-on-secondary-fixed-variant mb-4 sm:mb-0">© 2024 Titan Hardware. Construido para Profesionales.</span>
+<div class="flex gap-4">
+<a class="text-on-secondary-fixed-variant hover:text-primary-fixed transition-colors" href="#">
+<!-- Social Icons Placeholders -->
+<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
+</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary-fixed transition-colors" href="#">
+<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -90,7 +90,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   return (
   <Link
     to={`/producto/${producto.id}`}
-    className="relative w-[260px] h-[380px] bg-dark-blue border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col"
+    className="card-shell w-[260px] h-[380px] overflow-hidden flex flex-col"
   >
     {isAdmin && (
       <div
@@ -103,7 +103,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
             e.stopPropagation();
             onEdit?.(producto);
           }}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:bg-blue-600 hover:text-white transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
           title="Editar producto"
         >
           <PencilIcon />
@@ -111,7 +111,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
 
         <button
           onClick={handleDelete}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-dark-blue/90 border border-white/20 text-dark-muted hover:bg-red-600 hover:text-white transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-error hover:text-on-error transition-colors"
           title="Eliminar producto"
         >
           <TrashIcon />
@@ -120,7 +120,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
     )}
 
     {/* Imagen */}
-    <div className="h-1/2 w-full bg-white/5 overflow-hidden">
+    <div className="h-1/2 w-full overflow-hidden flex-shrink-0">
       <img
         src={imagen}
         alt={nombre}
@@ -129,30 +129,30 @@ const Card = ({ producto, onDelete, onEdit }) => {
       />
     </div>
     {/* Información */}
-    <div className="flex flex-1 flex-col px-2 py-2 gap-0.5">
+    <div className="flex flex-1 flex-col p-3 gap-1">
 
       <h3
-        className="text-dark-text text-sm font-semibold leading-snug truncate"
+        className="text-on-surface text-sm font-semibold leading-snug line-clamp-2"
         title={nombre}
       >
         {nombre}
       </h3>
-      <p className="text-xs text-dark-muted">
-        Marca: <span className="text-white">{marcaNombre}</span>
+      <p className="text-on-surface-variant text-xs uppercase">
+        <span>{marcaNombre}</span>
       </p>
 
       <div className="space-y-1">
 
         {precioOferta && (
-          <p className="text-xs text-dark-muted line-through">
+          <p className="text-xs text-on-surface-variant line-through">
             ${precioRegular.toLocaleString("es-AR")}
           </p>
         )}
 
-        <p className="text-lg font-bold text-blue-400">
+        <p className="font-headline text-headline-md text-primary">
           ${precioEfectivo.toLocaleString("es-AR")}
         </p>
-        
+
       </div>
 
       <button
@@ -160,7 +160,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
           e.preventDefault();
           agregarAlCarrito(productoParaCarrito);
         }}
-        className="mt-auto w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+        className="btn-primary mt-auto w-full py-2 text-sm h-10"
       >
         Agregar al carrito
       </button>

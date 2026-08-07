@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
 import Nav from './components/nav';
+import Footer from './components/footer';
+import ScrollToTop from './components/ui/scrollToTop';
 import Home from './components/pages/home';
 import Login from './components/pages/login';
 import Registro from './components/pages/registro';
@@ -32,7 +33,8 @@ function App() {
       <CarritoProvider>
         <ToastProvider>
           <ConfirmProvider>
-            <div>
+            <div className="flex flex-col min-h-screen bg-surface pt-[72px]">
+              <ScrollToTop />
               <Nav />
               <Routes>
                 <Route path="/home" element={<Home />} />
@@ -43,6 +45,7 @@ function App() {
                 <Route path="/producto/:id" element={<CardDetail />} />
                 <Route path="/admin" element={<Admin />} />
               </Routes>
+              <Footer />
             </div>
           </ConfirmProvider>
         </ToastProvider>

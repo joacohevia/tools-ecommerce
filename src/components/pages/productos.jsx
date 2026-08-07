@@ -9,7 +9,7 @@ import ProductForm from '../form/productForm';
 import CategForm from '../form/categForm';
 import MarcaForm from '../form/marcaForm';
 import Filtrado from '../filtrado';
-import Footer from '../footer';
+
 
 const ORDEN_OPCIONES = [
   { value: 'mas_vendido', label: 'Más vendidos' },
@@ -163,7 +163,7 @@ export default function Productos() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-dark-muted text-lg">Cargando productos...</p>
+        <p className="text-on-surface-variant text-lg">Cargando productos...</p>
       </div>
     );
   }
@@ -171,29 +171,29 @@ export default function Productos() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-400 text-lg">Error: {error}</p>
+        <p className="text-error text-lg">Error: {error}</p>
       </div>
     );
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-6">
+    <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-1">
       {/* Breadcrumb */}
-      <nav className="text-sm text-dark-muted mb-6" aria-label="Breadcrumb">
+      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">
           <li>
-            <Link to="/home" className="hover:text-dark-text transition-colors">
+            <Link to="/home" className="hover:text-on-surface transition-colors">
               Inicio
             </Link>
           </li>
           <li aria-hidden="true">/</li>
-          <li className="text-dark-text font-medium">Productos</li>
+          <li className="text-on-surface font-medium">Productos</li>
         </ol>
       </nav>
 
       {/* Top bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <p className="text-dark-muted text-sm">
+        <p className="text-on-surface-variant text-sm">
           {productosFiltrados.length} producto{productosFiltrados.length !== 1 ? 's' : ''}
         </p>
 
@@ -202,19 +202,19 @@ export default function Productos() {
             <>
               <button
                 onClick={() => { setEditProducto(null); setShowForm('producto'); }}
-                className="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-md text-sm font-medium cursor-pointer transition-colors"
+                className="btn-primary py-1.5 text-sm"
               >
                 + Agregar producto
               </button>
               <button
                 onClick={() => setShowForm('categoria')}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm font-medium cursor-pointer transition-colors"
+                className="btn-primary py-1.5 text-sm"
               >
                 + Agregar categoria
               </button>
               <button
                 onClick={() => setShowForm('marca')}
-                className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-md text-sm font-medium cursor-pointer transition-colors"
+                className="btn-primary py-1.5 text-sm"
               >
                 + Agregar marca
               </button>
@@ -223,14 +223,14 @@ export default function Productos() {
         </div>
 
         <div className="flex items-center gap-2">
-          <label htmlFor="ordenar" className="text-dark-text text-sm font-medium whitespace-nowrap">
+          <label htmlFor="ordenar" className="text-on-surface text-sm font-medium whitespace-nowrap">
             Ordenar por:
           </label>
           <select
             id="ordenar"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-black border border-white/10 rounded-lg px-3 py-2 text-dark-text text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none cursor-pointer"
+            className="select"
           >
             {ORDEN_OPCIONES.map((op) => (
               <option key={op.value} value={op.value}>
@@ -262,12 +262,12 @@ export default function Productos() {
         {/* Grid de productos */}
         <div className="flex-1">
           {productosFiltrados.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-dark-muted text-lg mb-2">No se encontraron productos</p>
-              <p className="text-dark-muted text-sm">Probá ajustando los filtros</p>
+            <div className="py-20">
+              <p className="text-on-surface-variant text-lg mb-2">No se encontraron productos</p>
+              <p className="text-on-surface-variant text-sm">Probá ajustando los filtros</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-7 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-gutter justify-items-center">
               {productosFiltrados.map((producto) => (
                 <Card
                   key={producto.id}
@@ -282,8 +282,8 @@ export default function Productos() {
       </div>
 
       {showForm === 'producto' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(null)}>
-          <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setShowForm(null)}>
+          <div className="modal-panel w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <ProductForm
               producto={editProducto}
               onSaved={() => { setShowForm(null); setEditProducto(null); cargarProductos(); }}
@@ -316,7 +316,6 @@ export default function Productos() {
         />
       )}
 
-    <Footer></Footer>
     </main>
   );
 }
@@ -338,38 +337,38 @@ function ModalCategorias({ categorias, onClose, onRefresh, confirm, toast }) {
   };
 
   if (modo === 'crear') return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <CategForm onSaved={() => { setModo('lista'); onRefresh(); }} />
       </div>
     </div>
   );
 
   if (modo === 'editar' && editando) return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <CategForm key={editando.id} categoria={editando} onSaved={() => { setModo('lista'); setEditando(null); onRefresh(); }} />
       </div>
     </div>
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-dark-text">Categorias ({categorias.length})</h2>
-          <button onClick={() => setModo('crear')} className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">+ Nueva</button>
+          <h2 className="text-headline-md font-headline text-on-surface">Categorias ({categorias.length})</h2>
+          <button onClick={() => setModo('crear')} className="btn-primary py-1 text-sm">+ Nueva</button>
         </div>
         {categorias.length === 0 ? (
-          <p className="text-dark-muted text-center py-4">No hay categorias.</p>
+          <p className="text-on-surface-variant text-center py-4">No hay categorias.</p>
         ) : (
           <ul className="space-y-1 max-h-64 overflow-y-auto">
             {categorias.map((cat) => (
-              <li key={cat.id} className="flex items-center justify-between px-3 py-2 bg-white/5 rounded hover:bg-white/10">
-                <div><span className="text-dark-text text-sm">{cat.nombre}</span><span className="text-dark-muted text-xs ml-2">{cat.slug}</span></div>
+              <li key={cat.id} className="flex items-center justify-between px-3 py-2 bg-surface-container rounded hover:bg-surface-container-high">
+                <div><span className="text-on-surface text-sm">{cat.nombre}</span><span className="text-on-surface-variant text-xs ml-2">{cat.slug}</span></div>
                 <div className="flex gap-1">
-                  <button onClick={() => { setEditando(cat); setModo('editar'); }} className="text-dark-muted hover:text-blue-400 px-2 cursor-pointer text-sm" title="Editar">✏️</button>
-                  <button onClick={() => handleDelete(cat)} className="text-dark-muted hover:text-red-400 px-2 cursor-pointer text-sm" title="Eliminar">🗑️</button>
+                  <button onClick={() => { setEditando(cat); setModo('editar'); }} className="text-on-surface-variant hover:text-primary px-2 cursor-pointer text-sm" title="Editar">✏️</button>
+                  <button onClick={() => handleDelete(cat)} className="text-on-surface-variant hover:text-error px-2 cursor-pointer text-sm" title="Eliminar">🗑️</button>
                 </div>
               </li>
             ))}
@@ -397,38 +396,38 @@ function ModalMarcas({ marcas, onClose, onRefresh, confirm, toast }) {
   };
 
   if (modo === 'crear') return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <MarcaForm onSaved={() => { setModo('lista'); onRefresh(); }} />
       </div>
     </div>
   );
 
   if (modo === 'editar' && editando) return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <MarcaForm key={editando.id} marca={editando} onSaved={() => { setModo('lista'); setEditando(null); onRefresh(); }} />
       </div>
     </div>
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-dark-blue border border-white/20 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-panel w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-dark-text">Marcas ({marcas.length})</h2>
-          <button onClick={() => setModo('crear')} className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">+ Nueva</button>
+          <h2 className="text-headline-md font-headline text-on-surface">Marcas ({marcas.length})</h2>
+          <button onClick={() => setModo('crear')} className="btn-primary py-1 text-sm">+ Nueva</button>
         </div>
         {marcas.length === 0 ? (
-          <p className="text-dark-muted text-center py-4">No hay marcas.</p>
+          <p className="text-on-surface-variant text-center py-4">No hay marcas.</p>
         ) : (
           <ul className="space-y-1 max-h-64 overflow-y-auto">
             {marcas.map((mar) => (
-              <li key={mar.id} className="flex items-center justify-between px-3 py-2 bg-white/5 rounded hover:bg-white/10">
-                <span className="text-dark-text text-sm">{mar.nombre}</span>
+              <li key={mar.id} className="flex items-center justify-between px-3 py-2 bg-surface-container rounded hover:bg-surface-container-high">
+                <span className="text-on-surface text-sm">{mar.nombre}</span>
                 <div className="flex gap-1">
-                  <button onClick={() => { setEditando(mar); setModo('editar'); }} className="text-dark-muted hover:text-blue-400 px-2 cursor-pointer text-sm" title="Editar">✏️</button>
-                  <button onClick={() => handleDelete(mar)} className="text-dark-muted hover:text-red-400 px-2 cursor-pointer text-sm" title="Eliminar">🗑️</button>
+                  <button onClick={() => { setEditando(mar); setModo('editar'); }} className="text-on-surface-variant hover:text-primary px-2 cursor-pointer text-sm" title="Editar">✏️</button>
+                  <button onClick={() => handleDelete(mar)} className="text-on-surface-variant hover:text-error px-2 cursor-pointer text-sm" title="Eliminar">🗑️</button>
                 </div>
               </li>
             ))}

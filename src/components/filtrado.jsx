@@ -43,8 +43,8 @@ export default function Filtrado({
   };
 
   return (
-    <aside className="w-full bg-dark-blue border border-white/10 rounded-xl p-5 flex flex-col gap-6">
-      <h3 className="text-dark-text font-subtitle text-lg font-semibold border-b border-white/10 pb-3">
+    <aside className="w-full bg-surface-container border border-outline-variant rounded-xl p-5 flex flex-col gap-6">
+      <h3 className="text-on-surface font-headline text-lg font-semibold border-b border-outline-variant/50 pb-3">
         Productos
       </h3>
 
@@ -52,7 +52,7 @@ export default function Filtrado({
       <div>
         <button
           onClick={() => setMarcasAbierto((prev) => !prev)}
-          className="w-full flex items-center justify-between text-dark-text font-medium text-sm mb-3 cursor-pointer"
+          className="w-full flex items-center justify-between text-on-surface font-medium text-sm mb-3 cursor-pointer"
         >
           <span>Filtrar por Marca</span>
           <svg
@@ -68,19 +68,19 @@ export default function Filtrado({
             {marcas.map((marca) => (
               <label
                 key={marca.id}
-                className="flex items-center gap-2 text-dark-muted text-sm cursor-pointer hover:text-dark-text transition-colors"
+                className="flex items-center gap-2 text-on-surface-variant text-sm cursor-pointer hover:text-on-surface transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={selectedMarcas.includes(marca.id)}
                   onChange={() => toggleMarca(marca.id)}
-                  className="w-4 h-4 rounded border-white/20 bg-dark-bg text-blue-500 focus:ring-blue-500 focus:ring-1 cursor-pointer accent-blue-500"
+                  className="w-4 h-4 rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-1 cursor-pointer accent-primary"
                 />
                 {marca.nombre}
               </label>
             ))}
             {marcas.length === 0 && (
-              <p className="text-dark-muted text-xs italic">No hay marcas disponibles</p>
+              <p className="text-on-surface-variant text-xs italic">No hay marcas disponibles</p>
             )}
           </div>
         )}
@@ -90,7 +90,7 @@ export default function Filtrado({
       <div>
         <button
           onClick={() => setCategoriasAbierto((prev) => !prev)}
-          className="w-full flex items-center justify-between text-dark-text font-medium text-sm mb-3 cursor-pointer"
+          className="w-full flex items-center justify-between text-on-surface font-medium text-sm mb-3 cursor-pointer"
         >
           <span>Filtrar por Categoría</span>
           <svg
@@ -106,19 +106,19 @@ export default function Filtrado({
             {categorias.map((cat) => (
               <label
                 key={cat.id}
-                className="flex items-center gap-2 text-dark-muted text-sm cursor-pointer hover:text-dark-text transition-colors"
+                className="flex items-center gap-2 text-on-surface-variant text-sm cursor-pointer hover:text-on-surface transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={selectedCategorias.includes(cat.id)}
                   onChange={() => toggleCategoria(cat.id)}
-                  className="w-4 h-4 rounded border-white/20 bg-dark-bg text-blue-500 focus:ring-blue-500 focus:ring-1 cursor-pointer accent-blue-500"
+                  className="w-4 h-4 rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-1 cursor-pointer accent-primary"
                 />
                 {cat.nombre}
               </label>
             ))}
             {categorias.length === 0 && (
-              <p className="text-dark-muted text-xs italic">No hay categorías disponibles</p>
+              <p className="text-on-surface-variant text-xs italic">No hay categorías disponibles</p>
             )}
           </div>
         )}
@@ -126,23 +126,23 @@ export default function Filtrado({
 
       {/* Precio */}
       <div>
-        <h4 className="text-dark-text font-medium text-sm mb-3">Precio</h4>
+        <h4 className="text-on-surface font-medium text-sm mb-3">Precio</h4>
         <div className="flex items-center gap-2">
           <input
             type="number"
             placeholder="Mín"
             value={precioMin}
             onChange={(e) => setPrecioMin(e.target.value)}
-            className="w-full bg-dark-bg border border-white/10 rounded-lg px-3 py-2 text-dark-text text-sm placeholder-dark-muted focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+            className="input"
             min="0"
           />
-          <span className="text-dark-muted text-sm">-</span>
+          <span className="text-on-surface-variant text-sm">-</span>
           <input
             type="number"
             placeholder="Máx"
             value={precioMax}
             onChange={(e) => setPrecioMax(e.target.value)}
-            className="w-full bg-dark-bg border border-white/10 rounded-lg px-3 py-2 text-dark-text text-sm placeholder-dark-muted focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+            className="input"
             min="0"
           />
         </div>

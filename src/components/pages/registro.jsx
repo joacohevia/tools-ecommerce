@@ -46,18 +46,18 @@ const Registro = () => {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-blue px-4">
-        <div className="w-full max-w-md bg-dark-blue border border-white/20 rounded-xl p-8 shadow-xl text-center">
-          <h2 className="text-2xl font-semibold text-dark-text mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-surface px-4">
+        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-xl text-center">
+          <h2 className="font-headline text-headline-md text-on-surface mb-4">
             Revisá tu correo
           </h2>
-          <p className="text-dark-muted text-sm mb-6">
+          <p className="text-on-surface-variant text-sm mb-6">
             Te enviamos un enlace de confirmación a <strong>{email}</strong>.
             Hacé clic en el enlace para activar tu cuenta.
           </p>
           <button
             onClick={() => navigate("/login")}
-            className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-6 rounded-lg transition-colors cursor-pointer"
+            className="btn-primary py-2.5 px-6"
           >
             Ir a iniciar sesión
           </button>
@@ -67,21 +67,21 @@ const Registro = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-dark-blue px-4">
-      <div className="w-full max-w-md bg-dark-blue border border-white/20 rounded-xl p-8 shadow-xl">
-        <h2 className="text-2xl font-semibold text-dark-text text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-surface px-4">
+      <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-xl">
+        <h2 className="font-headline text-headline-md text-on-surface text-center mb-6">
           Crear Cuenta
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-md text-red-300 text-sm text-center">
+          <div className="mb-4 p-3 bg-error-container border border-error text-on-error-container rounded-md text-sm text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Nombre
             </label>
             <input
@@ -90,12 +90,12 @@ const Registro = () => {
               onChange={(e) => setNombre(e.target.value)}
               required
               placeholder="Tu nombre"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Apellido
             </label>
             <input
@@ -104,12 +104,12 @@ const Registro = () => {
               onChange={(e) => setApellido(e.target.value)}
               required
               placeholder="Tu apellido"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               DNI (opcional)
             </label>
             <input
@@ -117,12 +117,12 @@ const Registro = () => {
               value={dni}
               onChange={(e) => setDni(e.target.value)}
               placeholder="Sin puntos ni guiones"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Correo electrónico
             </label>
             <input
@@ -131,12 +131,12 @@ const Registro = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="tu@correo.com"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Contraseña
             </label>
             <input
@@ -146,30 +146,30 @@ const Registro = () => {
               required
               minLength={6}
               placeholder="Mínimo 6 caracteres"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer"
+            className="btn-primary w-full py-2.5"
           >
             {loading ? "Registrando..." : "Registrarme"}
           </button>
         </form>
 
         <div className="mt-6 text-center space-y-2">
-          <p className="text-dark-muted text-sm">
+          <p className="text-on-surface-variant text-sm">
             ¿Ya tenés cuenta?{" "}
-            <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">
+            <Link to="/login" className="text-primary hover:underline font-medium">
               Iniciar sesión
             </Link>
           </p>
 
           <button
             onClick={() => navigate("/")}
-            className="text-dark-muted text-sm hover:text-dark-text cursor-pointer"
+            className="text-on-surface-variant text-sm hover:text-on-surface cursor-pointer"
           >
             Volver al inicio
           </button>

@@ -33,21 +33,21 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-dark-blue px-4">
-      <div className="w-full max-w-md bg-dark-blue border border-white/20 rounded-xl p-8 shadow-xl">
-        <h2 className="text-2xl font-semibold text-dark-text text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-surface px-4">
+      <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-xl">
+        <h2 className="font-headline text-headline-md text-on-surface text-center mb-6">
           Iniciar Sesión
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-md text-red-300 text-sm text-center">
+          <div className="mb-4 p-3 bg-error-container border border-error text-on-error-container rounded-md text-sm text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Correo electrónico
             </label>
             <input
@@ -56,12 +56,12 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="tu@correo.com"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">
+            <label className="block font-label-bold mb-1">
               Contraseña
             </label>
             <input
@@ -70,30 +70,30 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Tu contraseña"
-              className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/10 text-dark-text placeholder:text-dark-muted focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer"
+            className="btn-primary w-full py-2.5"
           >
             {loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
 
         <div className="mt-6 text-center space-y-2">
-          <p className="text-dark-muted text-sm">
+          <p className="text-on-surface-variant text-sm">
             ¿No tenés cuenta?{" "}
-            <Link to="/registro" className="text-blue-400 hover:text-blue-300 font-medium">
+            <Link to="/registro" className="text-primary hover:underline font-medium">
               Quiero registrarme
             </Link>
           </p>
 
           <button
             onClick={() => navigate("/")}
-            className="text-dark-muted text-sm hover:text-dark-text cursor-pointer"
+            className="text-on-surface-variant text-sm hover:text-on-surface cursor-pointer"
           >
             Volver al inicio
           </button>

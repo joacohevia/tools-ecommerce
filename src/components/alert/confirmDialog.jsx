@@ -44,33 +44,33 @@ export default function ConfirmDialog({ title, message, confirmText, cancelText,
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="modal-overlay"
       onClick={() => onClose?.(false)}
     >
       <div
-        className="bg-gray-900 border border-white/10 rounded-xl shadow-2xl max-w-md w-full mx-4"
+        className="modal-panel max-w-md w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-6 pt-6 pb-2 flex items-center gap-3">
           <WarningIcon />
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <h2 className="font-headline text-headline-md text-on-surface">{title}</h2>
         </div>
 
         <div className="px-6 pb-2">
-          <p className="text-sm text-gray-400">{message}</p>
+          <p className="text-body-md text-on-surface-variant">{message}</p>
         </div>
 
         <div className="px-6 pb-6 flex justify-end gap-3">
           <button
             onClick={() => onClose?.(false)}
-            className="px-4 py-2 text-sm rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700 transition-colors cursor-pointer"
+            className="btn-secondary py-2 text-sm"
           >
             {cancelText}
           </button>
           <button
             ref={confirmRef}
             onClick={() => onClose?.(true)}
-            className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-500 transition-colors cursor-pointer"
+            className="btn-primary py-2 text-sm bg-error hover:bg-error/80"
           >
             {confirmText}
           </button>

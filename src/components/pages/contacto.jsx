@@ -130,19 +130,19 @@ export default function Contacto() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="text-sm text-dark-muted mb-6" aria-label="Breadcrumb">
+      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">
           <li>
-            <Link to="/home" className="hover:text-dark-text transition-colors">
+            <Link to="/home" className="hover:text-on-surface transition-colors">
               Inicio
             </Link>
           </li>
           <li aria-hidden="true">/</li>
-          <li className="text-dark-text font-medium">Contacto</li>
+          <li className="text-on-surface font-medium">Contacto</li>
         </ol>
       </nav>
 
-      <div className="bg-dark-blue rounded-xl border border-white/10">
+      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant">
         <div className="flex flex-col md:flex-row">
 
           {/**
@@ -150,14 +150,14 @@ export default function Contacto() {
            * Se aumentó el padding derecho (pr-12) y se agregó gap-8 entre columnas
            * para mayor separación visual respecto al formulario.
            */}
-          <aside className="md:w-[40%] p-8 md:p-10 md:pr-16 flex flex-col gap-6 border-b md:border-b-0 md:border-r border-white/10">
-            <h2 className="text-2xl font-bold text-dark-text font-title">Contacto</h2>
+          <aside className="md:w-[40%] p-8 md:p-10 md:pr-16 flex flex-col gap-6 border-b md:border-b-0 md:border-r border-outline-variant">
+            <h2 className="text-2xl font-bold text-on-surface font-headline">Contacto</h2>
             <ul className="flex flex-col gap-6">
               {DATOS_CONTACTO.map(({ icono: Icono, label, valor, href }) => (
                 <li key={label} className="flex items-start gap-3">
-                  <span className="text-dark-muted mt-0.5"><Icono /></span>
+                  <span className="text-on-surface-variant mt-0.5"><Icono /></span>
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-dark-muted/60">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/60">
                       {label}
                     </span>
                     {href ? (
@@ -165,12 +165,12 @@ export default function Contacto() {
                         href={href}
                         target={label === 'WhatsApp' ? '_blank' : undefined}
                         rel={label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
-                        className="text-dark-text text-sm hover:text-blue-400 transition-colors"
+                        className="text-on-surface text-sm hover:text-primary transition-colors"
                       >
                         {valor}
                       </a>
                     ) : (
-                      <span className="text-dark-text text-sm">{valor}</span>
+                      <span className="text-on-surface text-sm">{valor}</span>
                     )}
                   </div>
                 </li>
@@ -192,14 +192,14 @@ export default function Contacto() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-dark-text mb-2">Mensaje enviado</h3>
-                <p className="text-dark-muted text-sm">Gracias por contactarnos. Te responderemos a la brevedad.</p>
+                <h3 className="text-xl font-semibold text-on-surface mb-2">Mensaje enviado</h3>
+                <p className="text-on-surface-variant text-sm">Gracias por contactarnos. Te responderemos a la brevedad.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                 {/* Nombre */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="nombre" className="text-sm font-medium text-dark-text">
+                  <label htmlFor="nombre" className="text-sm font-medium text-on-surface">
                     Nombre
                   </label>
                   <input
@@ -211,20 +211,20 @@ export default function Contacto() {
                     onChange={handleChange}
                     aria-invalid={!!errors.nombre}
                     aria-describedby={errors.nombre ? 'error-nombre' : undefined}
-                    className={`border rounded-lg px-4 py-2.5 text-sm bg-dark-bg text-dark-text placeholder-dark-muted outline-none transition-colors ${
+                    className={`input ${
                       errors.nombre
-                        ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
-                        : 'border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        ? 'border-error focus:border-error focus:ring-error'
+                        : ''
                     }`}
                   />
                   {errors.nombre && (
-                    <p id="error-nombre" className="text-red-400 text-xs">{errors.nombre}</p>
+                    <p id="error-nombre" className="text-error text-xs">{errors.nombre}</p>
                   )}
                 </div>
 
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="email" className="text-sm font-medium text-dark-text">
+                  <label htmlFor="email" className="text-sm font-medium text-on-surface">
                     Email
                   </label>
                   <input
@@ -236,20 +236,20 @@ export default function Contacto() {
                     onChange={handleChange}
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'error-email' : undefined}
-                    className={`border rounded-lg px-4 py-2.5 text-sm bg-dark-bg text-dark-text placeholder-dark-muted outline-none transition-colors ${
+                    className={`input ${
                       errors.email
-                        ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
-                        : 'border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        ? 'border-error focus:border-error focus:ring-error'
+                        : ''
                     }`}
                   />
                   {errors.email && (
-                    <p id="error-email" className="text-red-400 text-xs">{errors.email}</p>
+                    <p id="error-email" className="text-error text-xs">{errors.email}</p>
                   )}
                 </div>
 
                 {/* Teléfono */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="telefono" className="text-sm font-medium text-dark-text">
+                  <label htmlFor="telefono" className="text-sm font-medium text-on-surface">
                     Teléfono
                   </label>
                   <input
@@ -261,20 +261,20 @@ export default function Contacto() {
                     onChange={handleChange}
                     aria-invalid={!!errors.telefono}
                     aria-describedby={errors.telefono ? 'error-telefono' : undefined}
-                    className={`border rounded-lg px-4 py-2.5 text-sm bg-dark-bg text-dark-text placeholder-dark-muted outline-none transition-colors ${
+                    className={`input ${
                       errors.telefono
-                        ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
-                        : 'border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        ? 'border-error focus:border-error focus:ring-error'
+                        : ''
                     }`}
                   />
                   {errors.telefono && (
-                    <p id="error-telefono" className="text-red-400 text-xs">{errors.telefono}</p>
+                    <p id="error-telefono" className="text-error text-xs">{errors.telefono}</p>
                   )}
                 </div>
 
                 {/* Mensaje */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="mensaje" className="text-sm font-medium text-dark-text">
+                  <label htmlFor="mensaje" className="text-sm font-medium text-on-surface">
                     Mensaje
                   </label>
                   <textarea
@@ -286,20 +286,20 @@ export default function Contacto() {
                     onChange={handleChange}
                     aria-invalid={!!errors.mensaje}
                     aria-describedby={errors.mensaje ? 'error-mensaje' : undefined}
-                    className={`border rounded-lg px-4 py-3 text-sm bg-dark-bg text-dark-text placeholder-dark-muted outline-none transition-colors resize-none ${
+                    className={`input resize-none ${
                       errors.mensaje
-                        ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
-                        : 'border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        ? 'border-error focus:border-error focus:ring-error'
+                        : ''
                     }`}
                   />
                   {errors.mensaje && (
-                    <p id="error-mensaje" className="text-red-400 text-xs">{errors.mensaje}</p>
+                    <p id="error-mensaje" className="text-error text-xs">{errors.mensaje}</p>
                   )}
                 </div>
 
                 <button
                   type="submit"
-                  className="mt-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium py-2.5 px-6 rounded-lg transition-colors cursor-pointer self-start"
+                  className="mt-2 btn-primary mt-2 self-start"
                 >
                   Enviar mensaje
                 </button>
