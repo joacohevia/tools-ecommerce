@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Titan Hardware - Productos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary-fixed": "#1b1b1c",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-tertiary-container": "#4f5151",
+                        "inverse-primary": "#99d907",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0edec",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-fixed": "#131f00",
+                        "on-primary": "#ffffff",
+                        "primary": "#476800",
+                        "on-primary-fixed-variant": "#354e00",
+                        "outline": "#737a63",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-bright": "#fcf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "tertiary": "#5d5f5f",
+                        "on-primary-container": "#3d5900",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c2caaf",
+                        "on-secondary-container": "#636262",
+                        "secondary": "#5f5e5e",
+                        "secondary-container": "#e2dfde",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#424935",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "surface-variant": "#e5e2e1",
+                        "primary-container": "#97d700",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-tint": "#476800",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#99d907",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f734",
+                        "tertiary-container": "#c4c4c4",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "section-padding": "80px",
+                        "gutter": "24px",
+                        "stack-lg": "32px",
+                        "container-max": "1280px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .filter-checkbox:checked {
+            background-color: theme('colors.primary');
+            border-color: theme('colors.primary');
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 h-[72px] bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/30 shadow-sm flex items-center justify-between px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Logo -->
+<a class="flex items-center gap-2 flex-shrink-0 group" href="#">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">construction</span>
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface dark:text-on-surface-variant">
+        TITAN HARDWARE
+    </span>
+</a>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center space-x-8 font-body-md text-body-md">
+<a class="text-primary dark:text-primary-fixed font-semibold border-b-2 border-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Inicio</a>
+<!-- Dropdown Categorías -->
+<div class="relative group py-6">
+<button class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200 flex items-center gap-1 focus:outline-none">
+        Categorías
+        <span class="material-symbols-outlined text-sm transition-transform duration-200 group-hover:rotate-180">expand_more</span>
+</button>
+<div class="absolute left-0 top-full -mt-2 w-56 bg-surface-container-lowest border border-outline-variant rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col py-2 translate-y-2 group-hover:translate-y-0">
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">power</span> Herramientas Eléctricas
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">handyman</span> Herramientas Manuales
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">architecture</span> Construcción
+        </a>
+<a class="px-4 py-2 text-body-md text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">security</span> Seguridad Industrial
+        </a>
+</div>
+</div>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Productos</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary active:scale-95 transition-transform hover:opacity-80 transition-opacity duration-200" href="#">Contacto</a>
+</nav>
+<!-- Search & Actions -->
+<div class="flex items-center space-x-4 flex-1 md:flex-none justify-end md:justify-start ml-4 md:ml-0">
+<!-- Search Bar -->
+<div class="relative hidden sm:block w-full max-w-xs group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-on-surface/5 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-md text-body-md text-on-surface transition-colors placeholder:text-on-surface-variant/70" placeholder="Buscar productos..." type="text"/>
+</div>
+<!-- Trailing Icons -->
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95 relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop pt-[104px] pb-section-padding flex gap-gutter">
+<!-- SideNavBar (Sidebar) -->
+<aside class="h-full w-[280px] hidden lg:block flex-shrink-0">
+<div class="sticky top-[104px] rounded-lg p-6 flex flex-col gap-6 border border-outline-variant/20 shadow-xl bg-surface-container-low"><div class="pb-4 border-b border-outline-variant/20">
+<h2 class="font-headline-md text-headline-md text-on-surface">Productos</h2>
+</div>
+<!-- Filtrar por Marca -->
+<div>
+<div class="flex items-center justify-between mb-4 cursor-pointer text-on-surface">
+<span class="font-label-bold uppercase tracking-wider text-sm">Filtrar por Marca</span>
+<span class="material-symbols-outlined">expand_less</span>
+</div>
+<div class="flex flex-col gap-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Black &amp; Decker</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Bosch</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">DeWalt</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Dowen</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Einhell</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Gamma</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Lusqtoff</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Makita</span>
+</label>
+</div>
+</div>
+<!-- Filtrar por Categoría -->
+<div>
+<div class="flex items-center justify-between mb-4 cursor-pointer text-on-surface">
+<span class="font-label-bold uppercase tracking-wider text-sm">Filtrar por Categoría</span>
+<span class="material-symbols-outlined">expand_less</span>
+</div>
+<div class="flex flex-col gap-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Amoladoras</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Compresores</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Cortadoras</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Durlock</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Generadores</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Hidrolavadoras</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Lijadoras</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-4 w-4 bg-transparent border-outline-variant rounded-sm text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Martillos</span>
+</label>
+</div>
+</div>
+<!-- Precio -->
+<div>
+<span class="font-label-bold uppercase tracking-wider text-sm block mb-4 text-on-surface">Precio</span>
+<div class="flex items-center gap-2">
+<input class="w-full bg-transparent border border-outline-variant/30 rounded p-2 text-sm focus:ring-primary focus:border-primary placeholder-on-surface-variant/50 text-on-surface" placeholder="Mín" type="text"/>
+<span class="text-outline-variant">-</span>
+<input class="w-full bg-transparent border border-outline-variant/30 rounded p-2 text-sm focus:ring-primary focus:border-primary placeholder-on-surface-variant/50 text-on-surface" placeholder="Máx" type="text"/>
+</div>
+</div></div>
+</aside>
+<!-- Product Grid Area -->
+<div class="flex-1 w-full">
+<!-- Breadcrumbs & Controls -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-stack-lg gap-4">
+<div>
+<nav class="flex items-center text-sm text-on-surface-variant mb-2">
+<a class="hover:text-primary transition-colors" href="#">Inicio</a>
+<span class="mx-2 material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-medium text-on-surface">Productos</span>
+</nav>
+<p class="text-on-surface-variant">28 productos encontrados</p>
+</div>
+<div class="flex items-center gap-3">
+<label class="font-label-bold text-label-bold text-on-surface" for="sort">Ordenar por:</label>
+<div class="relative">
+<select class="appearance-none bg-surface border border-outline-variant text-on-surface text-sm rounded-md focus:ring-primary focus:border-primary block w-48 p-2.5 pr-8" id="sort">
+<option>Más vendidos</option>
+<option>Menor precio</option>
+<option>Mayor precio</option>
+<option>Relevancia</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Product Card 1 -->
+<article class="group bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-shadow duration-300 flex flex-col relative">
+<div class="relative aspect-square bg-surface-container-low p-4 flex items-center justify-center overflow-hidden">
+<img class="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500" data-alt="A high-resolution photograph of a rugged, industrial Gamma brand 3000W generator isolated on a clean, minimalist light gray background. Bright, high-key studio lighting highlights the metallic and sturdy plastic textures. Modern tool aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTcwn41h5kljhOxC1qDCGVR0w-2xEuorAXMf-Pc-L9_PNHOFLpicB9W2U3Owio16w4IlZI_F9xp9k5HUtqcj6wUpDDIVp8WYX06jrEawQp33rsvpSbKujoHBQcHaEl2Vf-4OWhLV8XchrNXA8BtZ1aRBcQ9LB3xV1aQSkoJU8inMLNBjoMZ2qqoNa1YZYNwjCvJz8zehn824F6EXNHUbrTPZmD6VIhQCRQeeVNe7OgZynsj2CZw3FK"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-primary/10 text-primary px-2 py-1 rounded-sm font-label-bold text-[10px] uppercase tracking-wider">Más Vendido</span>
+</div>
+<button class="absolute bottom-3 right-3 bg-surface-container-lowest p-2 rounded-full shadow-sm text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Gamma</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 leading-tight">Generador Gamma 3000W Nafta</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-primary">$350.000</span>
+</div>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">credit_card</span>
+                                6 cuotas sin interés
+                            </p>
+</div>
+<button class="w-full mt-4 bg-surface text-primary border border-primary hover:bg-primary hover:text-on-primary font-label-bold text-label-bold py-2 rounded transition-colors opacity-0 group-hover:opacity-100">
+                            Agregar al carrito
+                        </button>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="group bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-shadow duration-300 flex flex-col relative">
+<div class="relative aspect-square bg-surface-container-low p-4 flex items-center justify-center overflow-hidden">
+<img class="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv1QAq2e-5uyC1gsWl_EyDm1q7oG2hYtqdiQMTqrAk5zg-ZZuCrbqXpy8VB6E00b6TeWmeomKGr7siji9eF2ThJG3H-NyYmPY1l-pmZyMqEv3ZJKVxQCjzGGlmKcGB-zPVK7Y9-qBW3X9Dh2aRGprcXXiELWdbfZubQDXMBKAOjBgm_9m6RbqKM1YVi6c-zuTNPl1X7rU_ff8fqSpyAt_Qiv8UI6TAzETbJ4Oi8vnJtJPfUJWbDj9Xr5_golh286p3WA"/>
+<button class="absolute bottom-3 right-3 bg-surface-container-lowest p-2 rounded-full shadow-sm text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">DeWalt</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 leading-tight">Generador Inverter DeWalt 2000W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-primary">$420.000</span>
+</div>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">credit_card</span>
+                                3 cuotas sin interés
+                            </p>
+</div>
+<button class="w-full mt-4 bg-surface text-primary border border-primary hover:bg-primary hover:text-on-primary font-label-bold text-label-bold py-2 rounded transition-colors opacity-0 group-hover:opacity-100">
+                            Agregar al carrito
+                        </button>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="group bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-shadow duration-300 flex flex-col relative">
+<div class="relative aspect-square bg-surface-container-low p-4 flex items-center justify-center overflow-hidden">
+<img class="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500" data-alt="A detailed image of a heavy-duty Einhell 1500W combination hammer drill on a crisp white background. Minimalist industrial aesthetic with high contrast and sharp focus on the tool's red and black plastic casing and metal chuck." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcqg8tSbrT4V-t5MOLUOaQG6tPAb2ngmm9fwi1lrNiMWOyqA7OB71EUo4qN9uV3RJlF6TcJ0wLMtm1QpxOT3MWZIhwVOx99xU5fHDlp6_I6thSpKUOI_OOy1mqc0CY-pj7_tzKfi_4cfeV0LaiSoDiqCPXQJam_5k_Vs6lrw--9hxsJbrhPfkJV_uaJ3iEBiiNR1rHBD4vDu_KjPRuTfsBP47KT7eUdfrZs0OAxsKfhJEw55fH393r"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-error/10 text-error px-2 py-1 rounded-sm font-label-bold text-[10px] uppercase tracking-wider">Oferta</span>
+</div>
+<button class="absolute bottom-3 right-3 bg-surface-container-lowest p-2 rounded-full shadow-sm text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Einhell</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 leading-tight">Martillo Combinado Einhell 1500W</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-error">$95.000</span>
+<span class="text-body-md text-on-surface-variant line-through">$112.000</span>
+</div>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">inventory_2</span>
+                                Poco stock
+                            </p>
+</div>
+<button class="w-full mt-4 bg-surface text-primary border border-primary hover:bg-primary hover:text-on-primary font-label-bold text-label-bold py-2 rounded transition-colors opacity-0 group-hover:opacity-100">
+                            Agregar al carrito
+                        </button>
+</div>
+</article>
+</div>
+<!-- Pagination -->
+<div class="mt-stack-lg flex justify-center">
+<nav class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-md border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-md bg-primary text-on-primary font-label-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-md border border-outline-variant text-on-surface hover:border-primary hover:text-primary transition-colors font-label-bold">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-md border border-outline-variant text-on-surface hover:border-primary hover:text-primary transition-colors font-label-bold">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-md border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-padding bg-[#1b1b1c] dark:bg-[#1b1b1c] grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mt-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 flex flex-col gap-4">
+<span class="font-headline-lg text-headline-lg text-primary-fixed mb-4">TITAN HARDWARE</span>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">
+                Construido para Profesionales. Proveyendo equipamiento y herramientas de primer nivel para quienes exigen excelencia en su oficio.
+            </p>
+</div>
+<!-- Links Column 1 -->
+<div class="flex flex-col gap-3">
+<h4 class="font-label-bold text-label-bold text-on-secondary mb-2 uppercase tracking-wider">Empresa</h4>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Sobre Nosotros</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Soporte</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Trabaja con nosotros</a>
+</div>
+<!-- Links Column 2 -->
+<div class="flex flex-col gap-3">
+<h4 class="font-label-bold text-label-bold text-on-secondary mb-2 uppercase tracking-wider">Servicio al Cliente</h4>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Política de Envíos</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Devoluciones y Reembolsos</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Garantía</a>
+<a class="font-body-md text-body-md text-on-secondary-fixed-variant hover:text-primary-fixed hover:underline transition-all" href="#">Pedidos por Mayor</a>
+</div>
+<!-- Newsletter Column -->
+<div class="flex flex-col gap-4">
+<h4 class="font-label-bold text-label-bold text-on-secondary uppercase tracking-wider">Mantente Actualizado</h4>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">Suscríbete para ofertas exclusivas y anuncios de nuevos productos.</p>
+<div class="flex">
+<input class="bg-surface/10 border border-on-secondary-fixed-variant text-on-secondary px-3 py-2 w-full focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed" placeholder="Dirección de correo" type="email"/>
+<button class="bg-primary-fixed text-on-primary-fixed px-4 font-label-bold hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Copyright Bottom -->
+<div class="col-span-1 md:col-span-4 mt-stack-lg pt-stack-md border-t border-on-secondary-fixed-variant/50 flex flex-col sm:flex-row justify-between items-center">
+<span class="font-body-md text-body-md text-on-secondary-fixed-variant mb-4 sm:mb-0">© 2024 Titan Hardware. Construido para Profesionales.</span>
+<div class="flex gap-4">
+<a class="text-on-secondary-fixed-variant hover:text-primary-fixed transition-colors" href="#">
+<!-- Social Icons Placeholders -->
+<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
+</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary-fixed transition-colors" href="#">
+<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

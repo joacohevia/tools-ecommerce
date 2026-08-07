@@ -54,17 +54,17 @@ const ICON_MAP = {
 };
 
 const STYLE_MAP = {
-  success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
-  error: 'bg-red-500/10 border-red-500/30 text-red-300',
-  info: 'bg-blue-500/10 border-blue-500/30 text-blue-300',
-  warning: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
+  success: 'bg-primary-container/30 border-primary text-on-primary-container',
+  error: 'bg-error-container/30 border-error text-on-error-container',
+  info: 'bg-surface-container-high border-outline-variant text-on-surface-variant',
+  warning: 'bg-amber-100 border-amber-400 text-amber-900',
 };
 
 const ICON_COLOR_MAP = {
-  success: 'text-emerald-400',
-  error: 'text-red-400',
-  info: 'text-blue-400',
-  warning: 'text-amber-400',
+  success: 'text-primary',
+  error: 'text-error',
+  info: 'text-on-surface-variant',
+  warning: 'text-amber-600',
 };
 
 /**
@@ -94,7 +94,7 @@ export default function ErrorAlert({ type = 'info', title, message, onDismiss, c
       {onDismiss && (
         <button
           onClick={onDismiss}
-          className="p-1 rounded-full hover:bg-white/10 transition-colors cursor-pointer flex-shrink-0 opacity-70 hover:opacity-100"
+          className="p-1 rounded-full hover:bg-black/10 transition-colors cursor-pointer flex-shrink-0 opacity-70 hover:opacity-100"
           aria-label="Cerrar"
         >
           <CloseIcon />

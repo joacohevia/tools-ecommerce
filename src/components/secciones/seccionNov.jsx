@@ -14,16 +14,17 @@ const SeccionNov = () => {
   if (!novedades.length) return null;
 
   return (
-    <section className="relative overflow-hidden my-8">
+    <section className="relative overflow-hidden py-section-padding my-1">
       <div
-        className="absolute inset-0 bg-cover bg-center blur-[3px] opacity-30"
+        className="absolute inset-0 bg-cover bg-center blur-[3px] opacity-40"
         style={{ backgroundImage: `url(${heroImg})` }}
       />
+      <div className="absolute inset-0 bg-black/70" />
       <div className="relative z-10 py-8">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-dark-text">
+        <h2 className="font-headline text-headline-lg text-white text-center mb-8">
           Novedades
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 justify-items-center px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter justify-items-center px-4 max-w-container-max mx-auto">
           {novedades.map((nov) => (
             <Card
               key={nov.id}

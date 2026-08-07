@@ -5,11 +5,11 @@
  * operaciones de lectura sobre las tablas públicas.
  *
  * Credenciales: carga VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY del .env raíz.
- * Las consultas usan @supabase/supabase-js, que solo construye SELECTs.
+ * Consulta la estructura de tablas dinámicamente desde la API OpenAPI de Supabase/PostgREST.
  *
  * Tools expuestas:
- *   1. supabase_list_tables   → devuelve las 6 tablas con columnas y FKs
- *   2. supabase_get_columns   → columnas de una tabla específica
+ *   1. supabase_list_tables   → devuelve las tablas públicas con cantidad de columnas y PK
+ *   2. supabase_get_columns   → columnas de una tabla específica con tipos, nullability, defaults y FKs
  *   3. supabase_select        → SELECT parametrizado con filtros, orden y límite
  *
  * Protocolo: MCP sobre stdio (JSON-RPC), usando @modelcontextprotocol/sdk.
@@ -44,105 +44,102 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ──────────────────────────────────────────────────────────────
-// Esquema hardcodeado de las tablas públicas (Opción B)
-// Sincronizar con baseHerramientas.sql si cambia la estructura.
+// Introspección dinámica del esquema desde PostgREST OpenAPI spec
 // ──────────────────────────────────────────────────────────────
 
+let schemaCache = null;
+let schemaCacheTime = 0;
+const CACHE_TTL_MS = 30 * 1000; // 30 segundos
+
 /**
- * @typedef {{ name: string, type: string, nullable: boolean, default: string|null, fk_table?: string, fk_column?: string }} ColumnDef
- * @typedef {{ columns: ColumnDef[], estimated_rows: number, primary_key: string }} TableDef
+ * @typedef {{ name: string, type: string, nullable: boolean, default: any, fk_table?: string, fk_column?: string }} ColumnDef
+ * @typedef {{ table_name: string, primary_key: string, columns: ColumnDef[] }} TableDef
  */
 
-/** @type {Record<string, TableDef>} */
-const SCHEMA = {
-  categorias: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('categorias_id_seq')" },
-      { name: "nombre", type: "text", nullable: false, default: null },
-      { name: "slug", type: "text", nullable: false, default: null },
-      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
-    ],
-    estimated_rows: 11,
-    primary_key: "id",
-  },
-  marcas: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('marcas_id_seq')" },
-      { name: "nombre", type: "text", nullable: false, default: null },
-      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
-    ],
-    estimated_rows: 11,
-    primary_key: "id",
-  },
-  productos: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('productos_id_seq')" },
-      { name: "nombre", type: "text", nullable: false, default: null },
-      { name: "descripcion", type: "text", nullable: true, default: null },
-      { name: "slug", type: "text", nullable: false, default: null },
-      { name: "precio", type: "numeric", nullable: false, default: null },
-      { name: "precio_oferta", type: "numeric", nullable: true, default: null },
-      { name: "stock", type: "integer", nullable: true, default: "0" },
-      { name: "categoria_id", type: "bigint", nullable: false, default: null, fk_table: "categorias", fk_column: "id" },
-      { name: "marca_id", type: "bigint", nullable: false, default: null, fk_table: "marcas", fk_column: "id" },
-      { name: "destacado", type: "boolean", nullable: true, default: "false" },
-      { name: "mas_vendido", type: "boolean", nullable: true, default: "false" },
-      { name: "imagenes", type: "text[]", nullable: true, default: "'{}'::text[]" },
-      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
-    ],
-    estimated_rows: 10,
-    primary_key: "id",
-  },
-  perfiles: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('perfiles_id_seq')" },
-      { name: "user_id", type: "uuid", nullable: false, default: null, fk_table: "auth.users", fk_column: "id" },
-      { name: "nombre", type: "text", nullable: false, default: null },
-      { name: "apellido", type: "text", nullable: false, default: null },
-      { name: "dni", type: "text", nullable: true, default: null },
-      { name: "rol", type: "text", nullable: false, default: "'cliente'::text" },
-      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
-    ],
-    estimated_rows: 1,
-    primary_key: "id",
-  },
-  pedidos: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('pedidos_id_seq')" },
-      { name: "perfil_id", type: "bigint", nullable: false, default: null, fk_table: "perfiles", fk_column: "id" },
-      { name: "estado", type: "text", nullable: false, default: "'pendiente'::text" },
-      { name: "total", type: "numeric", nullable: false, default: "0" },
-      { name: "nota", type: "text", nullable: true, default: null },
-      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
-    ],
-    estimated_rows: 0,
-    primary_key: "id",
-  },
-  pedido_items: {
-    columns: [
-      { name: "id", type: "bigint", nullable: false, default: "nextval('pedido_items_id_seq')" },
-      { name: "pedido_id", type: "bigint", nullable: false, default: null, fk_table: "pedidos", fk_column: "id" },
-      { name: "producto_id", type: "bigint", nullable: false, default: null, fk_table: "productos", fk_column: "id" },
-      { name: "cantidad", type: "integer", nullable: false, default: null },
-      { name: "precio_unitario", type: "numeric", nullable: false, default: null },
-      { name: "subtotal", type: "numeric", nullable: true, default: "((cantidad)::numeric * precio_unitario)" },
-    ],
-    estimated_rows: 0,
-    primary_key: "id",
-  },
-};
+/**
+ * Consulta la especificación OpenAPI de PostgREST en Supabase y construye
+ * dinámicamente la definición de tablas, columnas, tipos, PKs y FKs.
+ *
+ * @returns {Promise<Record<string, TableDef>>}
+ */
+async function getDynamicSchema() {
+  const now = Date.now();
+  if (schemaCache && now - schemaCacheTime < CACHE_TTL_MS) {
+    return schemaCache;
+  }
+
+  const url = `${SUPABASE_URL}/rest/v1/`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Error al obtener el esquema dinámico de Supabase: ${res.statusText}`
+    );
+  }
+
+  const data = await res.json();
+  const definitions = data.definitions || {};
+
+  const schema = {};
+
+  for (const [tableName, def] of Object.entries(definitions)) {
+    const requiredCols = def.required || [];
+    const props = def.properties || {};
+    let primaryKey = "id";
+
+    const columns = Object.entries(props).map(([colName, colDef]) => {
+      const desc = colDef.description || "";
+
+      if (desc.includes("<pk/>")) {
+        primaryKey = colName;
+      }
+
+      const fkMatch = desc.match(/fk table='([^']+)' column='([^']+)'/);
+      const fk_table = fkMatch ? fkMatch[1] : undefined;
+      const fk_column = fkMatch ? fkMatch[2] : undefined;
+
+      let type = colDef.format || colDef.type || "text";
+      if (colDef.type === "array") {
+        type = `${colDef.items?.type || "text"}[]`;
+      }
+
+      return {
+        name: colName,
+        type,
+        nullable: !requiredCols.includes(colName),
+        default: colDef.default ?? null,
+        ...(fk_table ? { fk_table, fk_column } : {}),
+      };
+    });
+
+    schema[tableName] = {
+      table_name: tableName,
+      primary_key: primaryKey,
+      columns,
+    };
+  }
+
+  schemaCache = schema;
+  schemaCacheTime = now;
+  return schema;
+}
 
 // ──────────────────────────────────────────────────────────────
 // Handlers de las tools
 // ──────────────────────────────────────────────────────────────
 
 /**
- * @returns {Array<{ table_name: string, estimated_rows: number, column_count: number }>}
+ * @returns {Promise<Array<{ table_name: string, column_count: number, primary_key: string }>>}
  */
-function handleListTables() {
-  return Object.entries(SCHEMA).map(([name, def]) => ({
+async function handleListTables() {
+  const schema = await getDynamicSchema();
+  return Object.entries(schema).map(([name, def]) => ({
     table_name: name,
-    estimated_rows: def.estimated_rows,
     column_count: def.columns.length,
     primary_key: def.primary_key,
   }));
@@ -152,19 +149,19 @@ function handleListTables() {
  * Devuelve las columnas de una tabla específica, incluyendo claves foráneas.
  *
  * @param {{ table: string }} args
- * @returns {{ columns: ColumnDef[], table_name: string, primary_key: string }}
+ * @returns {Promise<{ columns: ColumnDef[], table_name: string, primary_key: string }>}
  */
-function handleGetColumns({ table }) {
-  const def = SCHEMA[table];
+async function handleGetColumns({ table }) {
+  const schema = await getDynamicSchema();
+  const def = schema[table];
   if (!def) {
     throw new Error(
-      `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(SCHEMA).join(", ")}`
+      `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(schema).join(", ")}`
     );
   }
   return {
     table_name: table,
     primary_key: def.primary_key,
-    estimated_rows: def.estimated_rows,
     columns: def.columns,
   };
 }
@@ -186,10 +183,11 @@ function handleGetColumns({ table }) {
  * @returns {Promise<Array<Object>>}
  */
 async function handleSelect({ table, select = "*", filters = [], limit = 100, order_column, order_asc = true }) {
-  const def = SCHEMA[table];
+  const schema = await getDynamicSchema();
+  const def = schema[table];
   if (!def) {
     throw new Error(
-      `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(SCHEMA).join(", ")}`
+      `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(schema).join(", ")}`
     );
   }
 
@@ -246,7 +244,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "supabase_list_tables",
       description:
-        "Lista todas las tablas del esquema público (categorias, marcas, productos, perfiles, pedidos, pedido_items) con cantidad estimada de filas y columnas.",
+        "Lista todas las tablas públicas de la base de datos Supabase con la cantidad de columnas y su clave primaria.",
       inputSchema: {
         type: "object",
         properties: {},
@@ -256,7 +254,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "supabase_get_columns",
       description:
-        "Devuelve la definición de columnas de una tabla específica: nombre, tipo, si es nullable, valor por defecto y claves foráneas.",
+        "Devuelve la definición dinámica de columnas de una tabla específica: nombre, tipo, si es nullable, valor por defecto y claves foráneas.",
       inputSchema: {
         type: "object",
         properties: {
@@ -271,7 +269,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "supabase_select",
       description:
-        "Ejecuta una consulta SELECT parametrizada sobre una tabla usando el builder seguro de supabase-js. Solo lectura, sin SQL raw. Soportá filtros con operadores (eq, neq, gt, gte, lt, lte, like, ilike, is, in), orden y límite. Para joins usar el parámetro select: '*,categorias(nombre),marcas(nombre)'.",
+        "Ejecuta una consulta SELECT parametrizada sobre una tabla usando el builder seguro de supabase-js. Solo lectura, sin SQL raw. Soporta filtros con operadores (eq, neq, gt, gte, lt, lte, like, ilike, is, in), orden y límite. Para joins usar el parámetro select: '*,categorias(nombre),marcas(nombre)'.",
       inputSchema: {
         type: "object",
         properties: {
@@ -332,11 +330,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case "supabase_list_tables":
-        result = handleListTables();
+        result = await handleListTables();
         break;
 
       case "supabase_get_columns":
-        result = handleGetColumns(args);
+        result = await handleGetColumns(args);
         break;
 
       case "supabase_select":
@@ -365,7 +363,7 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   // Log a stderr para no interferir con el protocolo stdio (stdout es JSON-RPC).
-  console.error("supabase-read MCP server iniciado vía stdio");
+  console.error("supabase-read MCP server iniciado vía stdio (esquema dinámico)");
 }
 
 main().catch((err) => {

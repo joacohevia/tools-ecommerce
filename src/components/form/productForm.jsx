@@ -213,88 +213,83 @@ function ProductForm({ producto, onSaved }) {
   };
 
   if (categorias.length === 0 && marcas.length === 0) {
-    return <p className="text-dark-muted text-center py-4">Cargando opciones...</p>;
+    return <p className="text-on-surface-variant text-center py-4">Cargando opciones...</p>;
   }
 
-  const selectClasses = [
-    'w-full rounded-md px-3 py-2 text-sm cursor-pointer appearance-none',
-    'bg-black border border-white/20 text-dark-text',
-    'focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none',
-    '[&>option]:bg-black [&>option]:text-dark-text',
-  ].join(' ');
+  const selectClasses = 'select w-full';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
-      <h3 className="text-xl font-semibold text-dark-text mb-4">
+      <h3 className="text-xl font-semibold text-on-surface mb-4">
         {isEdit ? 'Editar Producto' : 'Nuevo Producto'}
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-dark-text text-sm mb-1">Nombre *</label>
+          <label className="block text-on-surface text-sm mb-1">Nombre *</label>
           <input
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
             placeholder="Nombre del producto"
           />
         </div>
         <div>
-          <label className="block text-dark-text text-sm mb-1">Slug *</label>
+          <label className="block text-on-surface text-sm mb-1">Slug *</label>
           <input
             type="text"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
             placeholder="nombre-del-producto"
           />
         </div>
         <div className="sm:col-span-2">
-          <label className="block text-dark-text text-sm mb-1">Descripcion</label>
+          <label className="block text-on-surface text-sm mb-1">Descripcion</label>
           <textarea
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
             rows={3}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
             placeholder="Descripcion opcional..."
           />
         </div>
         <div>
-          <label className="block text-dark-text text-sm mb-1">Precio *</label>
+          <label className="block text-on-surface text-sm mb-1">Precio *</label>
           <input
             type="number"
             step="0.01"
             min="0"
             value={precio}
             onChange={(e) => setPrecio(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
             placeholder="0.00"
           />
         </div>
         <div>
-          <label className="block text-dark-text text-sm mb-1">Precio Oferta</label>
+          <label className="block text-on-surface text-sm mb-1">Precio Oferta</label>
           <input
             type="number"
             step="0.01"
             min="0"
             value={precioOferta}
             onChange={(e) => setPrecioOferta(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
             placeholder="Opcional"
           />
         </div>
         <div>
-          <label className="block text-dark-text text-sm mb-1">Stock</label>
+          <label className="block text-on-surface text-sm mb-1">Stock</label>
           <input
             type="number"
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-dark-text placeholder-dark-muted text-sm"
+            className="input"
           />
         </div>
         <div className="relative">
-          <label className="block text-dark-text text-sm mb-1">Categoria *</label>
+          <label className="block text-on-surface text-sm mb-1">Categoria *</label>
           <select
             value={categoriaId}
             onChange={(e) => setCategoriaId(e.target.value)}
@@ -302,15 +297,15 @@ function ProductForm({ producto, onSaved }) {
           >
             <option value="">Seleccionar...</option>
             {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id} className="bg-black text-dark-text">{cat.nombre}</option>
+              <option key={cat.id} value={cat.id} className="bg-surface-container-lowest text-on-surface">{cat.nombre}</option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 bottom-[11px] w-4 h-4 text-dark-muted" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="pointer-events-none absolute right-3 bottom-[11px] w-4 h-4 text-on-surface-variant" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.66a.75.75 0 01-1.08 0l-4.25-4.66a.75.75 0 01.02-1.06z" clipRule="evenodd" />
           </svg>
         </div>
         <div className="relative">
-          <label className="block text-dark-text text-sm mb-1">Marca *</label>
+          <label className="block text-on-surface text-sm mb-1">Marca *</label>
           <select
             value={marcaId}
             onChange={(e) => setMarcaId(e.target.value)}
@@ -318,28 +313,28 @@ function ProductForm({ producto, onSaved }) {
           >
             <option value="">Seleccionar...</option>
             {marcas.map((mar) => (
-              <option key={mar.id} value={mar.id} className="bg-black text-dark-text">{mar.nombre}</option>
+              <option key={mar.id} value={mar.id} className="bg-surface-container-lowest text-on-surface">{mar.nombre}</option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 bottom-[11px] w-4 h-4 text-dark-muted" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="pointer-events-none absolute right-3 bottom-[11px] w-4 h-4 text-on-surface-variant" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.66a.75.75 0 01-1.08 0l-4.25-4.66a.75.75 0 01.02-1.06z" clipRule="evenodd" />
           </svg>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-4 items-center">
-        <label className="flex items-center gap-2 text-dark-text text-sm">
+        <label className="flex items-center gap-2 text-on-surface text-sm">
           <input type="checkbox" checked={destacado} onChange={(e) => setDestacado(e.target.checked)} className="rounded" />
           Destacado
         </label>
-        <label className="flex items-center gap-2 text-dark-text text-sm">
+        <label className="flex items-center gap-2 text-on-surface text-sm">
           <input type="checkbox" checked={masVendido} onChange={(e) => setMasVendido(e.target.checked)} className="rounded" />
           Mas Vendido
         </label>
       </div>
 
       <div>
-        <label className="block text-dark-text text-sm mb-2">Imagenes</label>
+        <label className="block text-on-surface text-sm mb-2">Imagenes</label>
 
         {imagenesItems.length > 0 && (
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-3">
@@ -356,9 +351,9 @@ function ProductForm({ producto, onSaved }) {
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, idx)}
                   onDragEnd={() => { setDragIdx(null); setDragOverIdx(null); }}
-                  className={`relative group rounded-lg border overflow-hidden bg-white/5 transition-all ${
+                  className={`relative group rounded-lg border overflow-hidden bg-surface-container transition-all ${
                     isDragging ? 'opacity-40 scale-95' : ''
-                  } ${isOver ? 'border-blue-400 ring-2 ring-blue-400/30' : 'border-white/10'}`}
+                  } ${isOver ? 'border-blue-400 ring-2 ring-blue-400/30' : 'border-outline-variant'}`}
                 >
                   <img
                     src={src}
@@ -368,7 +363,7 @@ function ProductForm({ producto, onSaved }) {
                   />
                   <div className="absolute top-1 left-1 z-10 flex items-center gap-0.5">
                     <span
-                      className="flex items-center justify-center w-5 h-5 rounded bg-black/70 text-dark-muted hover:text-dark-text cursor-grab active:cursor-grabbing text-xs leading-none select-none"
+                      className="flex items-center justify-center w-5 h-5 rounded bg-surface-container-lowest/70 text-on-surface-variant hover:text-on-surface cursor-grab active:cursor-grabbing text-xs leading-none select-none"
                       title="Arrastrar para reordenar"
                     >
                       ≡
@@ -377,12 +372,12 @@ function ProductForm({ producto, onSaved }) {
                   <button
                     type="button"
                     onClick={() => handleRemoveImage(item.id)}
-                    className="absolute top-1 right-1 z-10 flex items-center justify-center w-5 h-5 rounded-full bg-red-600/80 hover:bg-red-500 text-white text-xs leading-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-1 right-1 z-10 flex items-center justify-center w-5 h-5 rounded-full bg-error/80 hover:bg-error text-white text-xs leading-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Eliminar imagen"
                   >
                     ×
                   </button>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-dark-muted text-[10px] text-center py-0.5">
+                  <div className="absolute bottom-0 left-0 right-0 bg-surface-container-lowest/60 text-on-surface-variant text-[10px] text-center py-0.5">
                     {item.type === 'existing' ? 'Actual' : 'Nueva'}
                   </div>
                 </div>
@@ -396,8 +391,8 @@ function ProductForm({ producto, onSaved }) {
           onClick={() => fileInputRef.current?.click()}
           className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors ${
             imagenesItems.length === 0
-              ? 'border-2 border-dashed border-white/20 text-dark-muted hover:border-blue-400 hover:text-blue-400'
-              : 'bg-white/10 border border-white/20 text-dark-text hover:bg-white/20'
+              ? 'border-2 border-dashed border-outline-variant text-on-surface-variant hover:border-blue-400 hover:text-primary'
+              : 'bg-surface-container-low border border-outline-variant text-on-surface hover:bg-surface-container-high'
           }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -419,14 +414,14 @@ function ProductForm({ producto, onSaved }) {
         <button
           type="submit"
           disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors"
+          className="btn-primary py-2 text-sm"
         >
           {submitting ? 'Guardando...' : 'Guardar'}
         </button>
         <button
           type="button"
           onClick={() => onSaved?.()}
-          className="bg-white/10 hover:bg-white/20 text-dark-text px-4 py-2 rounded-md text-sm cursor-pointer transition-colors"
+          className="btn-secondary py-2 text-sm"
         >
           Cancelar
         </button>

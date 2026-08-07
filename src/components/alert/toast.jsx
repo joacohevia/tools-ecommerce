@@ -74,10 +74,10 @@ const ICON_MAP = {
 };
 
 const STYLE_MAP = {
-  success: 'bg-emerald-600/90 border-emerald-400/30',
-  error: 'bg-red-600/90 border-red-400/30',
-  info: 'bg-blue-600/90 border-blue-400/30',
-  warning: 'bg-amber-500/90 border-amber-400/30',
+  success: 'bg-primary-container/90 border-primary text-on-primary-container',
+  error: 'bg-error-container/90 border-error text-on-error-container',
+  info: 'bg-surface-container-high border-outline-variant text-on-surface-variant',
+  warning: 'bg-amber-100/90 border-amber-400 text-amber-900',
 };
 
 /**
@@ -96,7 +96,7 @@ export default function ToastItem({ id, type, message, onDismiss }) {
   return (
     <div
       id={`toast-${id}`}
-      className={`animate-slide-in flex items-center gap-2 px-4 py-3 rounded-lg border shadow-lg backdrop-blur-sm min-w-[300px] max-w-[420px] text-white ${style}`}
+      className={`animate-slide-in flex items-center gap-2 px-4 py-3 rounded-lg border shadow-lg backdrop-blur-sm min-w-[300px] max-w-[420px] ${style}`}
     >
       <Icon />
       <span className="text-sm flex-1">{message}</span>
@@ -105,7 +105,7 @@ export default function ToastItem({ id, type, message, onDismiss }) {
           e.stopPropagation();
           onDismiss?.();
         }}
-        className="p-1 rounded-full hover:bg-white/10 transition-colors cursor-pointer flex-shrink-0"
+        className="p-1 rounded-full hover:bg-black/10 transition-colors cursor-pointer flex-shrink-0"
         aria-label="Cerrar notificación"
       >
         <CloseIcon />

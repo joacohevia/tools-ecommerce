@@ -31,8 +31,8 @@ export default function Admin() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-blue">
-        <p className="text-dark-muted text-lg">Cargando...</p>
+      <div className="min-h-screen flex items-center justify-center bg-surface">
+        <p className="text-on-surface-variant text-lg">Cargando...</p>
       </div>
     );
   }
@@ -96,9 +96,9 @@ export default function Admin() {
   const formatearFecha = (f) => f ? new Date(f).toLocaleDateString('es-AR') : '—';
 
   return (
-    <div className="min-h-screen bg-dark-blue py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface py-8 px-margin-mobile md:px-margin-desktop">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-dark-text mb-6">Administracion de Usuarios</h1>
+        <h1 className="font-headline text-headline-lg text-on-surface mb-6">Administracion de Usuarios</h1>
 
         <div className="mb-4">
           <input
@@ -106,22 +106,22 @@ export default function Admin() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar por nombre, apellido o DNI..."
-            className="w-full max-w-md bg-white/10 border border-white/20 rounded-md px-4 py-2 text-dark-text placeholder-dark-muted text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input max-w-md"
           />
         </div>
 
         {loading ? (
-          <p className="text-dark-muted text-center py-8">Cargando usuarios...</p>
+          <p className="text-on-surface-variant text-center py-8">Cargando usuarios...</p>
         ) : error ? (
-          <p className="text-red-400 text-center py-8">{error}</p>
+          <p className="text-error text-center py-8">{error}</p>
         ) : filtrados.length === 0 ? (
-          <p className="text-dark-muted text-center py-8">
+          <p className="text-on-surface-variant text-center py-8">
             {busqueda ? 'No se encontraron usuarios con ese criterio.' : 'No hay usuarios registrados.'}
           </p>
         ) : (
-          <div className="overflow-x-auto border border-white/10 rounded-lg">
+          <div className="table-admin">
             <table className="w-full text-sm text-left">
-              <thead className="bg-white/5 text-dark-muted text-xs uppercase border-b border-white/10">
+              <thead>
                 <tr>
                   <th className="px-4 py-3">Nombre</th>
                   <th className="px-4 py-3">Apellido</th>
@@ -133,27 +133,27 @@ export default function Admin() {
               </thead>
               <tbody>
                 {filtrados.map((p) => (
-                  <tr key={p.id} className="border-b border-white/5 hover:bg-white/5">
-                    <td className="px-4 py-2 text-dark-text">{p.nombre}</td>
-                    <td className="px-4 py-2 text-dark-text">{p.apellido}</td>
-                    <td className="px-4 py-2 text-dark-muted">{p.dni || '—'}</td>
+                  <tr key={p.id}>
+                    <td className="px-4 py-2 text-on-surface">{p.nombre}</td>
+                    <td className="px-4 py-2 text-on-surface">{p.apellido}</td>
+                    <td className="px-4 py-2 text-on-surface-variant">{p.dni || '—'}</td>
                     <td className="px-4 py-2">
-                      <span className={`px-2 py-0.5 rounded-full text-xs ${p.rol === 'admin' ? 'bg-blue-600/30 text-blue-300' : 'bg-white/10 text-dark-muted'}`}>
+                      <span className={p.rol === 'admin' ? 'badge-rol-admin' : 'badge-rol-cliente'}>
                         {p.rol}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-dark-muted text-xs">{formatearFecha(p.created_at)}</td>
+                    <td className="px-4 py-2 text-on-surface-variant text-xs">{formatearFecha(p.created_at)}</td>
                     <td className="px-4 py-2 text-right">
                       <button
                         onClick={() => handleCambiarRol(p)}
-                        className="text-dark-muted hover:text-blue-400 px-2 cursor-pointer text-sm"
+                        className="text-on-surface-variant hover:text-primary px-2 cursor-pointer text-sm"
                         title={p.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
                       >
                         {p.rol === 'admin' ? '⬇️' : '⬆️'}
                       </button>
                       <button
                         onClick={() => handleEliminar(p)}
-                        className="text-dark-muted hover:text-red-400 px-2 cursor-pointer text-sm"
+                        className="text-on-surface-variant hover:text-error px-2 cursor-pointer text-sm"
                         title="Eliminar usuario"
                       >
                         🗑️

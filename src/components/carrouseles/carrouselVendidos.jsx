@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import Card from "../card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
 import { getProductos } from "../../http";
+import Card from "../card";
 
 const CarrouselVendidos = () => {
   const [productos, setProductos] = useState([]);
@@ -25,28 +18,38 @@ const CarrouselVendidos = () => {
   if (error || !productos.length) return null;
 
   return (
-    <section className="my-8">
-      <h2 className="text-2xl font-semibold mb-4 font-title">
-        Más Vendidos
-      </h2>
-      <Carousel
-        opts={{
-          align: "start",
-          loop: true,
-          slidesToScroll: 3,
-        }}
-        className="px-10"
-      >
-        <CarouselContent className="py-1">
+    <section className="py-section-padding bg-surface-container-low">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="font-headline text-headline-lg text-on-surface">Más Vendidos</h2>
+            <p className="font-body text-body-md text-on-surface-variant mt-2">Los favoritos de nuestros clientes</p>
+          </div>
+          <div className="hidden md:flex gap-2">
+            <button
+              onClick={() => { const el = document.getElementById('carousel-vendidos'); if (el) el.scrollBy({ left: -300, behavior: 'smooth' }); }}
+              className="btn-secondary w-10 h-10 rounded-full p-0"
+              aria-label="Anterior"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button
+              onClick={() => { const el = document.getElementById('carousel-vendidos'); if (el) el.scrollBy({ left: 300, behavior: 'smooth' }); }}
+              className="btn-secondary w-10 h-10 rounded-full p-0"
+              aria-label="Siguiente"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </div>
+        <div id="carousel-vendidos" className="flex overflow-x-auto gap-gutter hide-scrollbar snap-x snap-mandatory pb-2">
           {productos.map((p) => (
-            <CarouselItem key={p.id} className="pr-2">
+            <div key={p.id} className="snap-start flex-shrink-0">
               <Card producto={p} onDelete={(id) => setProductos((prev) => prev.filter((x) => x.id !== id))} />
-            </CarouselItem>
+            </div>
           ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+        </div>
+      </div>
     </section>
   );
 };

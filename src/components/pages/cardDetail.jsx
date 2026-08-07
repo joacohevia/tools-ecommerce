@@ -55,7 +55,7 @@ const CardDetail = () => {
   if (loading) {
     return (
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-dark-muted text-lg">Cargando producto...</p>
+        <p className="text-on-surface-variant text-lg">Cargando producto...</p>
       </main>
     );
   }
@@ -63,8 +63,8 @@ const CardDetail = () => {
   if (error) {
     return (
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-red-400 text-lg">Error: {error}</p>
-        <Link to="/home" className="text-blue-400 hover:underline mt-4 inline-block">
+        <p className="text-error text-lg">Error: {error}</p>
+        <Link to="/home" className="text-primary hover:underline mt-4 inline-block">
           Volver al inicio
         </Link>
       </main>
@@ -74,8 +74,8 @@ const CardDetail = () => {
   if (!producto) {
     return (
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-dark-muted text-lg">Producto no encontrado</p>
-        <Link to="/home" className="text-blue-400 hover:underline mt-4 inline-block">
+        <p className="text-on-surface-variant text-lg">Producto no encontrado</p>
+        <Link to="/home" className="text-primary hover:underline mt-4 inline-block">
           Volver al inicio
         </Link>
       </main>
@@ -101,23 +101,23 @@ const CardDetail = () => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <nav className="text-sm text-dark-muted mb-6" aria-label="Breadcrumb">
-        <Link to="/home" className="hover:text-blue-400 transition-colors">
+      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+        <Link to="/home" className="hover:text-primary transition-colors">
           Inicio
         </Link>
-        <span className="mx-2 text-dark-muted/60">/</span>
-        <Link to="/" className="hover:text-blue-400 transition-colors">
+        <span className="mx-2 text-on-surface-variant/60">/</span>
+        <Link to="/" className="hover:text-primary transition-colors">
           Productos
         </Link>
-        <span className="mx-2 text-dark-muted/60">/</span>
+        <span className="mx-2 text-on-surface-variant/60">/</span>
         <Link
           to={`/?categoria=${producto.categorias?.slug || ''}`}
-          className="hover:text-blue-400 transition-colors"
+          className="hover:text-primary transition-colors"
         >
           {producto.categorias?.nombre || 'Categoria'}
         </Link>
-        <span className="mx-2 text-dark-muted/60">/</span>
-        <span className="text-dark-text">{producto.nombre}</span>
+        <span className="mx-2 text-on-surface-variant/60">/</span>
+        <span className="text-on-surface">{producto.nombre}</span>
       </nav>
 
       <div className="flex flex-col md:flex-row gap-6 mb-8">
@@ -129,20 +129,20 @@ const CardDetail = () => {
                 onClick={() => setImagenSeleccionada(img)}
                 className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 cursor-pointer transition-colors ${
                   imagenSeleccionada === img
-                    ? 'border-blue-500'
-                    : 'border-white/10 hover:border-white/30'
+                    ? 'border-primary'
+                    : 'border-outline-variant hover:border-outline'
                 }`}
               >
                 <img
                   src={img}
                   alt={`${producto.nombre} - vista ${i + 1}`}
-                  className="w-full h-full object-contain bg-white/5"
+                  className="w-full h-full object-contain bg-surface-container-low"
                 />
               </button>
             ))}
         </div>
 
-        <div className="flex-1 order-1 md:order-2 bg-white/5 rounded-xl p-6 flex items-center justify-center min-h-[300px]">
+        <div className="flex-1 order-1 md:order-2 bg-surface-container-low rounded-xl p-6 flex items-center justify-center min-h-[300px]">
           <img
             src={imagenSeleccionada || '/placeholder.jpg'}
             alt={producto.nombre}
@@ -151,41 +151,41 @@ const CardDetail = () => {
         </div>
 
         <div className="md:w-72 order-3 flex flex-col">
-          <h1 className="text-dark-text text-2xl font-bold mb-1">
+          <h1 className="font-headline text-headline-md text-on-surface mb-1">
             {producto.nombre}
           </h1>
-          <p className="text-dark-muted text-sm mb-4">
+          <p className="text-on-surface-variant text-sm mb-4">
             Marca: {producto.marcas?.nombre}
           </p>
 
           <div className="space-y-2 mb-6">
             {precioOferta && (
-              <p className="text-dark-muted text-lg line-through">
+              <p className="text-on-surface-variant text-lg line-through">
                 ${precioRegular.toLocaleString('es-AR')}
               </p>
             )}
-            <p className="text-blue-400 text-3xl font-bold">
+            <p className="text-primary text-3xl font-bold">
               ${precioEfectivo.toLocaleString('es-AR')}
-              <span className="text-dark-muted text-sm font-normal ml-2">
+              <span className="text-on-surface-variant text-sm font-normal ml-2">
                 efectivo
               </span>
             </p>
             {/*
-            <p className="text-dark-text text-sm">
+            <p className="text-on-surface text-sm">
               6x de ${cuota.toLocaleString('es-AR')}
-              <span className="text-dark-muted">/mes</span>
+              <span className="text-on-surface-variant">/mes</span>
             </p>
 
             */}
-            <p className="text-dark-muted text-sm">
+            <p className="text-on-surface-variant text-sm">
               Stock: {producto.stock ?? 0} unidades
             </p>
             
-            <section className="border-t border-white/10 pt-3 mt-5">
-              <h2 className="text-dark-text text-xl font-semibold mb-4">Descripción</h2>
+            <section className="border-t border-outline-variant pt-3 mt-5">
+              <h2 className="text-on-surface text-xl font-semibold mb-4">Descripción</h2>
 
               {producto.descripcion?.trim() ? (
-                <ul className="list-disc pl-5 space-y-2 text-dark-muted text-sm">
+                <ul className="list-disc pl-5 space-y-2 text-on-surface-variant text-sm">
                   {producto.descripcion
                     .split("\n")
                     .filter((item) => item.trim() !== "")
@@ -194,7 +194,7 @@ const CardDetail = () => {
                     ))}
                 </ul>
               ) : (
-                <p className="text-dark-muted text-sm">
+                <p className="text-on-surface-variant text-sm">
                   Este producto no posee descripción.
                 </p>
               )}
@@ -203,7 +203,7 @@ const CardDetail = () => {
 
           <button
             onClick={() => agregarAlCarrito(productoParaCarrito)}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-lg transition-colors duration-200 cursor-pointer"
+            className="btn-primary w-full py-3"
           >
             Agregar al carrito
           </button>
