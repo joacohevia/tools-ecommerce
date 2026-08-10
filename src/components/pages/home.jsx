@@ -3,6 +3,7 @@ import CarrouselVendidos from '../carrouseles/carrouselVendidos';
 import SeccionHerramientas from '../secciones/seccionHerramientas';
 import SeccionNov from '../secciones/seccionNov';
 import Portada from './portada';
+import WhatsAppButton from '../whatsappButton';
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
       <SeccionHerramientas />
       <CarrouselOfert />
       <SeccionNov />
+      <WhatsAppButton />
     </>
   );
 };

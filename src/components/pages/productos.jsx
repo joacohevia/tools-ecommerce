@@ -9,6 +9,7 @@ import ProductForm from '../form/productForm';
 import CategForm from '../form/categForm';
 import MarcaForm from '../form/marcaForm';
 import Filtrado from '../filtrado';
+import WhatsAppButton from '../whatsappButton';
 
 
 const ORDEN_OPCIONES = [
@@ -107,6 +108,7 @@ export default function Productos() {
 
   const [showForm, setShowForm] = useState(null);
   const [editProducto, setEditProducto] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
 
   const [searchParams] = useSearchParams();
 
@@ -177,6 +179,7 @@ export default function Productos() {
   }
 
   return (
+    <>
     <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-1">
       {/* Breadcrumb */}
       <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
@@ -222,29 +225,38 @@ export default function Productos() {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <label htmlFor="ordenar" className="text-on-surface text-sm font-medium whitespace-nowrap">
-            Ordenar por:
-          </label>
-          <select
-            id="ordenar"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="select"
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2">
+            <label htmlFor="ordenar" className="text-on-surface text-sm font-medium whitespace-nowrap">
+              Ordenar por:
+            </label>
+            <select
+              id="ordenar"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="select w-full sm:w-auto text-base sm:text-sm py-2 sm:py-0"
+            >
+              {ORDEN_OPCIONES.map((op) => (
+                <option key={op.value} value={op.value}>
+                  {op.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowFilters(true)}
+            className="btn-secondary text-sm py-1.5 md:hidden"
           >
-            {ORDEN_OPCIONES.map((op) => (
-              <option key={op.value} value={op.value}>
-                {op.label}
-              </option>
-            ))}
-          </select>
+            Filtros
+          </button>
         </div>
       </div>
 
       {/* Content */}
       <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar */}
-        <div className="w-full md:w-64 flex-shrink-0">
+        <div className="hidden md:block w-full md:w-64 flex-shrink-0">
           <Filtrado
             marcas={marcas}
             categorias={categorias}
@@ -280,6 +292,50 @@ export default function Productos() {
           )}
         </div>
       </div>
+
+      {/* Mobile filter bottom sheet */}
+      {showFilters && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setShowFilters(false)}
+          aria-hidden={!showFilters}
+        >
+          <div
+            className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest rounded-t-2xl max-h-[80vh] overflow-y-auto animate-slide-in md:hidden"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filtros"
+          >
+            <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-outline-variant bg-surface-container-lowest">
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                className="p-2 -ml-2 text-on-surface hover:text-primary"
+                aria-label="Cerrar filtros"
+              >
+                ✕
+              </button>
+              <h2 className="text-headline-sm font-headline text-on-surface">Filtros</h2>
+              <div className="w-8" />
+            </div>
+            <div className="p-4">
+              <Filtrado
+                marcas={marcas}
+                categorias={categorias}
+                selectedMarcas={selectedMarcas}
+                setSelectedMarcas={setSelectedMarcas}
+                selectedCategorias={selectedCategorias}
+                setSelectedCategorias={setSelectedCategorias}
+                precioMin={precioMin}
+                setPrecioMin={setPrecioMin}
+                precioMax={precioMax}
+                setPrecioMax={setPrecioMax}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {showForm === 'producto' && (
         <div className="modal-overlay" onClick={() => setShowForm(null)}>
@@ -317,6 +373,8 @@ export default function Productos() {
       )}
 
     </main>
+      <WhatsAppButton />
+    </>
   );
 }
 

@@ -87,7 +87,6 @@ const CardDetail = () => {
     ? Number(producto.precio_oferta)
     : null;
   const precioEfectivo = precioOferta || precioRegular;
-  const cuota = Math.round(precioEfectivo / 6);
   const imagenes = producto.imagenes?.length ? producto.imagenes : [];
 
   const productoParaCarrito = {
@@ -106,12 +105,12 @@ const CardDetail = () => {
           Inicio
         </Link>
         <span className="mx-2 text-on-surface-variant/60">/</span>
-        <Link to="/" className="hover:text-primary transition-colors">
+        <Link to="/productos" className="hover:text-primary transition-colors">
           Productos
         </Link>
         <span className="mx-2 text-on-surface-variant/60">/</span>
         <Link
-          to={`/?categoria=${producto.categorias?.slug || ''}`}
+          to={`/productos?categoria=${producto.categorias?.slug || ''}`}
           className="hover:text-primary transition-colors"
         >
           {producto.categorias?.nombre || 'Categoria'}

@@ -11,11 +11,14 @@ const Nav = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [menuUsuarioAbierto, setMenuUsuarioAbierto] = useState(false);
   const [carritoAbierto, setCarritoAbierto] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
   const [categorias, setCategorias] = useState([]);
 
   const categoriaRef = useRef(null);
   const usuarioRef = useRef(null);
   const carritoRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   const {
     items,
@@ -41,6 +44,9 @@ const Nav = () => {
       }
       if (carritoRef.current && !carritoRef.current.contains(e.target)) {
         setCarritoAbierto(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target)) {
+        setMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -87,7 +93,11 @@ const Nav = () => {
                         )}
                         <li>
                           <button
-                            onClick={() => { logout(); setMenuUsuarioAbierto(false); }}
+                            onClick={async () => {
+                              await logout();
+                              setMenuUsuarioAbierto(false);
+                              navigate('/home');
+                            }}
                             className="block w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container hover:text-error transition-colors cursor-pointer"
                         >
                           Cerrar sesión
@@ -237,58 +247,184 @@ const Nav = () => {
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm py-3">
-          <ul className="flex flex-wrap justify-center gap-8 text-sm font-medium">
-            <li>
-              <Link to="/home" className="text-on-surface-variant hover:text-primary transition-colors font-body">
-                Inicio
-              </Link>
-            </li>
+        <div className="flex items-center justify-between md:justify-center py-3">
+          {/* Menú hamburguesa mobile */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden text-on-surface hover:text-primary p-2 rounded border border-outline-variant"
+            aria-label="Abrir menú"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
 
-            <li className="relative" ref={categoriaRef}>
-              <button
-                onClick={() => setMenuAbierto(!menuAbierto)}
-                className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors font-body cursor-pointer select-none"
-                aria-expanded={menuAbierto}
-                aria-haspopup="true"
-              >
-                Categoria
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform duration-200 ${menuAbierto ? 'rotate-180' : ''}`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+          {/* Nav desktop */}
+          <nav className="hidden md:flex items-center gap-8 text-sm">
+            <ul className="flex flex-wrap justify-center gap-8 text-sm font-medium">
+              <li>
+                <Link to="/home" className="text-on-surface-variant hover:text-primary transition-colors font-body">
+                  Inicio
+                </Link>
+              </li>
+
+              <li className="relative" ref={categoriaRef}>
+                <button
+                  onClick={() => setMenuAbierto(!menuAbierto)}
+                  className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors font-body cursor-pointer select-none"
+                  aria-expanded={menuAbierto}
+                  aria-haspopup="true"
                 >
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.66a.75.75 0 01-1.08 0l-4.25-4.66a.75.75 0 01.02-1.06z" clipRule="evenodd"/>
+                  Categoria
+                  <svg
+                    className={`ml-1 w-4 h-4 transition-transform duration-200 ${menuAbierto ? 'rotate-180' : ''}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.66a.75.75 0 01-1.08 0l-4.25-4.66a.75.75 0 01.02-1.06z" clipRule="evenodd"/>
+                  </svg>
+                </button>
+
+                {menuAbierto && categorias.length > 0 && (
+                  <ul className="absolute left-0 mt-2 w-40 bg-surface-container-lowest border border-outline-variant rounded-md shadow-lg z-50">
+                    {categorias.map((cat) => (
+                      <li key={cat.id}>
+                        <button
+                          className="block w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+                          onClick={() => {
+                            navigate(`/productos?categoria=${cat.slug}`);
+                            setMenuAbierto(false);
+                          }}
+                        >
+                          {cat.nombre}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+
+              <li>
+                <button
+                  onClick={() => { window.location.href = '/productos'; }}
+                  className="text-on-surface-variant hover:text-primary transition-colors font-body cursor-pointer bg-transparent border-none p-0"
+                >
+                  Producto
+                </button>
+              </li>
+              <li><Link to="/contacto" className="text-on-surface-variant hover:text-primary transition-colors font-body">Contacto</Link></li>
+              {perfil?.rol === 'admin' && (
+                <li><Link to="/admin" className="text-on-surface-variant hover:text-primary transition-colors font-body">Admin</Link></li>
+              )}
+            </ul>
+          </nav>
+
+          <div className="md:hidden w-10" aria-hidden="true" />
+        </div>
+
+        {/* Panel menú mobile------------------------------------------ */}
+        {mobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/50"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <div
+              ref={mobileMenuRef}
+              className="fixed left-0 top-0 z-50 w-72 h-full bg-surface-container-lowest shadow-xl animate-slide-left"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="absolute top-4 right-4 text-on-surface hover:text-primary p-1"
+                aria-label="Cerrar menú"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
 
-              {menuAbierto && categorias.length > 0 && (
-                <ul className="absolute left-0 mt-2 w-40 bg-surface-container-lowest border border-outline-variant rounded-md shadow-lg z-50">
-                  {categorias.map((cat) => (
-                    <li key={cat.id}>
-                      <button
-                        className="block w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
-                        onClick={() => {
-                          navigate(`/productos?categoria=${cat.slug}`);
-                          setMenuAbierto(false);
-                        }}
-                      >
-                        {cat.nombre}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
+              <ul className="flex flex-col p-6 pt-16 gap-4">
+                <li>
+                  <Link
+                    to="/home"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-on-surface-variant hover:text-primary transition-colors font-body text-base py-2"
+                  >
+                    Inicio
+                  </Link>
+                </li>
 
-            <li><Link to="/productos" className="text-on-surface-variant hover:text-primary transition-colors font-body">Producto</Link></li>
-            <li><Link to="/contacto" className="text-on-surface-variant hover:text-primary transition-colors font-body">Contacto</Link></li>
-            {perfil?.rol === 'admin' && (
-              <li><Link to="/admin" className="text-on-surface-variant hover:text-primary transition-colors font-body">Admin</Link></li>
-            )}
-            {/*<li><Link to="/" className="text-dark-text hover:text-blue-400 transition-colors font-body">Quienes Somos</Link></li> */}
-          </ul>
-        </nav>
+                <li>
+                  <button
+                    onClick={() => setMobileCatsOpen(!mobileCatsOpen)}
+                    className="flex items-center w-full text-left text-on-surface-variant hover:text-primary transition-colors font-body text-base py-2 bg-transparent border-none cursor-pointer"
+                    aria-expanded={mobileCatsOpen}
+                  >
+                    Categorías
+                    <svg
+                      className={`ml-2 w-4 h-4 transition-transform duration-200 ${mobileCatsOpen ? 'rotate-180' : ''}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.66a.75.75 0 01-1.08 0l-4.25-4.66a.75.75 0 01.02-1.06z" clipRule="evenodd"/>
+                    </svg>
+                  </button>
+
+                  <div
+                    className={`overflow-hidden transition-all duration-200 ${mobileCatsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  >
+                    <ul className="bg-surface-container-lowest border border-outline-variant rounded-md shadow-lg py-2 mt-1 flex flex-col gap-0.5">
+                      {categorias.map((cat) => (
+                        <li key={cat.id}>
+                          <button
+                            className="block w-full text-left text-sm text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors py-1.5 px-3 bg-transparent border-none cursor-pointer"
+                            onClick={() => {
+                              navigate(`/productos?categoria=${cat.slug}`);
+                              setMobileMenuOpen(false);
+                            }}
+                          >
+                            {cat.nombre}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => { window.location.href = '/productos'; }}
+                    className="block w-full text-left text-on-surface-variant hover:text-primary transition-colors font-body text-base py-2 bg-transparent border-none cursor-pointer"
+                  >
+                    Productos
+                  </button>
+                </li>
+
+                <li>
+                  <Link
+                    to="/contacto"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-on-surface-variant hover:text-primary transition-colors font-body text-base py-2"
+                  >
+                    Contacto
+                  </Link>
+                </li>
+
+                {perfil?.rol === 'admin' && (
+                  <li>
+                    <Link
+                      to="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-on-surface-variant hover:text-primary transition-colors font-body text-base py-2"
+                    >
+                      Admin
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        )}
 
       </div>
     </header>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
@@ -50,6 +51,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   const { perfil } = useAuth();
   const { confirm } = useConfirm();
   const { toast } = useToast();
+  const [added, setAdded] = useState(false);
   const isAdmin = perfil?.rol === 'admin';
 
   const imagen = producto.imagenes?.[0] || '/placeholder.jpg';
@@ -90,7 +92,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   return (
   <Link
     to={`/producto/${producto.id}`}
-    className="card-shell w-[260px] h-[380px] overflow-hidden flex flex-col"
+    className="card-shell card-hover w-[185px] sm:w-[260px] h-[280px] sm:h-[380px]"
   >
     {isAdmin && (
       <div
@@ -120,36 +122,36 @@ const Card = ({ producto, onDelete, onEdit }) => {
     )}
 
     {/* Imagen */}
-    <div className="h-1/2 w-full overflow-hidden flex-shrink-0">
+    <div className="h-[40%] sm:h-1/2 w-full overflow-hidden flex-shrink-0">
       <img
         src={imagen}
         alt={nombre}
-        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        className="w-full h-full object-cover"
         loading="lazy"
       />
     </div>
     {/* Información */}
-    <div className="flex flex-1 flex-col p-3 gap-1">
+    <div className="flex flex-1 flex-col p-2 sm:p-3 gap-0.5 sm:gap-1">
 
       <h3
-        className="text-on-surface text-sm font-semibold leading-snug line-clamp-2"
+        className="text-on-surface text-xs sm:text-sm font-semibold leading-snug line-clamp-2"
         title={nombre}
       >
         {nombre}
       </h3>
-      <p className="text-on-surface-variant text-xs uppercase">
+      <p className="text-on-surface-variant text-[10px] sm:text-xs uppercase">
         <span>{marcaNombre}</span>
       </p>
 
-      <div className="space-y-1">
+      <div className="space-y-0.5 sm:space-y-1">
 
         {precioOferta && (
-          <p className="text-xs text-on-surface-variant line-through">
+          <p className="text-[10px] sm:text-xs text-on-surface-variant line-through">
             ${precioRegular.toLocaleString("es-AR")}
           </p>
         )}
 
-        <p className="font-headline text-headline-md text-primary">
+        <p className="font-headline text-base sm:text-headline-md font-semibold text-primary">
           ${precioEfectivo.toLocaleString("es-AR")}
         </p>
 
@@ -158,11 +160,15 @@ const Card = ({ producto, onDelete, onEdit }) => {
       <button
         onClick={(e) => {
           e.preventDefault();
+          setAdded(true);
           agregarAlCarrito(productoParaCarrito);
+          setTimeout(() => setAdded(false), 1000);
         }}
-        className="btn-primary mt-auto w-full py-2 text-sm h-10"
+        className={`btn-primary btn-primary-sm mt-auto w-full py-1 sm:py-2 text-xs sm:text-sm h-8 sm:h-10 transition-all duration-300 ${
+          added ? 'bg-primary-container text-on-primary-container' : ''
+        }`}
       >
-        Agregar al carrito
+        {added ? 'Agregado ✓' : 'Agregar al carrito'}
       </button>
     </div>
   </Link>

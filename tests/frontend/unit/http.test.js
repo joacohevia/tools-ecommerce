@@ -2,16 +2,16 @@
  * Tests unitarios para src/http.js con MSW.
  */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { server } from '../../mocks/server';
 import {
-  getProductos,
-  getProductoById,
   deleteProducto,
   getCategorias,
   getMarcas,
-  loginApi,
   getPerfilMe,
+  getProductoById,
+  getProductos,
+  loginApi,
 } from '../../../src/http';
+import { server } from '../../mocks/server';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterAll(() => server.close());
@@ -72,6 +72,6 @@ describe('loginApi', () => {
 describe('getPerfilMe', () => {
   it('devuelve perfil con token', async () => {
     const data = await getPerfilMe('fake-token');
-    expect(data.perfil.rol).toBe('admin');
+    expect(data.rol).toBe('admin');
   });
 });

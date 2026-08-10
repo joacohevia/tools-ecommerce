@@ -216,7 +216,7 @@ function ProductForm({ producto, onSaved }) {
     return <p className="text-on-surface-variant text-center py-4">Cargando opciones...</p>;
   }
 
-  const selectClasses = 'select w-full';
+  const selectClasses = 'select w-full text-base sm:text-sm py-2';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">

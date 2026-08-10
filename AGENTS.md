@@ -186,5 +186,5 @@ src/
 - Docstrings: funciones exportadas y helpers complejos incluyen JSDoc con `@param` y `@returns`
 
 <!-- SPECKIT START -->
-Plan actual: `specs/001-admin-panel/plan.md` — Administracion desde el Catalogo (admin CRUD en /productos + vista usuarios)
+Plan actual: `specs/003-ux-improvements/plan/plan.md` — Mejoras de UX: navegación, menú hamburguesa, filtros mobile, animaciones, toggle contraseña, WhatsApp
 <!-- SPECKIT END -->
