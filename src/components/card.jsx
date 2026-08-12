@@ -41,9 +41,10 @@ function TrashIcon() {
  * botones de editar (navega al detalle) y eliminar (confirma vía ConfirmDialog,
  * ejecuta deleteProducto, muestra toast de resultado).
  *
- * @param {{ producto, onDelete }} props
+ * @param {{ producto, onDelete, onEdit }} props
  * @param {object}  props.producto  - Objeto del producto (id, nombre, precio, imagenes, marcas, etc.)
  * @param {function} [props.onDelete] - Callback opcional tras eliminar, recibe (id) para refrescar el padre
+ * @param {function} [props.onEdit] - Callback opcional al editar, recibe el producto. Si no se pasa, se oculta el botón
  * @returns {JSX.Element}
  */
 const Card = ({ producto, onDelete, onEdit }) => {
@@ -60,6 +61,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   const precioOferta = producto.precio_oferta ? Number(producto.precio_oferta) : null;
   const precioEfectivo = precioOferta || precioRegular;
   const marcaNombre = producto.marcas?.nombre || '';
+  const stock = Number(producto.stock) || 0;
 
   const productoParaCarrito = {
     id: producto.id,
@@ -99,17 +101,19 @@ const Card = ({ producto, onDelete, onEdit }) => {
         className="absolute top-3 right-3 z-20 flex gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onEdit?.(producto);
-          }}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
-          title="Editar producto"
-        >
-          <PencilIcon />
-        </button>
+        {onEdit && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onEdit(producto);
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
+            title="Editar producto"
+          >
+            <PencilIcon />
+          </button>
+        )}
 
         <button
           onClick={handleDelete}
@@ -157,19 +161,25 @@ const Card = ({ producto, onDelete, onEdit }) => {
 
       </div>
 
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setAdded(true);
-          agregarAlCarrito(productoParaCarrito);
-          setTimeout(() => setAdded(false), 1000);
-        }}
-        className={`btn-primary btn-primary-sm mt-auto w-full py-1 sm:py-2 text-xs sm:text-sm h-8 sm:h-10 transition-all duration-300 ${
-          added ? 'bg-primary-container text-on-primary-container' : ''
-        }`}
-      >
-        {added ? 'Agregado ✓' : 'Agregar al carrito'}
-      </button>
+      {stock > 0 ? (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setAdded(true);
+            agregarAlCarrito(productoParaCarrito);
+            setTimeout(() => setAdded(false), 1000);
+          }}
+          className={`btn-primary btn-primary-sm mt-auto w-full py-1 sm:py-2 text-xs sm:text-sm h-8 sm:h-10 transition-all duration-300 ${
+            added ? 'bg-primary-container text-on-primary-container' : ''
+          }`}
+        >
+          {added ? 'Agregado ✓' : 'Agregar al carrito'}
+        </button>
+      ) : (
+        <div className="mt-auto w-full h-8 sm:h-10 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant text-xs sm:text-sm font-semibold uppercase">
+          Sin stock
+        </div>
+      )}
     </div>
   </Link>
 );

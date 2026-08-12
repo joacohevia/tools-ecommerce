@@ -26,6 +26,9 @@ const CardDetail = () => {
 
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
   // estado que guarda la URL de la imagen que se muestra en grande en la galeria
+
+  const [added, setAdded] = useState(false);
+  // estado para la animación de confirmación del botón "Agregar al carrito"
   useEffect(() => {
     let ignore = false;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -99,8 +102,8 @@ const CardDetail = () => {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-15">
+      <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <Link to="/home" className="hover:text-primary transition-colors">
           Inicio
         </Link>
@@ -200,12 +203,24 @@ const CardDetail = () => {
             </section>
           </div>
 
-          <button
-            onClick={() => agregarAlCarrito(productoParaCarrito)}
-            className="btn-primary w-full py-3"
-          >
-            Agregar al carrito
-          </button>
+          {(producto.stock ?? 0) > 0 ? (
+            <button
+              onClick={() => {
+                setAdded(true);
+                agregarAlCarrito(productoParaCarrito);
+                setTimeout(() => setAdded(false), 1000);
+              }}
+              className={`btn-primary w-full py-3 transition-all duration-300 ${
+                added ? 'bg-primary-container text-on-primary-container' : ''
+              }`}
+            >
+              {added ? 'Agregado ✓' : 'Agregar al carrito'}
+            </button>
+          ) : (
+            <div className="btn-secondary w-full py-3">
+              Sin stock
+            </div>
+          )}
         </div>
       </div>
       

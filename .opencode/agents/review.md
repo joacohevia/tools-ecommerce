@@ -1,7 +1,7 @@
 ---
 description: Juez de calidad — audita consistencia frontend/backend, nunca modifica código
 mode: subagent
-model: DeepSeek V4 Flash
+model: 
 temperature: 0
 permission:
   edit: deny

@@ -68,7 +68,7 @@ const Registro = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface px-4 py-20">
       <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-xl">
         <h2 className="font-headline text-headline-md text-on-surface text-center mb-6">
           Crear Cuenta
@@ -114,7 +114,7 @@ const Registro = () => {
               DNI (opcional)
             </label>
             <input
-              type="text"
+              type="number"
               value={dni}
               onChange={(e) => setDni(e.target.value)}
               placeholder="Sin puntos ni guiones"

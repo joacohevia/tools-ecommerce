@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import WhatsAppButton from '../whatsappButton';
 
 /**
  * Valida los campos del formulario de contacto.
@@ -128,9 +129,9 @@ export default function Contacto() {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8">
+    <main className="max-w-5xl mx-auto px-4 py-20 md:py-15">
       {/* Breadcrumb */}
-      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+      <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">
           <li>
             <Link to="/home" className="hover:text-on-surface transition-colors">
@@ -305,8 +306,8 @@ export default function Contacto() {
                 </button>
               </form>
             )}
+            <WhatsAppButton />
           </section>
-
         </div>
       </div>
     </main>

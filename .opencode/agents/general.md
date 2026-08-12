@@ -1,7 +1,7 @@
 ---
 description: Agente principal full-stack — coordina frontend/backend y cierra con revision
-mode: primary
-model: DeepSeek V4 Flash
+mode: subagent
+model: 
 permission:
   edit: allow
   bash: allow

@@ -1,7 +1,7 @@
 ---
 description: Desarrollo backend — Node.js + Express 5 (ESM) + Supabase
 mode: subagent
-model: DeepSeek V4 Pro
+model: 
 temperature: 0.1
 permission:
   edit: allow

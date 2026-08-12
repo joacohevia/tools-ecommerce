@@ -1,14 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Listbox } from '@headlessui/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { getCategorias, getMarcas, getProductos, deleteCategoria, deleteMarca } from '../../http';
 import { useAuth } from '../../context/AuthContext';
 import { useConfirm } from '../../context/ConfirmContext';
 import { useToast } from '../../context/ToastContext';
+import { deleteCategoria, deleteMarca, getCategorias, getMarcas, getProductos } from '../../http';
 import Card from '../card';
-import ProductForm from '../form/productForm';
+import Filtrado from '../filtrado';
 import CategForm from '../form/categForm';
 import MarcaForm from '../form/marcaForm';
-import Filtrado from '../filtrado';
+import ProductForm from '../form/productForm';
+import Paginador from '../paginador';
 import WhatsAppButton from '../whatsappButton';
 
 
@@ -20,6 +22,8 @@ const ORDEN_OPCIONES = [
   { value: 'precio_desc', label: 'Precio (Mayor a Menor)' },
   { value: 'destacado', label: 'Destacados' },
 ];
+
+const PRODUCTOS_POR_PAGINA = 30;
 
 /**
  * Aplica los filtros seleccionados y ordena la lista de productos.
@@ -89,6 +93,13 @@ function filtrarYOrdenar(productos, selectedMarcas, selectedCategorias, precioMi
 
   return resultado;
 }
+function ChevronDownIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 export default function Productos() {
   const { perfil } = useAuth();
@@ -109,6 +120,9 @@ export default function Productos() {
   const [showForm, setShowForm] = useState(null);
   const [editProducto, setEditProducto] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+
+  const [pagina, setPagina] = useState(1);
+  const gridRef = useRef(null);
 
   const [searchParams] = useSearchParams();
 
@@ -162,6 +176,22 @@ export default function Productos() {
     [productos, selectedMarcas, selectedCategorias, precioMin, precioMax, sortBy]
   );
 
+  const totalPaginas = Math.max(1, Math.ceil(productosFiltrados.length / PRODUCTOS_POR_PAGINA));
+  const paginaActual = Math.min(pagina, totalPaginas);
+  const inicio = (paginaActual - 1) * PRODUCTOS_POR_PAGINA;
+  const productosPaginados = productosFiltrados.slice(inicio, inicio + PRODUCTOS_POR_PAGINA);
+
+  const actualizarMarcas = (updater) => { setSelectedMarcas(updater); setPagina(1); };
+  const actualizarCategorias = (updater) => { setSelectedCategorias(updater); setPagina(1); };
+  const actualizarPrecioMin = (val) => { setPrecioMin(val); setPagina(1); };
+  const actualizarPrecioMax = (val) => { setPrecioMax(val); setPagina(1); };
+  const actualizarSort = (val) => { setSortBy(val); setPagina(1); };
+
+  const cambiarPagina = (nuevaPagina) => {
+    setPagina(nuevaPagina);
+    gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -180,9 +210,9 @@ export default function Productos() {
 
   return (
     <>
-    <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-1">
+    <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-15 flex-1">
       {/* Breadcrumb */}
-      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+      <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">
           <li>
             <Link to="/home" className="hover:text-on-surface transition-colors">
@@ -226,22 +256,37 @@ export default function Productos() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-2">
-            <label htmlFor="ordenar" className="text-on-surface text-sm font-medium whitespace-nowrap">
-              Ordenar por:
+          <div className="flex items-center gap-4">
+            <label className="text-on-surface text-sm font-medium whitespace-nowrap">
+              Ordenar por: 
             </label>
-            <select
-              id="ordenar"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="select w-full sm:w-auto text-base sm:text-sm py-2 sm:py-0"
-            >
-              {ORDEN_OPCIONES.map((op) => (
-                <option key={op.value} value={op.value}>
-                  {op.label}
-                </option>
-              ))}
-            </select>
+            <Listbox value={sortBy} onChange={actualizarSort}>
+              <div className="relative w-full sm:w-full">
+                <Listbox.Button className="select w-full sm:w-48 text-base sm:text-sm py-2 sm:py-0 flex items-center justify-between gap-2 text-left">
+                  {({ open }) => (
+                    <>
+                      <span>{ORDEN_OPCIONES.find((op) => op.value === sortBy)?.label}</span>
+                      <ChevronDownIcon className={`w-4 h-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+                    </>
+                  )}
+                </Listbox.Button>
+                <Listbox.Options className="absolute z-30 mt-1 w-full sm:w-48 rounded-md bg-surface-container-lowest border border-outline-variant shadow-lg">
+                  {ORDEN_OPCIONES.map((op) => (
+                    <Listbox.Option
+                      key={op.value}
+                      value={op.value}
+                      className={({ active }) =>
+                        `px-3 py-2.5 sm:py-1.5 text-base sm:text-sm cursor-pointer ${
+                          active ? 'bg-primary-container text-on-primary-container' : 'text-on-surface'
+                        }`
+                      }
+                    >
+                      {op.label}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            </Listbox>
           </div>
           <button
             type="button"
@@ -261,18 +306,18 @@ export default function Productos() {
             marcas={marcas}
             categorias={categorias}
             selectedMarcas={selectedMarcas}
-            setSelectedMarcas={setSelectedMarcas}
+            setSelectedMarcas={actualizarMarcas}
             selectedCategorias={selectedCategorias}
-            setSelectedCategorias={setSelectedCategorias}
+            setSelectedCategorias={actualizarCategorias}
             precioMin={precioMin}
-            setPrecioMin={setPrecioMin}
+            setPrecioMin={actualizarPrecioMin}
             precioMax={precioMax}
-            setPrecioMax={setPrecioMax}
+            setPrecioMax={actualizarPrecioMax}
           />
         </div>
 
         {/* Grid de productos */}
-        <div className="flex-1">
+        <div className="flex-1 scroll-mt-24" ref={gridRef}>
           {productosFiltrados.length === 0 ? (
             <div className="py-20">
               <p className="text-on-surface-variant text-lg mb-2">No se encontraron productos</p>
@@ -280,7 +325,7 @@ export default function Productos() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-gutter justify-items-center">
-              {productosFiltrados.map((producto) => (
+              {productosPaginados.map((producto) => (
                 <Card
                   key={producto.id}
                   producto={producto}
@@ -289,6 +334,14 @@ export default function Productos() {
                 />
               ))}
             </div>
+          )}
+
+          {totalPaginas > 1 && (
+            <Paginador
+              pagina={paginaActual}
+              totalPaginas={totalPaginas}
+              onChange={cambiarPagina}
+            />
           )}
         </div>
       </div>
@@ -324,13 +377,13 @@ export default function Productos() {
                 marcas={marcas}
                 categorias={categorias}
                 selectedMarcas={selectedMarcas}
-                setSelectedMarcas={setSelectedMarcas}
+                setSelectedMarcas={actualizarMarcas}
                 selectedCategorias={selectedCategorias}
-                setSelectedCategorias={setSelectedCategorias}
+                setSelectedCategorias={actualizarCategorias}
                 precioMin={precioMin}
-                setPrecioMin={setPrecioMin}
+                setPrecioMin={actualizarPrecioMin}
                 precioMax={precioMax}
-                setPrecioMax={setPrecioMax}
+                setPrecioMax={actualizarPrecioMax}
               />
             </div>
           </div>

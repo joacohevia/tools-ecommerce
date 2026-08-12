@@ -2,12 +2,14 @@ import { Route, Routes } from 'react-router-dom';
 import Nav from './components/nav';
 import Footer from './components/footer';
 import ScrollToTop from './components/ui/scrollToTop';
+import ScrollToTopButton from './components/scrollToTopButton';
 import Home from './components/pages/home';
 import Login from './components/pages/login';
 import Registro from './components/pages/registro';
 import CardDetail from './components/pages/cardDetail';
 import Contacto from './components/pages/contacto';
 import Productos from './components/pages/productos';
+import RealizarCompra from './components/pages/realizarCompra';
 import Admin from './components/pages/admin';
 import { CarritoProvider } from './context/CarritoContext';
 import { AuthProvider } from './context/AuthContext';
@@ -35,6 +37,7 @@ function App() {
           <ConfirmProvider>
             <div className="flex flex-col min-h-screen bg-surface pt-[72px]">
               <ScrollToTop />
+              <ScrollToTopButton />
               <Nav />
               <Routes>
                 <Route path="/home" element={<Home />} />
@@ -42,6 +45,7 @@ function App() {
                 <Route path="/registro" element={<Registro />} />
                 <Route path="/productos" element={<Productos />} />
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/realizar-compra" element={<RealizarCompra />} />
                 <Route path="/producto/:id" element={<CardDetail />} />
                 <Route path="/admin" element={<Admin />} />
               </Routes>

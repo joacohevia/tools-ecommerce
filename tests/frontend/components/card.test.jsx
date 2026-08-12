@@ -63,6 +63,16 @@ describe('Card', () => {
     expect(screen.getByRole('button', { name: /agregar/i })).toBeInTheDocument();
   });
 
+  it('no muestra boton Agregar cuando el stock es 0', () => {
+    renderWithProviders(<Card producto={{ ...productoMock, stock: 0 }} />);
+    expect(screen.queryByRole('button', { name: /agregar/i })).not.toBeInTheDocument();
+  });
+
+  it('muestra "Sin stock" cuando el stock es 0', () => {
+    renderWithProviders(<Card producto={{ ...productoMock, stock: 0 }} />);
+    expect(screen.getByText('Sin stock')).toBeInTheDocument();
+  });
+
   it('no muestra botones admin si no es admin', () => {
     renderWithProviders(<Card producto={productoMock} />);
     expect(screen.queryByTitle('Editar producto')).not.toBeInTheDocument();
@@ -71,8 +81,15 @@ describe('Card', () => {
 
   it('muestra botones admin cuando el usuario es admin', () => {
     useAuth.mockReturnValue({ perfil: { rol: 'admin' } });
-    renderWithProviders(<Card producto={productoMock} />);
+    renderWithProviders(<Card producto={productoMock} onEdit={vi.fn()} />);
     expect(screen.getByTitle('Editar producto')).toBeInTheDocument();
+    expect(screen.getByTitle('Eliminar producto')).toBeInTheDocument();
+  });
+
+  it('no muestra el botón Editar si onEdit no está definido', () => {
+    useAuth.mockReturnValue({ perfil: { rol: 'admin' } });
+    renderWithProviders(<Card producto={productoMock} />);
+    expect(screen.queryByTitle('Editar producto')).not.toBeInTheDocument();
     expect(screen.getByTitle('Eliminar producto')).toBeInTheDocument();
   });
 

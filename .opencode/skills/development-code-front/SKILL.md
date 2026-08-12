@@ -1,5 +1,5 @@
 ---
-name: skill
+name: development-code-front
 description: >
   Se activa al crear, editar o revisar componentes React del frontend de herramientas-tandil
   (carpeta src/). Combina las convenciones propias del proyecto (estructura de carpetas,

@@ -21,7 +21,7 @@ describe('WhatsAppButton', () => {
     whatsappConfig.number = '5492494123456';
     render(<WhatsAppButton />);
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', 'https://wa.me/5492494123456');
+    expect(link).toHaveAttribute('href', 'https://wa.me/5492494123456?text=Hola%2C%20te%20escribo%20desde%20la%20tienda');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });

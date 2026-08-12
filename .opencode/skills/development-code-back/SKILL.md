@@ -1,5 +1,5 @@
 ---
-name: skill
+name: development-code-back
 description: >
   Se activa al modificar o extender el backend Express de herramientas-tandil
   (backend/server.js). Combina las convenciones propias del proyecto (Supabase, multer/sharp

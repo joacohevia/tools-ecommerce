@@ -20,9 +20,10 @@ function WhatsAppIcon() {
 export default function WhatsAppButton() {
   if (!whatsappConfig.number) return null;
 
+  const mensaje = encodeURIComponent('Hola, te escribo desde la tienda');
   return (
     <a
-      href={`https://wa.me/${whatsappConfig.number}`}
+      href={`https://wa.me/${whatsappConfig.number}?text=${mensaje}`}
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-float"

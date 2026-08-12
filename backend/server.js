@@ -13,9 +13,9 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import swaggerUi from "swagger-ui-express";
 
-dotenv.config({ path: "../.env" });
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

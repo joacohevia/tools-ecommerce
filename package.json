@@ -16,6 +16,7 @@
     "test:backend": "vitest --project backend"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@supabase/supabase-js": "^2.108.2",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",

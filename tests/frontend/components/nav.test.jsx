@@ -187,4 +187,66 @@ describe('Nav', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/productos?categoria=taladros');
     });
   });
+
+  it('el panel mobile se monta como hijo directo de document.body', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    const overlay = screen.getByText('Categorías').closest('.fixed.left-0').parentElement;
+    expect(document.body.contains(overlay)).toBe(true);
+    expect(overlay).toHaveClass('z-50');
+  });
+
+  it('el panel mobile tiene z-[60] para quedar por encima de todos los overlays', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    const panel = screen.getByText('Categorías').closest('.fixed.left-0');
+    expect(panel).toHaveClass('z-[60]');
+    expect(panel).toHaveClass('fixed', 'left-0', 'top-0');
+  });
+
+  it('cierra el menú mobile al hacer clic en el overlay de fondo', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    expect(screen.getByText('Categorías')).toBeInTheDocument();
+
+    const panel = screen.getByText('Categorías').closest('.fixed.left-0');
+    const overlay = panel.parentElement;
+    await user.click(overlay);
+
+    expect(screen.queryByText('Categorías')).not.toBeInTheDocument();
+  });
+
+  it('cierra el menú mobile al presionar el botón X', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    await user.click(screen.getByLabelText('Cerrar menú'));
+    expect(screen.queryByText('Categorías')).not.toBeInTheDocument();
+  });
+
+  it('el botón de hamburguesa sigue estando en el header aunque el panel esté en Portal', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    expect(screen.getByLabelText('Abrir menú')).toBeInTheDocument();
+  });
+
+  it('el link Admin aparece en el panel mobile cuando el usuario es admin', async () => {
+    const user = userEvent.setup();
+    useAuth.mockReturnValue({ ...defaultAuth, perfil: { ...defaultAuth.perfil, rol: 'admin' } });
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    expect(screen.getAllByText('Admin').length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('los links mobile usan las etiquetas mobileLabel del array NAV_LINKS', async () => {
+    const user = userEvent.setup();
+    renderNav();
+    await user.click(screen.getByLabelText('Abrir menú'));
+    expect(screen.getByText('Categorías')).toBeInTheDocument();
+    expect(screen.getByText('Productos')).toBeInTheDocument();
+  });
 });
