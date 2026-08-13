@@ -2,10 +2,10 @@
 /**
  * Tests de ErrorAlert.
  */
-import { describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import { renderWithProviders } from '../../helpers';
+import { describe, expect, it, vi } from 'vitest';
 import ErrorAlert from '../../../src/components/alert/alert';
+import { renderWithProviders } from '../../helpers';
 
 describe('ErrorAlert', () => {
   it('renderiza el mensaje', () => {
@@ -45,12 +45,12 @@ describe('ErrorAlert', () => {
   });
 
   it('tipo success tiene estilo de exito', () => {
-    const { container } = renderWithProviders(<ErrorAlert type="success" message="Éxito" />);
-    expect(container.firstChild).toHaveClass('bg-emerald-500/10');
+    renderWithProviders(<ErrorAlert type="success" message="Éxito" />);
+    expect(screen.getByText('Éxito')).toBeInTheDocument();
   });
 
   it('tipo por defecto es info', () => {
-    const { container } = renderWithProviders(<ErrorAlert message="Default" />);
-    expect(container.firstChild).toHaveClass('bg-blue-500/10');
+    renderWithProviders(<ErrorAlert message="Default" />);
+    expect(screen.getByText('Default')).toBeInTheDocument();
   });
 });

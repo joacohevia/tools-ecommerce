@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCarrito } from '../context/CarritoContext';
@@ -40,9 +41,10 @@ function TrashIcon() {
  * botones de editar (navega al detalle) y eliminar (confirma vía ConfirmDialog,
  * ejecuta deleteProducto, muestra toast de resultado).
  *
- * @param {{ producto, onDelete }} props
+ * @param {{ producto, onDelete, onEdit }} props
  * @param {object}  props.producto  - Objeto del producto (id, nombre, precio, imagenes, marcas, etc.)
  * @param {function} [props.onDelete] - Callback opcional tras eliminar, recibe (id) para refrescar el padre
+ * @param {function} [props.onEdit] - Callback opcional al editar, recibe el producto. Si no se pasa, se oculta el botón
  * @returns {JSX.Element}
  */
 const Card = ({ producto, onDelete, onEdit }) => {
@@ -50,6 +52,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   const { perfil } = useAuth();
   const { confirm } = useConfirm();
   const { toast } = useToast();
+  const [added, setAdded] = useState(false);
   const isAdmin = perfil?.rol === 'admin';
 
   const imagen = producto.imagenes?.[0] || '/placeholder.jpg';
@@ -58,6 +61,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   const precioOferta = producto.precio_oferta ? Number(producto.precio_oferta) : null;
   const precioEfectivo = precioOferta || precioRegular;
   const marcaNombre = producto.marcas?.nombre || '';
+  const stock = Number(producto.stock) || 0;
 
   const productoParaCarrito = {
     id: producto.id,
@@ -90,24 +94,26 @@ const Card = ({ producto, onDelete, onEdit }) => {
   return (
   <Link
     to={`/producto/${producto.id}`}
-    className="card-shell w-[260px] h-[380px] overflow-hidden flex flex-col"
+    className="card-shell card-hover w-[185px] sm:w-[260px] h-[280px] sm:h-[380px]"
   >
     {isAdmin && (
       <div
         className="absolute top-3 right-3 z-20 flex gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onEdit?.(producto);
-          }}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
-          title="Editar producto"
-        >
-          <PencilIcon />
-        </button>
+        {onEdit && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onEdit(producto);
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 border border-outline-variant text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
+            title="Editar producto"
+          >
+            <PencilIcon />
+          </button>
+        )}
 
         <button
           onClick={handleDelete}
@@ -120,50 +126,60 @@ const Card = ({ producto, onDelete, onEdit }) => {
     )}
 
     {/* Imagen */}
-    <div className="h-1/2 w-full overflow-hidden flex-shrink-0">
+    <div className="h-[40%] sm:h-1/2 w-full overflow-hidden flex-shrink-0">
       <img
         src={imagen}
         alt={nombre}
-        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        className="w-full h-full object-cover"
         loading="lazy"
       />
     </div>
     {/* Información */}
-    <div className="flex flex-1 flex-col p-3 gap-1">
+    <div className="flex flex-1 flex-col p-2 sm:p-3 gap-0.5 sm:gap-1">
 
       <h3
-        className="text-on-surface text-sm font-semibold leading-snug line-clamp-2"
+        className="text-on-surface text-xs sm:text-sm font-semibold leading-snug line-clamp-2"
         title={nombre}
       >
         {nombre}
       </h3>
-      <p className="text-on-surface-variant text-xs uppercase">
+      <p className="text-on-surface-variant text-[10px] sm:text-xs uppercase">
         <span>{marcaNombre}</span>
       </p>
 
-      <div className="space-y-1">
+      <div className="space-y-0.5 sm:space-y-1">
 
         {precioOferta && (
-          <p className="text-xs text-on-surface-variant line-through">
+          <p className="text-[10px] sm:text-xs text-on-surface-variant line-through">
             ${precioRegular.toLocaleString("es-AR")}
           </p>
         )}
 
-        <p className="font-headline text-headline-md text-primary">
+        <p className="font-headline text-base sm:text-headline-md font-semibold text-primary">
           ${precioEfectivo.toLocaleString("es-AR")}
         </p>
 
       </div>
 
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          agregarAlCarrito(productoParaCarrito);
-        }}
-        className="btn-primary mt-auto w-full py-2 text-sm h-10"
-      >
-        Agregar al carrito
-      </button>
+      {stock > 0 ? (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setAdded(true);
+            agregarAlCarrito(productoParaCarrito);
+            setTimeout(() => setAdded(false), 1000);
+          }}
+          className={`btn-primary btn-primary-sm mt-auto w-full py-1 sm:py-2 text-xs sm:text-sm h-8 sm:h-10 transition-all duration-300 ${
+            added ? 'bg-primary-container text-on-primary-container' : ''
+          }`}
+        >
+          {added ? 'Agregado ✓' : 'Agregar al carrito'}
+        </button>
+      ) : (
+        <div className="mt-auto w-full h-8 sm:h-10 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant text-xs sm:text-sm font-semibold uppercase">
+          Sin stock
+        </div>
+      )}
     </div>
   </Link>
 );

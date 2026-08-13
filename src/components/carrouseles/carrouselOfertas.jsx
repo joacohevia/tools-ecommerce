@@ -20,10 +20,9 @@ const CarrouselOfertas = () => {
   return (
     <section id="seccion-ofertas" className="py-section-padding bg-surface">
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="font-headline text-headline-lg text-on-surface">Ofertas Especiales</h2>
-            <p className="font-body text-body-md text-on-surface-variant mt-2">Productos destacados con los mejores precios</p>
           </div>
           <div className="hidden md:flex gap-2">
             <button

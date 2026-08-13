@@ -73,10 +73,9 @@ function IconEnvio() {
 
 /** Datos de contacto con íconos. */
 const CONTACTOS = [
-  { icono: IconWhatsApp, label: 'WhatsApp', valor: '+54 9 223 687-4360', href: 'https://wa.me/542236874360' },
-  { icono: IconTelefono, label: 'Teléfono', valor: '223 687-4360', href: 'tel:2236874360' },
+  { icono: IconWhatsApp, label: 'WhatsApp', valor: '2494619971', href: 'https://wa.me/2494619971' },
   { icono: IconEmail,    label: 'Email',    valor: 'FORT@gmail.com',            href: 'mailto:FORT@gmail.com' },
-  { icono: IconDireccion, label: 'Dirección', valor: 'Calle Falsa 123, Tandil', href: undefined },
+  { icono: IconDireccion, label: 'Dirección', valor: 'Figueroa y Entre Rios, Tandil', href: undefined },
 ];
 
 /** Enlaces de navegación — mismos que el nav principal. */
@@ -89,8 +88,8 @@ const NAV_LINKS = [
 
 /** Horarios de atención. */
 const HORARIOS = [
-  { dias: 'Lunes a Viernes', horario: '8:00 – 18:00 hs' },
-  { dias: 'Sábados',         horario: '8:00 – 13:00 hs' },
+  { dias: 'Lunes a Viernes', horario: '9:00 – 18:00 hs' },
+  { dias: 'Sábados',         horario: '9:00 – 17:00 hs' },
   { dias: 'Domingos',        horario: 'Cerrado' },
 ];
 
@@ -221,7 +220,11 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Herramientas Tandil. Todos los derechos reservados.
           </p>
           <p className="text-on-secondary-fixed-variant/60 text-xs">
-            Desarrollado con ❤️ en Tandil
+            Desarrollado en Tandil por{' '}
+            <a href="https://www.linkedin.com/in/joaquin-hevia3704/" target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-on-secondary-fixed-variant transition-colors"
+            >Joaquin Hevia</a>
           </p>
         </div>
 

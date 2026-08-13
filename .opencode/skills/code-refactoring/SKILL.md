@@ -1,5 +1,5 @@
 ---
-name: skill
+name: code-refactoring
 description: >
   Se activa al refactorizar código en herramientas-tandil (frontend React o backend Express).
   Cubre extracción de funciones, separación de responsabilidades, eliminación de duplicación,

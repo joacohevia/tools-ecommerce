@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useToast } from '../../context/ToastContext';
-import { getCategorias, getMarcas, createProducto, updateProducto, uploadImagen } from '../../http';
+import { createProducto, getCategorias, getMarcas, updateProducto, uploadImagen } from '../../http';
 
 let _imgId = 0;
 function nextImgId() { return `new-${++_imgId}`; }
@@ -216,7 +216,7 @@ function ProductForm({ producto, onSaved }) {
     return <p className="text-on-surface-variant text-center py-4">Cargando opciones...</p>;
   }
 
-  const selectClasses = 'select w-full';
+  const selectClasses = 'select w-full text-base sm:text-sm py-2';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
@@ -414,14 +414,14 @@ function ProductForm({ producto, onSaved }) {
         <button
           type="submit"
           disabled={submitting}
-          className="btn-primary py-2 text-sm"
+          className="btn-primary p-2 text-sm"
         >
           {submitting ? 'Guardando...' : 'Guardar'}
         </button>
         <button
           type="button"
           onClick={() => onSaved?.()}
-          className="btn-secondary py-2 text-sm"
+          className="btn-secondary p-2 text-sm"
         >
           Cancelar
         </button>

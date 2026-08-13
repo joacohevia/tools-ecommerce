@@ -2,7 +2,7 @@
 /**
  * Tests del ConfirmContext.
  */
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ConfirmProvider, useConfirm } from '../../../src/context/ConfirmContext';
 

@@ -44,7 +44,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ──────────────────────────────────────────────────────────────
-// Introspección dinámica del esquema desde PostgREST OpenAPI spec
+// Introspección del esquema (dinámico + fallback hardcodeado)
 // ──────────────────────────────────────────────────────────────
 
 let schemaCache = null;
@@ -57,8 +57,93 @@ const CACHE_TTL_MS = 30 * 1000; // 30 segundos
  */
 
 /**
+ * Esquema hardcodeado como fallback cuando la introspección dinámica
+ * de OpenAPI no está disponible (la anon key no tiene acceso a /rest/v1/).
+ */
+const HARDCODED_SCHEMA = {
+  categorias: {
+    table_name: "categorias",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('categorias_id_seq')" },
+      { name: "nombre", type: "text", nullable: false, default: null },
+      { name: "slug", type: "text", nullable: false, default: null },
+      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
+    ],
+  },
+  marcas: {
+    table_name: "marcas",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('marcas_id_seq')" },
+      { name: "nombre", type: "text", nullable: false, default: null },
+      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
+    ],
+  },
+  productos: {
+    table_name: "productos",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('productos_id_seq')" },
+      { name: "nombre", type: "text", nullable: false, default: null },
+      { name: "descripcion", type: "text", nullable: true, default: null },
+      { name: "slug", type: "text", nullable: false, default: null },
+      { name: "precio", type: "numeric", nullable: false, default: null },
+      { name: "precio_oferta", type: "numeric", nullable: true, default: null },
+      { name: "stock", type: "integer", nullable: true, default: "0" },
+      { name: "categoria_id", type: "bigint", nullable: false, default: null, fk_table: "categorias", fk_column: "id" },
+      { name: "marca_id", type: "bigint", nullable: false, default: null, fk_table: "marcas", fk_column: "id" },
+      { name: "destacado", type: "boolean", nullable: true, default: "false" },
+      { name: "mas_vendido", type: "boolean", nullable: true, default: "false" },
+      { name: "imagenes", type: "text[]", nullable: true, default: "'{}'" },
+      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
+    ],
+  },
+  perfiles: {
+    table_name: "perfiles",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('perfiles_id_seq')" },
+      { name: "user_id", type: "uuid", nullable: false, default: null, fk_table: "users", fk_column: "id" },
+      { name: "nombre", type: "text", nullable: false, default: null },
+      { name: "apellido", type: "text", nullable: false, default: null },
+      { name: "dni", type: "text", nullable: true, default: null },
+      { name: "rol", type: "text", nullable: false, default: "'cliente'" },
+      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
+    ],
+  },
+  pedidos: {
+    table_name: "pedidos",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('pedidos_id_seq')" },
+      { name: "perfil_id", type: "bigint", nullable: false, default: null, fk_table: "perfiles", fk_column: "id" },
+      { name: "estado", type: "text", nullable: false, default: "'pendiente'" },
+      { name: "total", type: "numeric", nullable: false, default: "0" },
+      { name: "nota", type: "text", nullable: true, default: null },
+      { name: "created_at", type: "timestamptz", nullable: true, default: "now()" },
+    ],
+  },
+  pedido_items: {
+    table_name: "pedido_items",
+    primary_key: "id",
+    columns: [
+      { name: "id", type: "bigint", nullable: false, default: "nextval('pedido_items_id_seq')" },
+      { name: "pedido_id", type: "bigint", nullable: false, default: null, fk_table: "pedidos", fk_column: "id" },
+      { name: "producto_id", type: "bigint", nullable: false, default: null, fk_table: "productos", fk_column: "id" },
+      { name: "cantidad", type: "integer", nullable: false, default: null },
+      { name: "precio_unitario", type: "numeric", nullable: false, default: null },
+      { name: "subtotal", type: "numeric", nullable: false, default: null },
+    ],
+  },
+};
+
+/**
  * Consulta la especificación OpenAPI de PostgREST en Supabase y construye
  * dinámicamente la definición de tablas, columnas, tipos, PKs y FKs.
+ *
+ * Si la introspección dinámica falla (ej. la anon key no tiene acceso al
+ * endpoint OpenAPI), se usa el esquema hardcodeado como fallback.
  *
  * @returns {Promise<Record<string, TableDef>>}
  */
@@ -68,65 +153,69 @@ async function getDynamicSchema() {
     return schemaCache;
   }
 
-  const url = `${SUPABASE_URL}/rest/v1/`;
-  const res = await fetch(url, {
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error(
-      `Error al obtener el esquema dinámico de Supabase: ${res.statusText}`
-    );
-  }
-
-  const data = await res.json();
-  const definitions = data.definitions || {};
-
-  const schema = {};
-
-  for (const [tableName, def] of Object.entries(definitions)) {
-    const requiredCols = def.required || [];
-    const props = def.properties || {};
-    let primaryKey = "id";
-
-    const columns = Object.entries(props).map(([colName, colDef]) => {
-      const desc = colDef.description || "";
-
-      if (desc.includes("<pk/>")) {
-        primaryKey = colName;
-      }
-
-      const fkMatch = desc.match(/fk table='([^']+)' column='([^']+)'/);
-      const fk_table = fkMatch ? fkMatch[1] : undefined;
-      const fk_column = fkMatch ? fkMatch[2] : undefined;
-
-      let type = colDef.format || colDef.type || "text";
-      if (colDef.type === "array") {
-        type = `${colDef.items?.type || "text"}[]`;
-      }
-
-      return {
-        name: colName,
-        type,
-        nullable: !requiredCols.includes(colName),
-        default: colDef.default ?? null,
-        ...(fk_table ? { fk_table, fk_column } : {}),
-      };
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+      },
     });
 
-    schema[tableName] = {
-      table_name: tableName,
-      primary_key: primaryKey,
-      columns,
-    };
-  }
+    if (!res.ok) {
+      throw new Error(`OpenAPI no disponible: ${res.status} ${res.statusText}`);
+    }
 
-  schemaCache = schema;
-  schemaCacheTime = now;
-  return schema;
+    const data = await res.json();
+    const definitions = data.definitions || {};
+
+    const schema = {};
+
+    for (const [tableName, def] of Object.entries(definitions)) {
+      const requiredCols = def.required || [];
+      const props = def.properties || {};
+      let primaryKey = "id";
+
+      const columns = Object.entries(props).map(([colName, colDef]) => {
+        const desc = colDef.description || "";
+
+        if (desc.includes("<pk/>")) {
+          primaryKey = colName;
+        }
+
+        const fkMatch = desc.match(/fk table='([^']+)' column='([^']+)'/);
+        const fk_table = fkMatch ? fkMatch[1] : undefined;
+        const fk_column = fkMatch ? fkMatch[2] : undefined;
+
+        let type = colDef.format || colDef.type || "text";
+        if (colDef.type === "array") {
+          type = `${colDef.items?.type || "text"}[]`;
+        }
+
+        return {
+          name: colName,
+          type,
+          nullable: !requiredCols.includes(colName),
+          default: colDef.default ?? null,
+          ...(fk_table ? { fk_table, fk_column } : {}),
+        };
+      });
+
+      schema[tableName] = {
+        table_name: tableName,
+        primary_key: primaryKey,
+        columns,
+      };
+    }
+
+    schemaCache = schema;
+    schemaCacheTime = now;
+    return schema;
+  } catch (err) {
+    console.error(`Introspección dinámica fallida (${err.message}), usando esquema hardcodeado`);
+    schemaCache = HARDCODED_SCHEMA;
+    schemaCacheTime = now;
+    return HARDCODED_SCHEMA;
+  }
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -183,12 +272,17 @@ async function handleGetColumns({ table }) {
  * @returns {Promise<Array<Object>>}
  */
 async function handleSelect({ table, select = "*", filters = [], limit = 100, order_column, order_asc = true }) {
-  const schema = await getDynamicSchema();
-  const def = schema[table];
-  if (!def) {
-    throw new Error(
-      `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(schema).join(", ")}`
-    );
+  let def;
+  try {
+    const schema = await getDynamicSchema();
+    def = schema[table];
+    if (!def) {
+      throw new Error(
+        `Tabla "${table}" no encontrada. Tablas disponibles: ${Object.keys(schema).join(", ")}`
+      );
+    }
+  } catch (err) {
+    console.error(`Esquema dinámico no disponible para validar "${table}", se omite la validación: ${err.message}`);
   }
 
   const MAX_LIMIT = 1000;

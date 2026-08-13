@@ -63,14 +63,14 @@ export default function ConfirmDialog({ title, message, confirmText, cancelText,
         <div className="px-6 pb-6 flex justify-end gap-3">
           <button
             onClick={() => onClose?.(false)}
-            className="btn-secondary py-2 text-sm"
+            className="btn-secondary p-2 text-sm"
           >
             {cancelText}
           </button>
           <button
             ref={confirmRef}
             onClick={() => onClose?.(true)}
-            className="btn-primary py-2 text-sm bg-error hover:bg-error/80"
+            className="btn-primary p-2 text-sm bg-error hover:bg-error/80"
           >
             {confirmText}
           </button>

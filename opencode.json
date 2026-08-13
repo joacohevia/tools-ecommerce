@@ -15,6 +15,11 @@
       "command": ["node", "backend/mcp/supabase-read/server.js"],
       "enabled": true
     },
+    "supabase-escritura": {
+      "type": "local",
+      "command": ["node", "backend/mcp/supabase-escritura/server.js"],
+      "enabled": true
+    },
     "filesystem": {
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\joaco\\OneDrive\\Escritorio\\FACULTAD\\Herramientas-Tandil\\herramientas-tandil"],

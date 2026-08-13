@@ -26,6 +26,9 @@ const CardDetail = () => {
 
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
   // estado que guarda la URL de la imagen que se muestra en grande en la galeria
+
+  const [added, setAdded] = useState(false);
+  // estado para la animación de confirmación del botón "Agregar al carrito"
   useEffect(() => {
     let ignore = false;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -87,7 +90,6 @@ const CardDetail = () => {
     ? Number(producto.precio_oferta)
     : null;
   const precioEfectivo = precioOferta || precioRegular;
-  const cuota = Math.round(precioEfectivo / 6);
   const imagenes = producto.imagenes?.length ? producto.imagenes : [];
 
   const productoParaCarrito = {
@@ -100,18 +102,18 @@ const CardDetail = () => {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <nav className="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-15">
+      <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <Link to="/home" className="hover:text-primary transition-colors">
           Inicio
         </Link>
         <span className="mx-2 text-on-surface-variant/60">/</span>
-        <Link to="/" className="hover:text-primary transition-colors">
+        <Link to="/productos" className="hover:text-primary transition-colors">
           Productos
         </Link>
         <span className="mx-2 text-on-surface-variant/60">/</span>
         <Link
-          to={`/?categoria=${producto.categorias?.slug || ''}`}
+          to={`/productos?categoria=${producto.categorias?.slug || ''}`}
           className="hover:text-primary transition-colors"
         >
           {producto.categorias?.nombre || 'Categoria'}
@@ -120,7 +122,7 @@ const CardDetail = () => {
         <span className="text-on-surface">{producto.nombre}</span>
       </nav>
 
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="flex md:flex-col gap-2 order-2 md:order-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
           {imagenes.length > 1 &&
             imagenes.map((img, i) => (
@@ -142,7 +144,7 @@ const CardDetail = () => {
             ))}
         </div>
 
-        <div className="flex-1 order-1 md:order-2 bg-surface-container-low rounded-xl p-6 flex items-center justify-center min-h-[300px]">
+        <div className="flex-1 order-1 md:order-2 bg-surface-container-low rounded-xl p-6 flex items-start justify-center min-h-[300px]">
           <img
             src={imagenSeleccionada || '/placeholder.jpg'}
             alt={producto.nombre}
@@ -201,12 +203,24 @@ const CardDetail = () => {
             </section>
           </div>
 
-          <button
-            onClick={() => agregarAlCarrito(productoParaCarrito)}
-            className="btn-primary w-full py-3"
-          >
-            Agregar al carrito
-          </button>
+          {(producto.stock ?? 0) > 0 ? (
+            <button
+              onClick={() => {
+                setAdded(true);
+                agregarAlCarrito(productoParaCarrito);
+                setTimeout(() => setAdded(false), 1000);
+              }}
+              className={`btn-primary w-full py-3 transition-all duration-300 ${
+                added ? 'bg-primary-container text-on-primary-container' : ''
+              }`}
+            >
+              {added ? 'Agregado ✓' : 'Agregar al carrito'}
+            </button>
+          ) : (
+            <div className="btn-secondary w-full py-3">
+              Sin stock
+            </div>
+          )}
         </div>
       </div>
       
