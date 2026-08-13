@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Footer from './components/footer';
 import Nav from './components/nav';
 import Admin from './components/pages/admin';
@@ -41,7 +41,7 @@ function App() {
               <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                
+                <Route path="/" element={<Navigate to="/home" replace />} />
                 <Route path="/productos" element={<Productos />} />
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/realizar-compra" element={<RealizarCompra />} />
