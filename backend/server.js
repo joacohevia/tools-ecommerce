@@ -7,7 +7,6 @@ import { load } from "js-yaml";
 import multer from "multer";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -24,7 +23,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const upload = multer({ dest: path.join(__dirname, "uploads") });
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors({
   origin: process.env.VITE_FRONTEND_URL || "http://localhost:5173",
@@ -728,18 +727,12 @@ app.post("/api/upload", auth, adminOnly, upload.single("imagen"), async (req, re
       return res.status(400).json({ error: "No se recibio ninguna imagen" });
     }
 
-    const filePath = req.file.path;
     const filename = `${randomUUID()}.webp`;
-    const outputPath = path.join(__dirname, "uploads", filename);
 
-    await sharp(filePath)
+    const fileBuffer = await sharp(req.file.buffer)
       .resize(800, 800, { fit: "inside", withoutEnlargement: true })
       .webp({ quality: 75 })
-      .toFile(outputPath);
-
-    const fileBuffer = await import("node:fs").then((fs) =>
-      fs.promises.readFile(outputPath)
-    );
+      .toBuffer();
 
     const { error } = await supabase.storage
       .from("productos")
@@ -747,9 +740,6 @@ app.post("/api/upload", auth, adminOnly, upload.single("imagen"), async (req, re
         contentType: "image/webp",
         cacheControl: "3600",
       });
-
-    await unlink(filePath).catch(() => {});
-    await unlink(outputPath).catch(() => {});
 
     if (error) return res.status(500).json({ error: error.message });
 
@@ -888,9 +878,9 @@ app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });
 
-const isTest = process.env.NODE_ENV === 'test';
+const isServerless = process.env.VERCEL === "1" || process.env.NODE_ENV === "test";
 
-if (!isTest) {
+if (!isServerless) {
   app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });
