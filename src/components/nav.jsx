@@ -119,9 +119,10 @@ const Nav = () => {
                           onClick={() => { navigate('/login'); setMenuUsuarioAbierto(false); }}
                           className="block w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
                         >
-                          Iniciar sesión
+                          Soy Administrador
                         </button>
                       </li>
+                      {/*
                       <li>
                         <button
                           onClick={() => { navigate('/registro'); setMenuUsuarioAbierto(false); }}
@@ -130,6 +131,7 @@ const Nav = () => {
                           Quiero registrarme
                         </button>
                       </li>
+                       */}
                     </>
                   )}
                 </ul>

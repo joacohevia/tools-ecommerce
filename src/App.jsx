@@ -1,20 +1,19 @@
 import { Route, Routes } from 'react-router-dom';
-import Nav from './components/nav';
 import Footer from './components/footer';
-import ScrollToTop from './components/ui/scrollToTop';
-import ScrollToTopButton from './components/scrollToTopButton';
-import Home from './components/pages/home';
-import Login from './components/pages/login';
-import Registro from './components/pages/registro';
+import Nav from './components/nav';
+import Admin from './components/pages/admin';
 import CardDetail from './components/pages/cardDetail';
 import Contacto from './components/pages/contacto';
+import Home from './components/pages/home';
+import Login from './components/pages/login';
 import Productos from './components/pages/productos';
 import RealizarCompra from './components/pages/realizarCompra';
-import Admin from './components/pages/admin';
-import { CarritoProvider } from './context/CarritoContext';
+import ScrollToTopButton from './components/scrollToTopButton';
+import ScrollToTop from './components/ui/scrollToTop';
 import { AuthProvider } from './context/AuthContext';
-import { ToastProvider } from './context/ToastContext';
+import { CarritoProvider } from './context/CarritoContext';
 import { ConfirmProvider } from './context/ConfirmContext';
+import { ToastProvider } from './context/ToastContext';
 
 /**
  * Componente raíz de la aplicación.
@@ -42,7 +41,7 @@ function App() {
               <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/registro" element={<Registro />} />
+                
                 <Route path="/productos" element={<Productos />} />
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/realizar-compra" element={<RealizarCompra />} />

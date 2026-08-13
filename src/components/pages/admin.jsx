@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useConfirm } from '../../context/ConfirmContext';
 import { useToast } from '../../context/ToastContext';
-import { getPerfiles, updatePerfilRol, deletePerfil } from '../../http';
+import { deletePerfil, getPerfiles, updatePerfilRol } from '../../http';
 
 /**
  * Vista de administracion de usuarios en /admin.
@@ -96,7 +96,7 @@ export default function Admin() {
   const formatearFecha = (f) => f ? new Date(f).toLocaleDateString('es-AR') : '—';
 
   return (
-    <div className="min-h-screen bg-surface py-8 px-margin-mobile md:px-margin-desktop">
+    <div className="min-h-screen bg-surface py-22 px-margin-mobile md:px-margin-desktop">
       <div className="max-w-5xl mx-auto">
         <h1 className="font-headline text-headline-lg text-on-surface mb-6">Administracion de Usuarios</h1>
 

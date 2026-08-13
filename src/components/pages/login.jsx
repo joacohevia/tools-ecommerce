@@ -115,7 +115,7 @@ const Login = () => {
           </p>
 
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             className="text-on-surface-variant text-sm hover:text-on-surface cursor-pointer"
           >
             Volver al inicio

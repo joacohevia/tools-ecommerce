@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useToast } from '../../context/ToastContext';
-import { getCategorias, getMarcas, createProducto, updateProducto, uploadImagen } from '../../http';
+import { createProducto, getCategorias, getMarcas, updateProducto, uploadImagen } from '../../http';
 
 let _imgId = 0;
 function nextImgId() { return `new-${++_imgId}`; }
@@ -414,14 +414,14 @@ function ProductForm({ producto, onSaved }) {
         <button
           type="submit"
           disabled={submitting}
-          className="btn-primary py-2 text-sm"
+          className="btn-primary p-2 text-sm"
         >
           {submitting ? 'Guardando...' : 'Guardar'}
         </button>
         <button
           type="button"
           onClick={() => onSaved?.()}
-          className="btn-secondary py-2 text-sm"
+          className="btn-secondary p-2 text-sm"
         >
           Cancelar
         </button>

@@ -1,7 +1,7 @@
 ---
 description: Desarrollo frontend — React 19 + Vite 8 + Tailwind CSS v4
 mode: subagent
-model: 
+model: DeepSeek V4 Pro
 temperature: 0.1
 permission:
   edit: allow

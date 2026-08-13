@@ -235,19 +235,19 @@ export default function Productos() {
             <>
               <button
                 onClick={() => { setEditProducto(null); setShowForm('producto'); }}
-                className="btn-primary py-1.5 text-sm"
+                className="btn-primary p-2 text-sm"
               >
                 + Agregar producto
               </button>
               <button
                 onClick={() => setShowForm('categoria')}
-                className="btn-primary py-1.5 text-sm"
+                className="btn-primary p-2 text-sm"
               >
                 + Agregar categoria
               </button>
               <button
                 onClick={() => setShowForm('marca')}
-                className="btn-primary py-1.5 text-sm"
+                className="btn-primary p-2 text-sm"
               >
                 + Agregar marca
               </button>

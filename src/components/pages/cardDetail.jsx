@@ -122,7 +122,7 @@ const CardDetail = () => {
         <span className="text-on-surface">{producto.nombre}</span>
       </nav>
 
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="flex md:flex-col gap-2 order-2 md:order-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
           {imagenes.length > 1 &&
             imagenes.map((img, i) => (
@@ -144,7 +144,7 @@ const CardDetail = () => {
             ))}
         </div>
 
-        <div className="flex-1 order-1 md:order-2 bg-surface-container-low rounded-xl p-6 flex items-center justify-center min-h-[300px]">
+        <div className="flex-1 order-1 md:order-2 bg-surface-container-low rounded-xl p-6 flex items-start justify-center min-h-[300px]">
           <img
             src={imagenSeleccionada || '/placeholder.jpg'}
             alt={producto.nombre}
