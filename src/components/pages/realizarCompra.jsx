@@ -197,7 +197,7 @@ export default function RealizarCompra() {
                 name="celular"
                 type="tel"
                 inputMode="numeric"
-                placeholder="ej: 2494619971"
+                placeholder="ej: 2494010203"
                 value={form.celular}
                 onChange={handleChange}
                 aria-invalid={!!errors.celular}
@@ -259,7 +259,7 @@ export default function RealizarCompra() {
                     id="direccion"
                     name="direccion"
                     type="text"
-                    placeholder="ej: Calle 123, Tandil"
+                    placeholder="ej: Rodriguez 123, Tandil"
                     value={form.direccion}
                     onChange={handleChange}
                     aria-invalid={!!errors.direccion}

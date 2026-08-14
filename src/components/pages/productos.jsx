@@ -329,6 +329,7 @@ export default function Productos() {
                 <Card
                   key={producto.id}
                   producto={producto}
+                  fullWidth
                   onDelete={(id) => setProductos((prev) => prev.filter((p) => p.id !== id))}
                   onEdit={(p) => { setEditProducto(p); setShowForm('producto'); }}
                 />

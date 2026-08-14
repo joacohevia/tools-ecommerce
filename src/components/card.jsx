@@ -41,13 +41,14 @@ function TrashIcon() {
  * botones de editar (navega al detalle) y eliminar (confirma vía ConfirmDialog,
  * ejecuta deleteProducto, muestra toast de resultado).
  *
- * @param {{ producto, onDelete, onEdit }} props
+ * @param {{ producto, onDelete, onEdit, fullWidth }} props
  * @param {object}  props.producto  - Objeto del producto (id, nombre, precio, imagenes, marcas, etc.)
  * @param {function} [props.onDelete] - Callback opcional tras eliminar, recibe (id) para refrescar el padre
  * @param {function} [props.onEdit] - Callback opcional al editar, recibe el producto. Si no se pasa, se oculta el botón
+ * @param {boolean} [props.fullWidth] - Si es true, la card ocupa todo el ancho de su columna (grid). Si es false, usa ancho fijo (carruseles)
  * @returns {JSX.Element}
  */
-const Card = ({ producto, onDelete, onEdit }) => {
+const Card = ({ producto, onDelete, onEdit, fullWidth = false }) => {
   const { agregarAlCarrito } = useCarrito();
   const { perfil } = useAuth();
   const { confirm } = useConfirm();
@@ -94,7 +95,7 @@ const Card = ({ producto, onDelete, onEdit }) => {
   return (
   <Link
     to={`/producto/${producto.id}`}
-    className="card-shell card-hover w-[185px] sm:w-[260px] h-[280px] sm:h-[380px]"
+    className={`card-shell card-hover ${fullWidth ? 'w-full' : 'w-[185px] sm:w-[260px]'} h-[280px] sm:h-[380px]`}
   >
     {isAdmin && (
       <div

@@ -4,13 +4,15 @@ import heroImg from '../../../public/herramientas-fondo.jpg';
 const Portada = () => {
   const handleVerOfertas = () => {
     const ofertas = document.getElementById('seccion-ofertas');
-    if (ofertas) {
-      ofertas.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (!ofertas) return;
+    const header = document.querySelector('header');
+    const offset = header ? header.offsetHeight : 0;
+    const y = ofertas.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
   };
 
   return (
-    <section className="relative h-[500px] md:h-[600px] bg-surface-container-low overflow-hidden mt-0">
+    <section className="relative h-[530px] md:h-[600px] bg-surface-container-low overflow-hidden mt-0">
       <img
         src={heroImg}
         alt="Herramientas Tandil"
@@ -21,7 +23,7 @@ const Portada = () => {
         <p className="font-label-bold uppercase tracking-wider text-primary mb-3">
           Herramientas de Calidad
         </p>
-        <h1 className="font-headline text-headline-xl text-on-surface mb-4 max-w-3xl">
+        <h1 className="font-headline text-headline-xl text-on-surface my-5 mb-4 max-w-3xl">
           Todo lo que necesitás para tu taller y hogar
         </h1>
         <p className="font-body text-body-lg text-on-surface-variant max-w-xl mb-8">
