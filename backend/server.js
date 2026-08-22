@@ -541,6 +541,8 @@ app.get("/api/perfiles/:id", auth, adminOnly, async (req, res) => {
  * @body {string} nombre - Nombre del usuario
  * @body {string} apellido - Apellido del usuario
  * @body {string} [dni] - DNI del usuario (opcional)
+ * @body {string} [celular] - Celular del usuario (opcional)
+ * @body {string} [correo] - Correo del usuario (opcional)
  * @returns {object} 201 - Perfil creado
  * @returns {object} 400 - Campos requeridos faltantes
  * @returns {object} 401 - Token inválido o ausente
@@ -548,7 +550,7 @@ app.get("/api/perfiles/:id", auth, adminOnly, async (req, res) => {
  */
 app.post("/api/perfiles", auth, async (req, res) => {
   try {
-    const { nombre, apellido, dni } = req.body;
+    const { nombre, apellido, dni, celular, correo } = req.body;
 
     if (!nombre || !apellido) {
       return res.status(400).json({ error: "Faltan campos requeridos: nombre, apellido" });
@@ -572,6 +574,8 @@ app.post("/api/perfiles", auth, async (req, res) => {
         apellido,
         dni: dni || null,
         rol: "cliente",
+        celular: celular || null,
+        correo: correo || null,
       })
       .select()
       .single();

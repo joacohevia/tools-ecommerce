@@ -65,18 +65,27 @@ const Nav = () => {
     <header className="bg-surface/90 backdrop-blur-md w-full border-b border-outline-variant/30 shadow-sm fixed top-0 z-40">
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
 
-        <div className="flex items-center justify-between h-[72px] gap-6">
+        <div className="flex items-center justify-between h-[88px] md:h-[80px] gap-4">
+          {/* Menu hamburguesa mobile ------ */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden text-on-surface hover:text-primary p-1 rounded border border-outline-variant"
+            aria-label="Abrir menú"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
           <Link to="/home" className="flex-shrink-0">
-            <img src={fotoLogo} alt="Logo" className="h-20 w-auto object-contain" />
+            <img src={fotoLogo} alt="Logo" className="h-22 md:h-28 w-auto object-contain" />
           </Link>
-
           <Busq />
-
-          <div className="flex space-x-16 flex-shrink-0">
+          <div className="flex space-x-5 md:space-x-16 flex-shrink-0">
             <div className="relative" ref={usuarioRef}>
               <button
                 onClick={() => setMenuUsuarioAbierto(!menuUsuarioAbierto)}
-                className="text-on-surface hover:text-primary transition-colors cursor-pointer text-xl"
+                className="text-on-surface hover:text-primary transition-colors cursor-pointer text-lg md:text-xl"
                 aria-expanded={menuUsuarioAbierto}
                 aria-haspopup="true"
               >
@@ -141,7 +150,7 @@ const Nav = () => {
             <div className="relative" ref={carritoRef}>
               <button
                 onClick={() => setCarritoAbierto(!carritoAbierto)}
-                className="relative text-on-surface hover:text-primary transition-colors cursor-pointer text-xl"
+                className="relative text-on-surface hover:text-primary transition-colors cursor-pointer text-lg md:text-xl"
                 aria-expanded={carritoAbierto}
                 aria-haspopup="true"
               >
@@ -261,18 +270,7 @@ const Nav = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between md:justify-center py-5">
-          {/* Menu hamburguesa mobile ------------------------------------------------------*/}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden text-on-surface hover:text-primary p-2 rounded border border-outline-variant"
-            aria-label="Abrir menú"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
+        <div className="hidden md:flex items-center justify-center py-2">
           {/* Nav desktop */}
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <ul className="flex flex-wrap justify-center gap-8 text-sm font-medium">
@@ -344,8 +342,6 @@ const Nav = () => {
               )}
             </ul>
           </nav>
-
-          <div className="md:hidden w-10" aria-hidden="true" />
         </div>
 
         {/* Panel menú mobile — Portal para escapar del stacking context del header */}

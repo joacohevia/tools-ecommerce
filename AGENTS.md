@@ -60,6 +60,8 @@ perfiles
 ├── nombre (text, not null)
 ├── apellido (text, not null)
 ├── dni (text, nullable)
+├── celular (text, nullable)
+├── correo (text, nullable)
 ├── rol (text, not null, default 'cliente', CHECK: admin|cliente)
 └── created_at (timestamptz, default now())
 

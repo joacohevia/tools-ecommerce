@@ -12,7 +12,7 @@ const Portada = () => {
   };
 
   return (
-    <section className="relative h-[530px] md:h-[600px] bg-surface-container-low overflow-hidden mt-0">
+    <section className="relative h-[460px] md:h-[350px] bg-surface-container-low overflow-hidden mt-1">
       <img
         src={heroImg}
         alt="Herramientas Tandil"
@@ -20,20 +20,20 @@ const Portada = () => {
       />
       <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 to-transparent" />
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        <p className="font-label-bold uppercase tracking-wider text-primary mb-3">
+        <p className="font-label-bold uppercase tracking-wider text-primary mb-8">
           Herramientas de Calidad
         </p>
-        <h1 className="font-headline text-headline-xl text-on-surface my-5 mb-4 max-w-3xl">
+        <h1 className="font-headline text-headline-lg md:text-headline-xl text-on-surface my-4 mb-4 max-w-3xl">
           Todo lo que necesitás para tu taller y hogar
         </h1>
-        <p className="font-body text-body-lg text-on-surface-variant max-w-xl mb-8">
+        <p className="font-body text-body-lg text-on-surface-variant max-w-xl mb-6">
           Más de 10 años brindando las mejores herramientas en Tandil. Calidad, precio y atención personalizada.
         </p>
         <div className="flex gap-4">
-          <Link to="/productos" className="btn-primary rounded px-8 py-3 no-underline">
+          <Link to="/productos" className="btn-primary rounded px-6 py-3 no-underline">
             Comprar Herramientas
           </Link>
-          <button onClick={handleVerOfertas} className="btn-secondary rounded px-8 py-3 no-underline">
+          <button onClick={handleVerOfertas} className="btn-secondary rounded px-6 py-3 no-underline">
             Ver Ofertas
           </button>
         </div>

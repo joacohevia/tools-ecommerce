@@ -27,6 +27,10 @@ function subtotalDe(producto, cantidad) {
 function validar(data) {
   const errores = {};
 
+  if (!data.nombre.trim()) {
+    errores.nombre = 'El nombre es obligatorio';
+  }
+
   if (!data.celular.trim()) {
     errores.celular = 'El celular es obligatorio';
   } else if (!/^\d+$/.test(data.celular.replace(/[\s\-()]/g, ''))) {
@@ -78,6 +82,7 @@ function construirMensaje({ items, total, form }) {
 
   lineas.push(`Pago: ${form.metodoPago === 'transferencia' ? 'Transferencia' : 'Efectivo'}`);
   lineas.push('');
+  lineas.push(`Nombre: ${form.nombre.trim()}`);
   lineas.push(`Celular: ${form.celular.trim()}`);
   lineas.push(`Correo: ${form.correo.trim()}`);
 
@@ -105,6 +110,7 @@ export default function RealizarCompra() {
   const { toast } = useToast();
 
   const [form, setForm] = useState({
+    nombre: '',
     celular: '',
     correo: '',
     metodoEntrega: 'envio',
@@ -188,6 +194,24 @@ export default function RealizarCompra() {
       {paso === 'form' && (
         <div className="flex flex-col lg:flex-row gap-6">
           <form onSubmit={handleSubmit} noValidate className="flex-1 flex flex-col gap-5">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="nombre" className="text-sm font-medium text-on-surface">
+                Nombre
+              </label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                inputMode="text"
+                placeholder="ej: Juan"
+                value={form.nombre}
+                onChange={handleChange}
+                aria-invalid={!!errors.nombre}
+                className={`input ${errors.nombre ? 'border-error focus:border-error' : ''}`}
+              />
+              {errors.nombre && <p className="text-error text-xs">{errors.nombre}</p>}
+            </div>
+
             <div className="flex flex-col gap-1.5">
               <label htmlFor="celular" className="text-sm font-medium text-on-surface">
                 Celular
@@ -351,6 +375,12 @@ export default function RealizarCompra() {
                 <h2 className="font-headline text-headline-md text-on-surface mb-4">
                   Datos para transferir
                 </h2>
+                <p>
+                  <span className="text-on-surface-variant text-sm leading-relaxed">
+                    Los datos se van a compartir al <strong className="font-semibold">finalizar la compra</strong>
+                  </span>
+                </p>
+                {/* 
                 <div className="flex items-center justify-between gap-3 mb-1">
                   <span className="text-on-surface-variant text-sm">Alias</span>
                   <span className="text-on-surface font-semibold">{pagoConfig.alias || '—'}</span>
@@ -377,7 +407,7 @@ export default function RealizarCompra() {
                 )}
                 <p className="text-on-surface-variant text-xs mt-3">
                   Recordá enviar el comprobante por WhatsApp.
-                </p>
+                </p>*/}
               </div>
             ) : (
               <div className="bg-surface-container-low rounded-xl border border-outline-variant p-5">

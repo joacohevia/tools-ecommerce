@@ -42,6 +42,8 @@ CREATE TABLE public.perfiles (
   nombre text NOT NULL,
   apellido text NOT NULL,
   dni text,
+  celular text,
+  correo text,
   rol text NOT NULL DEFAULT 'cliente'::text CHECK (rol = ANY (ARRAY['admin'::text, 'cliente'::text])),
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT perfiles_pkey PRIMARY KEY (id),

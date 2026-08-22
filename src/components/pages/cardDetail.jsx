@@ -102,7 +102,7 @@ const CardDetail = () => {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-15">
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-1 md:py-1">
       <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <Link to="/home" className="hover:text-primary transition-colors">
           Inicio

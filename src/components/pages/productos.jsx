@@ -210,7 +210,7 @@ export default function Productos() {
 
   return (
     <>
-    <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-15 flex-1">
+    <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-1 md:py-1 flex-1">
       {/* Breadcrumb */}
       <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">

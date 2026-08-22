@@ -109,7 +109,7 @@ export default function Contacto() {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-20 md:py-15">
+    <main className="max-w-5xl mx-auto px-4 py-1 md:py-1">
       {/* Breadcrumb */}
       <nav className="text-sm text-on-surface-variant py-3 mb-6" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5">

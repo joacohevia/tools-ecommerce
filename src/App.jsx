@@ -34,7 +34,7 @@ function App() {
       <CarritoProvider>
         <ToastProvider>
           <ConfirmProvider>
-            <div className="flex flex-col min-h-screen bg-surface pt-[72px]">
+            <div className="flex flex-col min-h-screen bg-surface pt-[88px] md:pt-[112px]">
               <ScrollToTop />
               <ScrollToTopButton />
               <Nav />
